@@ -2,7 +2,10 @@
 .Rhistory
 .RData
 .Ruserdata
+.Rprofile
 *.html
 *_cache
 _targets
 .RDatabak
+output
+renv

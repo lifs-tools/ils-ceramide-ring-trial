@@ -10,6 +10,8 @@ We use `renv` to manage the dependencies of the code. To install all packages, a
 renv::restore() 
 ```
 
+and follow the instructions. Hit `CTRL+SHIFT+F10` to restart the R session.
+
 In order to run the evaluation, execute the following script, for example within RStudio:
 
 ```
