@@ -1,0 +1,43 @@
+LabId,Vendor,Instrument,MassAnalyzerType
+01,Sciex,QTRAP 5500,QQQ
+02a,Sciex,QTRAP 6500+,QQQ
+02b,Sciex,QTRAP 6500+,QQQ
+03,Bruker,Bruker EVOQ Elite,QQQ
+04,Sciex,QTRAP 6500+,QQQ
+05,Sciex,QTRAP 6500+,QQQ
+07,Thermo,QE,Orbitrap
+08,Sciex,QTRAP 5500,QQQ
+09,Sciex,QTRAP 5500,QQQ
+10a,Agilent,6495,QQQ
+10b,Agilent,6495,QQQ
+12,Sciex,QTRAP 6500,QQQ
+13,Sciex,QTRAP 6500+,QQQ
+14,Sciex,QTRAP 5500,QQQ
+15,Sciex,QTRAP 6500+,QQQ
+16,Thermo,QE Plus,Orbitrap
+17a,Sciex,TripleTOF 6600,TOF
+17b,Sciex,TripleTOF 6600,TOF
+18a,Thermo,TSQ Quantiva,QQQ
+18b,Waters,Xevo TQ-S,QQQ
+19,Agilent,6490,QQQ
+20,Agilent,6460,QQQ
+21,Sciex,QTRAP 6500,QQQ
+22,Sciex,QTRAP 6500+,QQQ
+23,Agilent,6495,QQQ
+24,Waters,Xevo TQ-S,QQQ
+25,Waters,Xevo TQ,QQQ
+26a,Thermo,QE,Orbitrap
+26b,Waters,Micromass Quattro Ultima,QQQ
+27,Sciex,QTRAP 6500 ,QQQ
+28,Sciex,QTRAP 6500+,QQQ
+29a,Waters,Synapt G2-Si,TOF
+29b,Sciex,QTRAP 6500,QQQ
+30,Shimadzu,8060,QQQ
+31,Waters,Xevo TQ-S,QQQ
+32,Waters,Xevo G2S,TOF
+33,Agilent,6470,QQQ
+34,Sciex,QTRAP 5500,QQQ
+35,Sciex,4500 MD,QQQ
+36,Sciex,QTRAP 6500+,QQQ
+37,Sciex,QTRAP 5500,QQQ
+38,Waters,Xevo TQ-S,QQQ

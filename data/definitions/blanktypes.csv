@@ -1,0 +1,42 @@
+LabId,BlankReportType,Sheet,Range,Comments
+1,MatrixBlank,NA,NA,Completely different reporting format
+02a,TotalBlank,LC-MRM - Intra Assay QC Res,B112:Z114,"No values reported for QC samples, only single replicates for NIST samples, added total blank values from raw peak areas"
+02b,TotalBlank,LC-MRM - Intra Assay QC Res,B112:Z114,Only Repl 1 values reported for Blank QC
+3,TotalBlank,LC-MRM - Intra Assay QC Res,B112:Z114,
+4,MatrixBlank,LC-MRM - Intra Assay QC Res,B112:Z114,
+5,MatrixBlank,LC-MRM - Intra Assay QC Res,B112:Z114,"Only Blank label, assuming MatrixBlank"
+7,MatrixBlank,LC-MRM - Intra Assay QC Res,B112:Z114,"Only Blank label, assuming MatrixBlank"
+8,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B112:Z113,Replicates horizontally
+10a,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B112:Z113,Replicates horizontally
+10b,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B112:Z113,
+12,MatrixBlank,LC-MRM - Intra Assay QC Res,B112:Z114,
+13,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B112:Z113,"No values reported, only raw peak areas"
+14,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B112:Z113,
+15,MatrixBlank,LC-MRM - Intra Assay QC Res,B112:Z114,
+16,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B112:Z113,
+17a,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B112:Z112,
+17b,NA,NA,NA,Completely different reporting format
+18a,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B112:Z113,
+18b,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B112:Z113,
+19,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B112:Z117,
+20,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B112:Z116,
+21,MatrixBlank,LC-MRM - Intra Assay QC Res,B112:Z114,Added missing QC sample rows with empty / NA values
+22,MatrixBlank,LC-MRM - Intra Assay QC Res,B112:Z114,Provide QC samples measured on another day
+23,MatrixBlank,LC-MRM - Intra Assay QC Res,B112:Z114,
+24,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B112:Z113,
+25,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B134:Z138,Two times two calibration curve samples
+26a,NA,NA,NA,Completely different reporting format
+26b,NA,NA,NA,Completely different reporting format
+27,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B112:Z113,Switched calibration line 2 STD 5 and 4
+28,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B112:Z113,
+29a,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B112:Z117,"Merged Total Blank QC & Matrix Blank section, renamed samples"
+29b,MatrixAndTotalBlank,UHPSFC MS - Intra Assay QC Res,B112:Z117,"Merged Total Blank QC & Matrix Blank section, renamed samples"
+30,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B112:Z113,
+31,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B112:Z113,
+32,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B112:Z117,"Two Calibration line and blank measurement batches, additional STD3 dilution steps"
+33,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B112:Z113,"Additional dilution steps for STD2, STD3 and STD 4"
+34,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B112:Z113,"Only 1 replicate measurement, except for Blanks"
+35,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B112:Z113,
+36,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B112:Z113,
+37,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B112:Z117,"Merged Total Blank QC & Matrix Blank section, renamed samples"
+38,MatrixAndTotalBlank,LC-MRM - Intra Assay QC Res,B112:Z113,"failed inj for replicate 3, MQC, HQC and HLQC"
