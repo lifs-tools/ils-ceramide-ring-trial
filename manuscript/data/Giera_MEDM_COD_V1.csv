@@ -1,0 +1,5 @@
+Species,Study,n_labs,MAD,MEDM,Uncertainty,COD
+Cer d18:1/16:0,Lipidyzer,9,0.035306133,0.41,0.0148,3.6000
+Cer d18:1/18:0,Lipidyzer,9,0.015500254,0.12,0.0065,5.4000
+Cer d18:1/24:0,Lipidyzer,9,0.458118604,3.42,0.1915,5.6000
+Cer d18:1/24:1,Lipidyzer,9,0.194757815,1.18,0.0814,6.9000
