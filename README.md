@@ -1,5 +1,15 @@
 # ILS Ceramide Ring Trial Results
 
+## Prerequisites
+
+The evaluation code requires R 4.3 or later. Additionally, some packages may require system library dependencies. Please consult the package installation output for details for your environment.
+
+### Ubuntu
+
+```
+sudo apt update && sudo apt install cmake libcurl4-openssl-dev build-essential libxml2-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
+```
+
 ## Starting the Evaluation
 
 The data for the evaluation is located in the `data` folder. Scripts used during the evaluation are located in the `R` folder, the `_targets.R` and `evaluation.R` files.
