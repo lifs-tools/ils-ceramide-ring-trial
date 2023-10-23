@@ -108,20 +108,23 @@ plotDatasetSummary <- function(
   outputDirectory
 ) {
   allReports <- data.frame("LabId"=c(standardReports, preferredReports))
-  filteredSummary <- datasetSummary %>% dplyr::semi_join(allReports, by = c("LabId"))
+  filteredSummary <- datasetSummary |> dplyr::semi_join(allReports, by = c("LabId"))
   readr::write_csv(filteredSummary, file=file.path(outputDirectory,"filteredDataSummary.csv"))
-  # filteredSummary <- readr::read_csv(file="figures/filteredDataSummary.csv")
-  filteredSummaryLong <- filteredSummary %>% 
-    dplyr::select(-`Processing Status`) %>%
-    dplyr::group_by(LabId) %>%
+  filteredSummaryLong <- filteredSummary |> 
+    dplyr::select(-`Processing Status`) |>
+    dplyr::group_by(LabId) |>
     tidyr::pivot_longer(
       cols = 2:last_col(),
       names_to = "Category",
       values_to = "Reported"
     ) |> 
     dplyr::mutate(
-      Reported=forcats::fct_relevel(Reported, c("Standard", "Preferred", "No", "Yes (with remarks)", "Yes")),
-      Category=forcats::fct_relevel(Category, c("Blank", "Calibration Line 1", "Calibration Line 2", "LLQC","LQC","MQC","HQC","HLQC", "NIST SRM", "NIST hTAG", "NIST T1D", "NIST Young AA"))
+      Reported=as.factor(Reported),
+      Category=as.factor(Category),
+    ) |>
+    dplyr::mutate(
+      Reported=forcats::fct_relevel(Reported, c("Standard", "Preferred", "Yes", "Yes (with remarks)", "No")),
+      Category=forcats::fct_relevel(Category, c("Type", "Blank", "Calibration Line 1", "Calibration Line 2", "LLQC","LQC","MQC","HQC","HLQC", "NIST SRM", "NIST hTAG", "NIST T1D", "NIST Young AA"))
     )
   heatmap <- ggplot2::ggplot(
     filteredSummaryLong, ggplot2::aes(LabId, Category, fill = Reported)
@@ -135,7 +138,6 @@ plotDatasetSummary <- function(
 }
 
 meanSdCalibrationLinesPlots <- function(calibLineDataLmPred, theme=mytheme, avgLipidToISRatios, suffix="", cunit="", d_theoratios, outputDirectory) {
-  library(ggrepel)
   # Plot "average" calibration line
   calibLineDataLmPredPlot <- calibLineDataLmPred |> 
     group_by(
@@ -158,12 +160,12 @@ meanSdCalibrationLinesPlots <- function(calibLineDataLmPred, theme=mytheme, avgL
       labelavg=paste(format(yavg, digits=3, nsmall=3),"+/-", format(ysd, digits=2, nsmall=2)),
       labelmed=paste(format(ymed, digits=3, nsmall=3),"+/-", format(ysd, digits=2, nsmall=2)),
       labelconc=paste(format(Concentration, digits=3, nsmall=3)),
-      labelsd=paste("\u03C3 +/-", format(ysd, digits=2, nsmall=2))
+      labelsd=paste("\u03BC +/-", format(ysd, digits=2, nsmall=2))
     )
 
-  write_csv(calibLineDataLmPredPlot, here::here(file.path(outputDirectory,"temp.csv")))
+  #write_csv(calibLineDataLmPredPlot, here::here(file.path(outputDirectory,"temp.csv")))
   
-  calibLineDataLmPredPlot <- calibLineDataLmPredPlot %>% 
+  calibLineDataLmPredPlot <- calibLineDataLmPredPlot |> 
     left_join(d_theoratios, by=c("ceramideId", "ceramideName", "Concentration"))
   
   if(!is.null(avgLipidToISRatios)) {
@@ -177,10 +179,10 @@ meanSdCalibrationLinesPlots <- function(calibLineDataLmPred, theme=mytheme, avgL
     geom_line(aes(x=Concentration, y=ymed), color="black", linetype=2, show.legend = FALSE, alpha=0.2) +
     geom_point(aes(x=Concentration, y=yavg), color="blue", alpha=0.4) +
     geom_point(aes(x=Concentration, y=ymed), color="black", alpha=0.4) +
-    geom_errorbar(aes(x=Concentration, ymin=yavgmin, ymax=yavgmax), color="black", alpha=0.5, linetype=1) +
+    geom_errorbar(aes(x=Concentration, ymin=yavgmin, ymax=yavgmax), color="blue", alpha=0.5, linetype=1) +
     geom_vline(aes(xintercept=Concentration), linetype=1, color="black", alpha=0.3) +
     geom_text(aes(x=Concentration, y=max(yavg+(ymax-ymin)*0.05), angle=90, label=labelconc), size=3, vjust = -0.5, hjust=0.5, check_overlap = TRUE, color="black") +
-    geom_text_repel(aes(x=Concentration, y=yavgmin, label=labelsd), min.segment.length = 1, size=3, nudge_y = -0.1, point.padding=4, direction="y", color="black")
+    ggrepel::geom_text_repel(aes(x=Concentration, y=yavgmin, label=labelsd), min.segment.length = 1, size=3, nudge_y = -0.1, point.padding=4, direction="y", color="black")
   if(!is.null(avgLipidToISRatios)) {
     avgMedCalibrationLinesLog10 <- avgMedCalibrationLinesLog10 +
       geom_ribbon(aes(x=Concentration, y=meanAreaRatios,ymin=meanAreaRatios-sdAreaRatios,ymax=meanAreaRatios+sdAreaRatios), fill="red", alpha=0.1, show.legend = FALSE) +
@@ -189,7 +191,7 @@ meanSdCalibrationLinesPlots <- function(calibLineDataLmPred, theme=mytheme, avgL
   avgMedCalibrationLinesLog10 <- avgMedCalibrationLinesLog10 +
     scale_color_discrete(breaks=c("blue","black"), labels=c("Mean","Median")) +
       facet_wrap(.~ceramideName, scales = "free_x") + 
-    xlab(paste0("Concentration ", cunit)) + ylab("Ratio Light/Heavy") +
+    xlab(paste0("Concentration ", cunit)) + ylab("Ratio Non-labeled/Labeled") +
     scale_x_log10() + scale_y_log10() + 
     theme
   ggsave(file.path(outputDirectory, paste0("CalibrationLinesAvgMedRangeLog10",suffix,".png")), avgMedCalibrationLinesLog10, width = 9, height = 9)
@@ -201,10 +203,10 @@ meanSdCalibrationLinesPlots <- function(calibLineDataLmPred, theme=mytheme, avgL
     geom_line(aes(x=Concentration, y=ymed), color="black", linetype=2, show.legend = FALSE, alpha=0.2) +
     geom_point(aes(x=Concentration, y=yavg), color="blue", alpha=0.4) +
     geom_point(aes(x=Concentration, y=ymed), color="black", alpha=0.4) +
-    geom_errorbar(aes(x=Concentration, ymin=yavgmin, ymax=yavgmax), color="black", alpha=0.5, linetype=1) +
+    geom_errorbar(aes(x=Concentration, ymin=yavgmin, ymax=yavgmax), color="blue", alpha=0.5, linetype=1) +
     geom_vline(aes(xintercept=Concentration), linetype=1, color="black", alpha=0.3) +
     geom_text(aes(x=Concentration, y=max(yavg+(ymax-ymin)*0.05), angle=90, label=labelconc), size=3, vjust = -0.5, hjust=0.5, check_overlap = TRUE, color="black") +
-    geom_text_repel(aes(x=Concentration, y=yavgmin, label=labelsd), min.segment.length = 1, size=3, nudge_y = -0.1, point.padding=4, direction="y", color="black")
+    ggrepel::geom_text_repel(aes(x=Concentration, y=yavgmin, label=labelsd), min.segment.length = 1, size=3, nudge_y = -0.1, point.padding=4, direction="y", color="black")
   if(!is.null(avgLipidToISRatios)) {
     avgMedCalibrationLinesLinear <- avgMedCalibrationLinesLinear + 
       geom_ribbon(aes(x=Concentration, y=meanAreaRatios,ymin=meanAreaRatios-sdAreaRatios,ymax=meanAreaRatios+sdAreaRatios), fill="red", alpha=0.1, show.legend = FALSE) +
@@ -213,7 +215,7 @@ meanSdCalibrationLinesPlots <- function(calibLineDataLmPred, theme=mytheme, avgL
   avgMedCalibrationLinesLinear <- avgMedCalibrationLinesLinear + 
     scale_color_discrete(breaks=c("blue","black"), labels=c("Mean","Median")) +
     facet_wrap(.~ceramideName, scales = "free_x") +
-    xlab(paste0("Concentration ", cunit)) + ylab("Ratio Light/Heavy") +
+    xlab(paste0("Concentration ", cunit)) + ylab("Ratio Non-labeled/Labeled") +
     theme
   ggsave(file.path(outputDirectory, paste0("CalibrationLinesAvgMedRangeLinear",suffix,".png")), avgMedCalibrationLinesLinear)
   return(list(avgMedCalibrationLinesLog10, avgMedCalibrationLinesLinear))
@@ -261,20 +263,8 @@ nistSurveyPlot <- function(IntraAssayNIST, theme=mytheme, colorscale=mycolorscal
   NISTSurveyPlot
 }
 
-scatterRatioPlots <- function(linRegFormula, data, ceramideIds, outputDirectory) {
-  ceramideIds %>% 
-    map(
-      ~ scatterRatioPlot(
-        linRegFormula=linRegFormula,
-        data=data,
-        selectedCeramideId=.x,
-        outputDirectory=outputDirectory
-      )
-    )
-}
-
 scatterRatioPlot <- function(linRegFormula, data, selectedCeramideId, outputDirectory) {
-  dataCer <- data %>% dplyr::filter(ceramideId == selectedCeramideId)
+  dataCer <- data |> dplyr::filter(ceramideId == selectedCeramideId)
   stopifnot(length(unique(dataCer$ceramideId))==1)
   scatterRatioPlotCer <- ggplot(
     data = dataCer, 
@@ -291,7 +281,7 @@ scatterRatioPlot <- function(linRegFormula, data, selectedCeramideId, outputDire
 }
 
 nistAreaRatioPlots <- function(data, sampleTypes, theme=mytheme, fillscale=scale_fill_nejm(), outlierShape=19, outputDirectory) {
-  sampleTypes %>% 
+  sampleTypes |> 
     map(
       ~ nistAreaRatioPlot(
         data=data,
@@ -305,26 +295,28 @@ nistAreaRatioPlots <- function(data, sampleTypes, theme=mytheme, fillscale=scale
 }
 
 nistAreaRatioPlot <- function(data, selectedSampleType, theme=mytheme, fillscale=scale_fill_nejm(), outlierShape=19, outputDirectory) {
-  dataSampleType <- data %>% dplyr::filter(SampleType == selectedSampleType)
+  print(paste("Creating area ratio plot for", selectedSampleType))
+  dataSampleType <- data |> dplyr::filter(SampleType == selectedSampleType)
   stopifnot(length(unique(dataSampleType$SampleType))==1)
   plot <- ggplot(data=dataSampleType, 
          mapping = aes(x=LabId, y=RatioLipidToIS, fill=ceramideName)) +
     geom_boxplot(outlier.shape=outlierShape) + ylab("Cer / ISCer (area ratio)") +
     facet_grid(ceramideName~SampleType, scales="free_y") + theme + fillscale
-  ggsave(file.path(outputDirectory, paste0("NIST_Light_Heavy_AreasRatioPlot-", selectedSampleType,".png")), plot)
+  ggsave(file.path(outputDirectory, paste0("NIST_Non-labeled_Labeled_AreasRatioPlot-", selectedSampleType,".png")), plot)
   plot
 }
 
 calibrationLinePlot <- function(linRegFormula, lmPred, adjAnalyteConcentrations, theme=mytheme, labId, digits = 4, cunit = "", d_theoratios, outputDirectory) {
+  print(paste("Creating calibration line plot for lab", labId))
   oldDigits <- getOption("digits")
   options(digits = digits)
-  filteredLmPred <- lmPred %>% filter(LabId==labId)
-  filteredAdjAnalyteConcentrations <- adjAnalyteConcentrations %>% filter(LabId==labId)
+  filteredLmPred <- lmPred |> filter(LabId==labId)
+  filteredAdjAnalyteConcentrations <- adjAnalyteConcentrations |> filter(LabId==labId)
   
-  filteredAdjAnalyteConcentrations <- filteredAdjAnalyteConcentrations %>% 
+  filteredAdjAnalyteConcentrations <- filteredAdjAnalyteConcentrations |> 
     left_join(d_theoratios, by=c("ceramideId", "ceramideName", "Concentration"))
   
-  Cl4Plot <- ggplot(
+  plot <- ggplot(
     data=filteredAdjAnalyteConcentrations, 
     mapping = aes(x=Concentration , y=RatioLipidToIS)
   ) + 
@@ -338,21 +330,60 @@ calibrationLinePlot <- function(linRegFormula, lmPred, adjAnalyteConcentrations,
     facet_wrap(LabId+SampleType~ceramideName, scales = "free", ncol=4) + 
     theme + 
     labs(subtitle = paste("Results for Lab", labId)) +
-    xlab(paste0("Actual Concentration ", cunit)) + ylab("Ratio Light/Heavy")
-  ggsave(file.path(outputDirectory, paste0("CalibrationLineAnalyteConcentrationsLab",labId, ".png")), plot=Cl4Plot, width=10)
+    xlab(paste0("Actual Concentration ", cunit)) + ylab("Ratio Non-labeled/Labeled")
+  ggsave(file.path(outputDirectory, paste0("CalibrationLineAnalyteConcentrationsLab",labId, ".png")), plot=plot, width=10)
   options(digits = oldDigits)
-  filteredAdjAnalyteConcentrations
+  plot
 }
 
-calibrationLineVsSinglePointPlot <- function(analyteConcentrationsFromCalibLines, theme=mytheme, mycolorscale, outputDirectory) {
+calibrationLineResidualsPlot <- function(linRegFormula, lmPred, adjAnalyteConcentrations, theme=mytheme, labId, digits = 4, cunit = "", d_theoratios, outputDirectory) {
+  print(paste("Creating calibration line residuals plot for lab", labId))
+  oldDigits <- getOption("digits")
+  options(digits = digits)
+  filteredLmPred <- lmPred |> filter(LabId==labId)
   plot <- ggplot(
-    aes(x=Concentration, y=C_Adj/C_SinglePoint, color=ceramideName, label=LabId, group=LabId), 
-    data=analyteConcentrationsFromCalibLines) + 
-    geom_smooth(method = "lm") +
-    facet_wrap(~ceramideName, scale="free") + 
-    theme +
-    mycolorscale
-  ggsave(file.path(outputDirectory, paste0("figures/CalibrationLineVsSinglePoint.png")), plot=plot, width=8)
+    data=filteredLmPred, 
+    mapping = aes(x=RatioLipidToIS , y=.resid)
+  ) + 
+    #geom_point(aes(color=LabId, shape=ceramideName)) +
+    geom_point(data = filteredLmPred, aes(x= Concentration, y = .std.resid, shape = ceramideName)) +
+    facet_wrap(LabId+SampleType~ceramideName, scales = "free", ncol=4) + 
+    theme + 
+    labs(subtitle = paste("Results for Lab", labId)) +
+    xlab(paste0("Concentration ", cunit)) + ylab("Std. Residuals")
+  ggsave(file.path(outputDirectory, paste0("CalibrationLineConcentrationsVsStdResidualsLab",labId, ".png")), plot=plot, width=10)
+  options(digits = oldDigits)
+  plot
+}
+
+calibrationLineVsSinglePointPlot <- function(analyteConcentrationsFromCalibLines, selectedCeramideId, suffix="", theme=mytheme, mycolorscale, outputDirectory) {
+  dta <- analyteConcentrationsFromCalibLines |> filter(ceramideId==selectedCeramideId)
+  plot <- ggplot(
+      aes(x=C_SinglePoint, y=C_Adj, color=LabId, fill=LabId, label=LabId, group=LabId), 
+      data=dta
+    ) + 
+    geom_abline(slope = 1, intercept = 0, color = "#6c9694", linewidth=.3, linetype = "longdash") +
+    geom_point(shape = 21, stroke = 0.33, size = 1.2, alpha = .6) + 
+    geom_hline(aes(yintercept = Concentration), color = "lightgray", linewidth=.3, linetype = "dashed", alpha = .5) +
+    geom_vline(aes(xintercept = Concentration), color = "lightgray", linewidth=.3, linetype = "dashed", alpha = .5) +
+    stat_smooth(method = "lm", aes( x = C_SinglePoint, y = C_Adj, color=LabId, fill=LabId), linewidth=.15, linetype = "dotted", inherit.aes = FALSE, se = FALSE, ) +
+    facet_grid(rows = vars(ceramideName), cols = vars(Protocol, MassAnalyzerType), scales = "free") +
+    scale_x_log10() +
+    scale_y_log10() +
+    labs(x = "\U003BCmol/L (single-point calibration)", y = "\U003BCmol/L (multi-point calibration)") +
+    labs(color=NULL, fill = NULL)+
+    theme_classic( base_size =  9) +  
+    theme(
+      axis.text = element_text(size = 7), 
+      axis.title = element_text(size = 8, face = "bold"), 
+      strip.background =element_rect(fill="grey99")
+    ) + theme(aspect.ratio = 1) +
+    theme(legend.position="bottom",
+          legend.text = element_text(size = 6),
+          legend.key.size = unit(0.1, "cm"),
+          legend.spacing.y = unit(.001, 'cm')
+    )
+  ggsave(file.path(outputDirectory, paste0("CalibrationLineVsSinglePoint-", selectedCeramideId, suffix, ".png")), width = 8, height = 4, plot=plot)
   plot
 }
 
@@ -369,7 +400,7 @@ ClPlot <- ggplot(
   stat_regline_equation(formula = linRegFormula, label.y = max(calibLineDataLmPred$.fitted)+(max(calibLineDataLmPred$.fitted)-min(calibLineDataLmPred$.fitted))*0.1, aes(label =  paste(after_stat(adj.rr.label), sep = "~~"))) +
   facet_wrap(LabId+SampleType~ceramideName, scales = "free", ncol=8) + 
   labs(subtitle = paste("Results for all labs")) +
-  xlab(paste0("Concentration ", cunit)) + ylab("Ratio Light/Heavy") +
+  xlab(paste0("Concentration ", cunit)) + ylab("Ratio Non-labeled/Labeled") +
   theme
   ggsave(file.path(outputDirectory, "CalibrationLineAnalyteConcentrations.png"), plot=ClPlot, width=12, height=60, limitsize = FALSE)
   return(ClPlot)
@@ -407,17 +438,17 @@ qcConcentrationsByLabIdPlot <- function(qcAveragedConcentrations, theme=mytheme,
 ################################################################################
 qcSampleStatsPlot <- function(qcSampleStats, theme=mytheme, fillscale=scale_fill_nejm(), outlierShape=19, outputDirectory) {
   #"LabId,","SampleType","ceramideId","ceramideName","Unit","Protocol","Instrument","MassAnalyzerType"
-  qcSampleStatsLong <- qcSampleStats %>% 
-    ungroup() %>% 
+  qcSampleStatsLong <- qcSampleStats |> 
+    ungroup() |> 
     select(
       -SdAvg_C_Adj, 
       -CV_C_Adj,
       -SdAvg_C_SinglePoint,
-      -CV_C_SinglePoint) %>% pivot_longer(
+      -CV_C_SinglePoint) |> pivot_longer(
         cols = c("AvgAvg_C_Adj", "Avg_C_SinglePoint"),
         names_to = c("CalibrationType"),
         values_to = c("MeanAdjustedConcentration")
-      ) %>%
+      ) |>
     mutate(
       CalibrationType = forcats::fct_recode(
         CalibrationType,
@@ -456,17 +487,17 @@ qcConcentrationsByLabIdDensityPlot <- function(qcAveragedConcentrations, theme=m
 # Stds Box Plot
 ################################################################################
 stdsBoxplot <- function(averagedConcentrations, selectCeramideId, theme=mythemeXRot, fillscale=scale_fill_nejm(), outlierShape=19, outputDirectory) {
-  dta <- averagedConcentrations %>% filter(ceramideId==selectCeramideId)
+  dta <- averagedConcentrations |> filter(ceramideId==selectCeramideId)
   loDf <- data.frame(
     LoD=dta$Avg_C_LoD_C, 
     LoQ=dta$Avg_C_LoQ_C, 
     LabId=dta$LabId, 
     Sample=dta$Sample,
     label=paste(dta$Sample, " ", dta$Concentration, " ", dta$Unit)
-  ) %>% filter(
+  ) |> filter(
     Sample=="STD 6"
-  ) %>% distinct()
-  loDfLong <- loDf %>% pivot_longer(cols = c("LoD", "LoQ"), names_to = "FoM", values_to = "y")
+  ) |> distinct()
+  loDfLong <- loDf |> pivot_longer(cols = c("LoD", "LoQ"), names_to = "FoM", values_to = "y")
   # boxplot of averaged adjusted concentrations
   boxPlot <- ggplot(aes(x = LabId, y = Avg_C_Adj, fill = Sample), data=dta) + 
     geom_boxplot(show.legend = FALSE, outlier.shape = outlierShape) + 
@@ -477,8 +508,8 @@ stdsBoxplot <- function(averagedConcentrations, selectCeramideId, theme=mythemeX
     scale_shape_discrete(solid = FALSE) + # use non-solid characters for FoMs LoQ and LoD
     guides(fill = "none") + # do not show points in legend for Sample
     ylab(paste0("Adj. Concentration ",unique(dta$Unit))) +
-    labs(caption = paste0("Avg. LoD from calib. lines for STD 6, where LoD=3.3*sd(a_l/a_h)/slope\n",
-           "Avg. LoQ from calib. lines for STD 6, where LoQ=10*sd(a_l/a_h)/slope")) +
+    labs(caption = paste0("Avg. LoD from calib. lines for STD 6, where LoD=3.3*SE(intercept)/slope\n",
+           "Avg. LoQ from calib. lines for STD 6, where LoQ=10*SE(intercept)/slope")) +
     theme + 
     fillscale
   ggsave(file.path(outputDirectory, paste0("CalibrationLineSTDsCer",selectCeramideId,".png")), plot=boxPlot, width=20)
@@ -489,7 +520,7 @@ stdsBoxplot <- function(averagedConcentrations, selectCeramideId, theme=mythemeX
 # Stds Variance Histogram Plot
 ################################################################################
 stdsVarHistoPlot <- function(averagedConcentrations, selectCeramideId, theme=mythemeXRot, fillscale=scale_fill_nejm(), outputDirectory) {
-  dta <- averagedConcentrations %>% 
+  dta <- averagedConcentrations |> 
     filter(ceramideId==selectCeramideId)
   # boxplot of averaged adjusted concentrations
   boxPlot <- ggplot(aes(x = Avg_C_Adj, fill = Sample), data=dta) + 
@@ -511,8 +542,8 @@ stdsVarHistoPlot <- function(averagedConcentrations, selectCeramideId, theme=myt
 # Stds Recovery Percent Histogram Plot
 ################################################################################
 stdsRecoveryPercentHistoPlot <- function(averagedConcentrations, selectCeramideId, theme=mythemeXRot, fillscale=scale_fill_nejm(), outputDirectory) {
-  dta <- averagedConcentrations %>% 
-    filter(ceramideId==selectCeramideId) %>% 
+  dta <- averagedConcentrations |> 
+    filter(ceramideId==selectCeramideId) |> 
     pivot_longer(cols=c(Avg_C_Adj_Rec_Perc, Avg_C_SinglePoint_Rec_Perc), names_to="Calibration_Type", values_to="Adj_C_Recovery_Perc")
   readr::write_csv(file=file.path(outputDirectory, "stdsRecoveryPercentHistoData.csv"), dta)
   # boxplot of averaged adjusted concentrations
@@ -550,7 +581,7 @@ nistConcentrationsPlot <- function(nistAveragedConcentrationsLong, theme=mytheme
 nistCvPlot <- function(nistConcentrationsStatsLong, theme=mythemeXRot45, fillscale=scale_fill_nejm(), outlierShape=19, outputDirectory) {
   # TODO: filter should be removed once the calibration line for lab 28 does not produce a negative concentration
   # for the NIST YAA sample
-  nistCvPlot <- ggplot(aes(x=SampleType, y=CV, fill=Calibration), data=nistConcentrationsStatsLong %>%
+  nistCvPlot <- ggplot(aes(x=SampleType, y=CV, fill=Calibration), data=nistConcentrationsStatsLong |>
                          filter(AvgAvg_C_Adj>0)) + 
     geom_boxplot(outlier.shape=outlierShape) + 
     facet_grid(ceramideName~facetLabel, scales="free_y") + 
@@ -570,7 +601,7 @@ nistConcentrationsPlotBySampleType <- function(data, namesuffix, width=6, unit, 
       ylab(paste0("Adj. Concentration ", unit)) + 
       labs(title=unique(data$SampleType)) + 
       theme + xfillscale
-    ggsave(file.path(outputDirectory, paste0("figures/NISTSamplesConcentrationsBySampleType-", namesuffix, ".png")), plot, width=width)
+    ggsave(file.path(outputDirectory, paste0("NISTSamplesConcentrationsBySampleType-", namesuffix, ".png")), plot, width=width)
     plot
 }
 
@@ -606,6 +637,9 @@ nistConcentrationsByLabIdPlot <- function(nistAveragedConcentrationsLong, theme=
 nistCvByLabIdPlot <- function(nistConcentrationsStatsLong, theme=mythemeXRot, xfillscale=scale_fill_nejm(), outlierShape=19, outputDirectory) {
   nistCvByLabIdPlot <- ggplot(aes(x=LabId,y=CV*100,fill=Calibration), data=nistConcentrationsStatsLong) + 
   geom_boxplot(outlier.shape = outlierShape) + 
+  geom_hline(aes(yintercept = 20), color="red", linetype = 2, show.legend = FALSE) +
+  geom_hline(aes(yintercept = 10), color="yellow", linetype = 2, show.legend = FALSE) +
+  geom_hline(aes(yintercept = 5), color="green", linetype = 2, show.legend = FALSE) +
   scale_y_log10() +
   facet_grid(ceramideName~SampleType, scales="free_y") + 
   ylab(paste0("CV")) + 
@@ -625,87 +659,4 @@ nistZscoreByLabIdPlot <- function(nistConcentrationsZScoreStatsLong, theme=mythe
   mythemeXRot + scale_fill_nejm()
   ggsave(file.path(outputDirectory, "NISTSamplesZScoreByLabId.png"), nistZscoreByLabIdPlot, width=35)
   nistZscoreByLabIdPlot
-}
-
-################################################################################
-# Ring Trial comparison plot
-################################################################################
-ringTrialsComparisonPlot <- function(
-  ringTrialsComparisonTbl,
-  theme=mythemeXRot,
-  outlierShape=outlierShape,
-  outputDirectory
-) {
-  # formula standard uncertainty (Ghorasaini et al, Analytical Chemistry, 2021)
-  std_uncert <- function(x) sqrt(pi/(2*length(x))) * mad(x, constant = 1.4826, na.rm = TRUE)
-  
-  ringTrialsComparisonTblFiltered <- ringTrialsComparisonTbl |>
-    filter(Study!="Giera 2021 (SP)")
-  
-  d_lipidyzer <- ringTrialsComparisonTbl |>
-    filter(Study=="Giera 2021 (SP)") |> # added because we use the row bound values
-    select(Study, Compound, everything()) |>
-    mutate(MADM = MAD/MEDM *100)
-  
-  d_sum_1 <- ringTrialsComparisonTblFiltered |> 
-    group_by(Compound, Study) |> 
-    summarise(
-      n_labs = n(),
-      MEAN = mean(Conc_mean, na.rm = TRUE),
-      SD = sd(Conc_mean, na.rm = TRUE),
-      CV = SD/MEAN *100,
-      SEM = SD/sqrt(n_labs),
-      CV_SEM = SEM/MEAN *100,
-      MAD = mad(Conc_mean, constant = 1.4826, na.rm = TRUE),
-      MEDM = median(Conc_mean, na.rm = TRUE),
-      MADM = MAD/MEDM * 100, 
-      Uncertainty = std_uncert(Conc_mean), 
-      COD = Uncertainty/MEDM *100, 
-      Conc_max = max(Conc_mean, na.rm = TRUE))
-  
-  
-  write_csv(x = d_sum_1, file = file.path(outputDirectory, "ILS-Ceramides_Conc_Summary_20220808.csv"))
-  
-  d_sum <- d_sum_1 |>
-    bind_rows(d_lipidyzer) |>
-    mutate(Study = factor(Study, levels = c("Quehenberger 2010", "Bowden 2017 (MP)",
-                                            "Moseley 2019 (SP)", "Giera 2021 (SP)",
-                                            "ILS Ceramides (MP)")))|>
-    arrange(Study) |>
-    # Conc_max used for label positioning only
-    mutate(Conc_max = if_else(is.na(Conc_max), MEDM + MAD, Conc_max)) |>
-    group_by(Compound) |>
-    mutate(Conc_max = Conc_max + max(Conc_max)*0.05)
-  p_Fig1 <- ggplot(ringTrialsComparisonTblFiltered, aes(x = Study, y = Conc_mean)) +
-    
-    ggbeeswarm::geom_beeswarm(
-      shape = 21, size = 2, stroke  = 0.5, dodge.width = 1, cex = 1.5, color = "grey50") +
-    geom_crossbar(
-      data = d_sum,
-      aes(y = MEDM, ymin = MEDM - Uncertainty, ymax = MEDM + Uncertainty),
-      inherit.aes = TRUE, 
-      fatten = .1, size = 0.2, fill = "grey95", color = "red", width = .6, alpha = 0.1) +
-    geom_crossbar(
-      data = d_sum,
-      aes(y = MEDM, ymin = MEDM, ymax = MEDM),
-      inherit.aes = TRUE, fatten = 0, size = 1.1, fill = "grey95", color = "red", width = 0.7) +
-    scale_y_continuous(limits = c(0, NA), expand = expansion(mult = c(.03, .1))) +
-    geom_text(
-      data = d_sum,
-      aes(label = n_labs, y = Conc_max),
-      size = 3, nudge_x = 0.0, inherit.aes = TRUE, color = "#d40202", fontface = "italic") +
-    facet_wrap(vars(Compound), scales = "free", nrow = 1) +
-    scale_x_discrete(drop = FALSE, expand = expansion(mult = c(.03, .25))) +
-    theme_classic() +
-    labs(x = "", y = "\U003BCmol/L") +
-    theme(
-      axis.text.x = element_text(size = 7, angle = 46, vjust = 1, hjust = 1)
-    )
-  
-  ggsave(
-    plot = p_Fig1,
-    filename = file.path(outputDirectory, "ils-to-other-ring-trials-comparison-nist-srm1950.png"),
-    dpi = 300, width = 220, height = 110, units = "mm"
-  )
-  p_Fig1
 }

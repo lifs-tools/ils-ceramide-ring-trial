@@ -43,6 +43,7 @@ readDatasetSummary <- function(filename, sheet, range, columnNames, na=c("")) {
 }
 
 loadLabDataLcMRMIntraAssayQc <- function(labId, filename, ceramideColNames, na, blankTypesColumnRange) {
+  print(paste("Processing lab report", filename))
   intraAssayCalLine1 <- readSubTable(
     labId = labId,
     filename = filename,
@@ -167,6 +168,8 @@ loadLabDataLcMRMIntraAssayQc <- function(labId, filename, ceramideColNames, na, 
     )
   }
   
+  print(paste("Combining results sections!"))
+  
   intraAssayTable <- bind_rows(
     intraAssayCalLine1,
     intraAssayCalLine2,
@@ -206,7 +209,7 @@ loadLabDataAndBindRows <- function(labIds, ceramideColNames, filePrefix="Report 
         na,
         blankTypesColumnRange[blankTypesColumnRange$LabId==.x, ]$Range
       )
-    ) %>% mutate(
+    ) |> mutate(
       LabId=factor(.data$LabId, levels = labIds), 
       Protocol=protocol
     )
@@ -227,10 +230,10 @@ loadAndCombineRingTrialData <- function(nistAveragedConcentrations, reportsDir="
   d_ils_labs <- d_ils |> 
     group_by(LabID, SampleName,Compound) |> 
     summarise(
-      Conc_SP_mean = mean(Conc_SP, na.rm = TRUE), 
-      Conc_MP_mean = mean(Conc_MP, na.rm = TRUE),
-      CV_intra_SP = sd(Conc_SP, na.rm = TRUE)/mean(Conc_SP, na.rm = TRUE) *100,
-      CV_intra_MP = sd(Conc_MP, na.rm = TRUE)/mean(Conc_MP, na.rm = TRUE) * 100
+      Conc_SP_mean = mean(Conc_SP*2, na.rm = TRUE), 
+      Conc_MP_mean = mean(Conc_MP*2, na.rm = TRUE),
+      CV_intra_SP = sd(Conc_SP*2, na.rm = TRUE)/mean(Conc_SP*2, na.rm = TRUE) *100,
+      CV_intra_MP = sd(Conc_MP*2, na.rm = TRUE)/mean(Conc_MP*2, na.rm = TRUE) * 100
     ) |> 
     mutate(Study = "ILS Ceramides (MP)", .before = 1) |> 
     ungroup()

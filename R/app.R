@@ -18,6 +18,8 @@ source("functions_methods.R")
 source("functions_ggpubr-custom.R")
 source("functions_plots.R")
 
+dir.create(outputDir, showWarnings = F, recursive = T)
+
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 
@@ -36,17 +38,21 @@ ui <- fluidPage(
           
           # Horizontal line ----
           tags$hr(),
+          selectInput("protocol", "Protocol", choices=c("Standard","Preferred"), selected = "Standard", multiple = FALSE)
         ),
 
         # Show a plot of the generated distribution
         mainPanel(
           tabsetPanel(
-            tabPanel("Raw Report", tableOutput("rawReport")),
-            tabPanel("Summary", verbatimTextOutput("summary")),
+            tabPanel("Summary", tableOutput("summary")),
+            tabPanel("Comparison", tableOutput("comparison")),
             tabPanel("Calibration Lines", tableOutput("calibrationLines")),
             tabPanel("QC Samples", tableOutput("qcSamples")),
             tabPanel("NIST SRM 1950", tableOutput("nistSrm")),
             tabPanel("NIST YAA", tableOutput("nistYaa")),
+            tabPanel("NIST hTAG", tableOutput("nistHtag")),
+            tabPanel("NIST T1D", tableOutput("nistT1d")),
+            tabPanel("Raw Report", tableOutput("rawReport"))
           )
         )
     )
@@ -64,6 +70,7 @@ server <- function(input, output) {
     # or all rows if selected, will be shown.
     # req(input$labId)
     req(input$file1)
+    req(input$protocol)
     
     # when reading semicolon separated files,
     # having a comma separator causes `read.csv` to error
@@ -76,24 +83,62 @@ server <- function(input, output) {
           reportsToInclude = c("mylab"), 
           ceramideColNames = ceramideColNames, 
           filePrefix = "", 
-          protocol="User", 
+          protocol=input$protocol, 
           reportsDir=reportsDir,
           blankTypes = blankTypesTable,
           na = naValues
-        )
-        reactiveValues$data <- df
+        ) |> mutate(SampleType = forcats::as_factor(as.character(SampleType)))
+        data$table <- df
       },
       error = function(e) {
         # return a safeError if a parsing error occurs
         stop(safeError(e))
       }
     )
-    return(head(df))
+    return(df)
+  })
+  
+  output$summary <- renderTable({
+    req(data$table)
+    data$table |> group_by(LabId, SampleType, ceramideName, isotope) |> summarize(n=n(), min_area=min(area), max_area=max(area))
   })
   
   output$calibrationLines <- renderTable({
-    req(reactiveValues$data)
-    
+    req(data$table)
+    data$table |>
+      filter(SampleType %in% c("Calibration Line 1", "Calibration Line 2"))
+  })
+  
+  # output$calibrationLinesPlot <- 
+  
+  output$qcSamples <- renderTable({
+    req(data$table)
+    data$table |>
+      filter(grepl("QC", SampleType))
+  })
+  
+  output$nistSrm <- renderTable({
+    req(data$table)
+    data$table |>
+      filter(grepl("NIST SRM", SampleType))
+  })
+  
+  output$nistYaa <- renderTable({
+    req(data$table)
+    data$table |>
+      filter(grepl("NIST YAA", SampleType))
+  })
+  
+  output$nistHtag <- renderTable({
+    req(data$table)
+    data$table |>
+      filter(grepl("NIST hTAG", SampleType))
+  })
+  
+  output$nistT1d <- renderTable({
+    req(data$table)
+    data$table |>
+      filter(grepl("NIST T1D", SampleType))
   })
   
 }

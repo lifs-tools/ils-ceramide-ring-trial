@@ -971,7 +971,7 @@ if(params$run_in_targets) {
 } else {
   knitr::include_graphics(here("output/CalibrationLinesAvgMedRangeLog10-with-NISTSRM-AvgRatio.png"))
 }
-fs::file_copy(path = here("output/CalibrationLinesAvgMedRangeLog10-with-NISTSRM-AvgRatio.png"), new_path = here("manuscript/output/FigS01_CalibrationLinesAvgMedRangeLog10-with-NISTSRM-AvgRatio.png"))
+fs::file_copy(path = here("output/CalibrationLinesAvgMedRangeLog10-with-NISTSRM-AvgRatio.png"), new_path = here("manuscript/output/FigS01_CalibrationLinesAvgMedRangeLog10-with-NISTSRM-AvgRatio.png"), overwrite = TRUE)
 ```
 
 # 10. Figure S2: Single Point Quantification of NIST SRM 1950

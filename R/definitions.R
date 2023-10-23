@@ -1,5 +1,7 @@
 require("tidyverse")
 require("ggsci")
+require("ggh4x")
+require("ggrepel")
 
 if(Sys.getenv("DATA_DIR")!="") {
   dataDir <- Sys.getenv("DATA_DIR")
@@ -7,8 +9,11 @@ if(Sys.getenv("DATA_DIR")!="") {
   dataDir <- "data"
 }
 reportsDir <- file.path(dataDir, "reports")
-outputDir <- "output"
-
+if(Sys.getenv("OUTPUT_DIR")!="") {
+  outputDir <- Sys.getenv("OUTPUT_DIR")
+}else{
+  outputDir <- "output"
+}
 
 datasetSummaryColumnNames <- c(
   "LabId",
@@ -46,7 +51,7 @@ ceramideColNames <- c("Sample",
                       "Cer4-h:R1", "Cer4-h:R2", "Cer4-h:R3"
 )
 
-outlierShape <- NA
+outlierShape <- 19
 
 cerIdLookup <- data.frame(
   ceramideId = c("1","2","3","4"),
@@ -61,7 +66,6 @@ standardReportsToInclude <- c(
   "02b",
   "04",
   #"06", # replaced by 18a, which is more complete 
-  #"07",
   #"08", duplicate of 14
   "10a",
   #"11", duplicate of 14
@@ -69,9 +73,6 @@ standardReportsToInclude <- c(
   "14",
   # massive outlier in STD5 replicate 1 for all Ceramides -> remove
   "15",
-  "16",
-  # 1 matrix blank, 2 total blanks, N/F
-  "17a",
   # missing replicates 2 and 3 for NIST samples, matrix blank, total blank, no QC samples
   "18a",
   # matrix blank, total blank, NF
@@ -89,14 +90,14 @@ standardReportsToInclude <- c(
   # missing replicates 2 and 3 for NIST samples, three blank rows, missing replicates 2 and 3
   "24", 
   # matrix blank, total blank, not inj / <LOD for missing values, missing replicates 2 and 3, two-times calibration lines 1 and 2
-  #"25", 
+  # Currently disabled
+  "25", 
    ### REMOVED BEFORE edited by switching STD 4 and 5 rows for calibration line 2
   "27",
   "28",
   "29a",
   "30",
   "31",
-  "32",
   "34", # replicates 2 and 3 are missing
   "36",
   "38"
@@ -109,15 +110,16 @@ preferredReportsToInclude <- c(
   "07",
   "09", # FIA-MRM, table layout is different, HQC and HLQC seem to be too high
   "10b",
-  "13", ### REMOVED BEFORE only raw areas
+  "13", ### REMOVED BEFORE only raw areas, not in required format
   "16",
   "17a",
   # missing replicates 2 and 3 for NIST samples, matrix blank, total blank, no QC samples
-  #"17b", table layout is totally different, sheets missing, not all ceramides included, onl 18:1/16:0, 18:1/18:0 and 18:1/24:0 as labeled
+  #"17b", table layout is totally different, sheets missing, not all ceramides included, only 18:1/16:0, 18:1/18:0 and 18:1/24:0 as labeled
   "20b", 
   ### REMOVED BEFORE has 4 replicates instead of three, removed smallest one, only 1 STD curve, issue with table? Zero value, high var of replicates. Bo: FTT communicated with lab, purple sheet is a differernt non-SOP extraction. #20a is the SOP
-  #"26a", ### QQQ -  REMOVED BEFORE  FIA and QQresults, table layout is different, after communination lab provided peak areas intesities, added to template sheet by Bo 
-  #"26b", ### FIA -  REMOVED BEFORE  FIA and QQresults, table layout is different, after communination lab provided peak areas intesities. added to template sheet by Bo 
+  ### Currently disabled, causing issues with parsing
+  "26a", ### QQQ -  REMOVED BEFORE  FIA and QQresults, table layout is different, after communination lab provided peak areas intesities, added to template sheet by Bo 
+  "26b", ### FIA -  REMOVED BEFORE  FIA and QQresults, table layout is different, after communination lab provided peak areas intesities. added to template sheet by Bo 
   "29b", # UHPSFC different sheet name,
   "32",
   "33", # additional STD dilutions, using only defaults
@@ -196,7 +198,7 @@ mycolorscale <- scale_colour_nejm()
 myfillscale <- scale_fill_nejm()
 
 ################################################################################
-# Nominal concentrations of labeled standards and ratios of light/heavy
+# Nominal concentrations of labeled standards and ratios of non-labeled/labeled
 ################################################################################
 expectedStdsConcentrations <- expectedCalibrationLineConcentrations |>
   left_join(

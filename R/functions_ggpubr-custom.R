@@ -106,8 +106,8 @@
 .label_params_by_group <- function(..., group.ids){
   purrr::map(group.ids,
              function(group.id, ...){.label_params(..., group.id = group.id)},
-             ...) %>%
-    dplyr::bind_rows() #%>%
+             ...) |>
+    dplyr::bind_rows() #|>
   #dplyr::mutate(x = group.ids)
   
 }

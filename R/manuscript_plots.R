@@ -1,3 +1,102 @@
+get_study_stats <- function(d, limit_iqr = 1.5){ 
+  d_res <- d %>%
+    group_by(ceramideName, SampleType) |> 
+    dplyr::summarize(
+      n = n(),
+      n_SOP = length(RatioLipidToIS_mean[Protocol == "SOP"]),
+      RatioLipidToIS_interlabMEAN = mean(RatioLipidToIS_mean, na.rm = FALSE),
+      RatioLipidToIS_interlabSD = sd(RatioLipidToIS_mean, na.rm = FALSE), 
+      RatioLipidToIS_interlabCV = RatioLipidToIS_interlabSD/RatioLipidToIS_interlabMEAN *100,
+      RatioLipidToIS_median_intralabCV = median(RatioLipidToIS_intralabCV, na.rm = FALSE),
+      RatioLipidToIS_interlabMEDIAN = median(RatioLipidToIS_mean, na.rm = FALSE),      
+      RatioLipidToIS_IQR = IQR(RatioLipidToIS_mean, na.rm = FALSE),
+      RatioLipidToIS_limitQ1 = quantile(RatioLipidToIS_mean, 0.25, na.rm = FALSE) -  (RatioLipidToIS_IQR * limit_iqr),
+      RatioLipidToIS_limitQ3 = quantile(RatioLipidToIS_mean, 0.75, na.rm = FALSE) +  (RatioLipidToIS_IQR * limit_iqr),
+      C_SinglePoint_interlabMEAN = mean(C_SinglePoint_mean, na.rm = TRUE),
+      C_SinglePoint_interlabSEM = sd(C_SinglePoint_mean, na.rm = TRUE)/sqrt(n), 
+      C_SinglePoint_interlabSD = sd(C_SinglePoint_mean, na.rm = TRUE), 
+      C_SinglePoint_interlabCV = C_SinglePoint_interlabSD/C_SinglePoint_interlabMEAN *100,
+      C_SinglePoint_median_intralabCV = median(C_SinglePoint_intralabCV, na.rm = FALSE),
+      C_SinglePoint_IQR = IQR(C_SinglePoint_mean, na.rm = TRUE),
+      C_SinglePoint_limitQ1 = quantile(C_SinglePoint_mean, 0.25, na.rm = TRUE) -  (C_SinglePoint_IQR * limit_iqr),
+      C_SinglePoint_limitQ3 = quantile(C_SinglePoint_mean, 0.75, na.rm = TRUE) +  (C_SinglePoint_IQR * limit_iqr),
+      C_Adj_interlabMEAN = mean(C_Adj_mean, na.rm = TRUE),
+      C_Adj_interlabMEDIAN = median(C_Adj_mean, na.rm = TRUE),
+      C_Adj_interlabSD = sd(C_Adj_mean, na.rm = TRUE), 
+      C_Adj_interlabMAD = mad(C_Adj_mean, na.rm = TRUE), 
+      C_Adj_interlabSEM = sd(C_Adj_mean, na.rm = TRUE)/sqrt(n), 
+      C_Adj_interlabCV = C_Adj_interlabSD/C_Adj_interlabMEAN *100,
+      C_Adj_interlabRCV = C_Adj_interlabMAD/C_Adj_interlabMEDIAN *100,
+      C_Adj_C16_interlabMEAN = mean(C_Adj_C16_mean, na.rm = TRUE),
+      C_Adj_C16_interlabSD = sd(C_Adj_C16_mean, na.rm = TRUE), 
+      C_Adj_C16_interlabCV = C_Adj_C16_interlabSD/C_Adj_C16_interlabMEAN *100,
+      C_Adj_C24_interlabMEAN = mean(C_Adj_C24_mean, na.rm = TRUE),
+      C_Adj_C24_interlabSD = sd(C_Adj_C24_mean, na.rm = TRUE), 
+      C_Adj_C24_interlabCV = C_Adj_C24_interlabSD/C_Adj_C24_interlabMEAN *100,
+      C_Adj_IQR = IQR(C_Adj_mean, na.rm = TRUE),
+      C_Adj_limitQ1 = quantile(C_Adj_mean, 0.25, na.rm = TRUE) -  (C_Adj_IQR * limit_iqr),
+      C_Adj_limitQ3 = quantile(C_Adj_mean, 0.75, na.rm = TRUE) +  (C_Adj_IQR * limit_iqr),
+      C_Adj_median_intralabCV = median(C_Adj_intralabCV, na.rm = TRUE)) |> 
+    ungroup() |> 
+    arrange(SampleType)
+  d_res
+}
+
+# Flag outliers, based on Tukey’s 3xIQR
+flag_outlier <- function(data, include_calibdata, limit_iqr = 1.5){
+  data <- data |>
+    group_by(ceramideName, SampleType) %>% 
+    mutate(
+      IQR_sp = IQR(C_SinglePoint_mean, na.rm = TRUE),
+      Q1_sp = quantile(C_SinglePoint_mean, 0.25, na.rm = TRUE),
+      Q3_sp = quantile(C_SinglePoint_mean, 0.75, na.rm = TRUE), 
+      IQR_mp = IQR(C_Adj_mean, na.rm = TRUE),
+      Q1_mp = quantile(C_Adj_mean, 0.25, na.rm = TRUE),
+      Q3_mp = quantile(C_Adj_mean, 0.75, na.rm = TRUE), 
+      Outlier_sp = !between(C_SinglePoint_mean,(Q1_sp - limit_iqr*IQR_sp),(Q3_sp + limit_iqr*IQR_sp)), 
+      Outlier_mp = !between(C_Adj_mean,(Q1_mp - limit_iqr*IQR_mp),(Q3_mp + limit_iqr*IQR_mp))
+    ) |> 
+    ungroup()
+  data
+}
+
+sig_annot = function(x){
+  if(x < 1e-9) {"p < 1e-9"}
+  else if(x < 1e-4) {paste0("p = ", formatC(x, format = "e", digits = 2))}
+  else if(x <= 1) {paste0("p = ", formatC(x, digits = 4))}      
+  else{NA}
+}
+
+# formula standard uncertainty (Ghorasaini et al, Analytical Chemistry, 2021)
+std_uncert <-
+  function(x)
+    sqrt(pi / (2 * length(x))) * mad(x, constant = 1.4826, na.rm = TRUE)
+
+labScatterPlot <- function(sample_type, d_samples, d_assays, variable = "C_Adj", normalisation_sample = "SRM", plot_file_prefix) {
+  print(paste("Creating plots of", sample_type, "normalized on SRM 1950"))
+  C16_max <- NA
+  C18_max <- NA
+  C24_max <- NA
+  C241_max <- NA
+  if (variable=="C_Adj") {
+    C16_max <- d_samples |> filter(ceramideName=="Cer 18:1;O2/16:0") |> summarise(C16_max=max(na.omit(C_Adj_mean))) |> unlist()
+    C18_max <- d_samples |> filter(ceramideName=="Cer 18:1;O2/18:0") |> summarise(C18_max=max(na.omit(C_Adj_mean))) |> unlist()
+    C24_max <- d_samples |> filter(ceramideName=="Cer 18:1;O2/24:0") |> summarise(C24_max=max(na.omit(C_Adj_mean))) |> unlist()
+    C241_max <- d_samples |> filter(ceramideName=="Cer 18:1;O2/24:1") |> summarise(C241_max=max(na.omit(C_Adj_mean))) |> unlist()
+  } else {
+    C16_max <- d_samples |> filter(ceramideName=="Cer 18:1;O2/16:0") |> summarise(C16_max=max(na.omit(C_SinglePoint_mean))) |> unlist()
+    C18_max <- d_samples |> filter(ceramideName=="Cer 18:1;O2/18:0") |> summarise(C18_max=max(na.omit(C_SinglePoint_mean))) |> unlist()
+    C24_max <- d_samples |> filter(ceramideName=="Cer 18:1;O2/24:0") |> summarise(C24_max=max(na.omit(C_SinglePoint_mean))) |> unlist()
+    C241_max <- d_samples |> filter(ceramideName=="Cer 18:1;O2/24:1") |> summarise(C241_max=max(na.omit(C_SinglePoint_mean))) |> unlist()
+  }
+  p1 <- plot_labscatter(d_samples = d_samples, d_assays = d_assays, variable = variable, labid_col = "LabNum", sample_type = sample_type, normalisation_sample = NULL, excluded_labs = "", save_plot = FALSE, C16_max = C16_max, C18_max = C18_max, C24_max = C24_max, C241_max = C241_max)
+  p2 <- plot_labscatter(d_samples = d_samples, d_assays = d_assays, variable = variable, labid_col = "LabNum", sample_type = sample_type, normalisation_sample = normalisation_sample, excluded_labs = "", save_plot = FALSE, C16_max = C16_max, C18_max = C18_max, C24_max = C24_max, C241_max = C241_max)
+  
+  p_comb <- p1$plt + p2$plt
+  
+  ggsave(plot = p_comb, filename = here("manuscript/output", glue("{plot_file_prefix}_{variable}_{sample_type}_combined_beforeafterNorm_to_{normalisation_sample}.png")), device = "png", dpi = 600, width = 290, height =210, units = "mm")
+  list(p_comb=p_comb, p1=p1, p2=p2)
+}
 
 # Plotting all samples (with replicate StDev as error bars) of all labs. 
 plot_labscatter <- function(d_samples, d_assays, variable, sample_type, labid_col, normalisation_sample = NULL, 
@@ -29,19 +128,20 @@ plot_labscatter <- function(d_samples, d_assays, variable, sample_type, labid_co
       group_by(ceramideName, LabId) |>  
       mutate(!!ensym(var_meanreplicates) := !!ensym(var_meanreplicates)/mean(lab_mean_conc[SampleType == normalisation_sample]) * (!!sym(paste0(variable, "_interlabMEAN")))) 
     
-    View(d_samples)
+    write_csv(x = d_samples, file = here(glue("manuscript/output/Stats_plot_labscatter_{sample_type}.csv")))
+    #View(d_samples)
   }
   
   if(variable == "C_Adj"){
     d_assays_filt <- flag_outlier(d_assays) |> filter(!Outlier_mp)
     d_stat_all <- get_study_stats(d_assays |> filter(SampleType == sample_type))
     d_stat_filt <- get_study_stats(d_assays_filt |> filter(SampleType == sample_type))
-    conc_text <- "calibration curve"
+    conc_text <- "\U003BCmol/L (multi-point calibration)"
   } else if(variable == "C_SinglePoint"){
     d_assays_filt <- flag_outlier(d_assays) |> filter(!Outlier_sp)
     d_stat_all <- get_study_stats(d_assays |> filter(SampleType == sample_type))
     d_stat_filt <- get_study_stats(d_assays_filt |> filter(SampleType == sample_type))
-    conc_text <- "ISTD"
+    conc_text <- "\U003BCmol/L (single-point calibration)"
   } else {
     stop("Variable not present or supported!")
   }
@@ -92,7 +192,7 @@ plot_labscatter <- function(d_samples, d_assays, variable, sample_type, labid_co
                        expand = expansion(mult = c(0,0.01)))+
     scale_fill_manual(values = c("SOP" = "#faafaf", "OTHER" = "#b4c5fa")) +
     scale_color_manual(values = c("SOP" = "#e30202", "OTHER" = "darkblue"))+
-    labs(x = "Laboratory", y = glue("\U003BCmol/L ({conc_text})")) + 
+    labs(x = "Laboratory", y = glue("{conc_text}")) + 
     labs(color=NULL, fill = NULL)+
     theme_classic(base_size = 8) +  
     ggh4x::facetted_pos_scales(
@@ -121,41 +221,43 @@ plot_labscatter <- function(d_samples, d_assays, variable, sample_type, labid_co
 
 # Plotting all samples (with replicate StDev as error bars) of all labs. 
 plot_comparison_norm <- function(d_assays, variable, sample_type, normalisation_sample = NULL, 
-                            excluded_labs = "", save_plot = TRUE, filename_prefix){
+                            excluded_labs = "", save_plot = TRUE, filename_prefix,
+                            selected_ceramides = c("Cer 18:1;O2/16:0", "Cer 18:1;O2/18:0", "Cer 18:1;O2/24:0", "Cer 18:1;O2/24:1"),
+                            pos = ggbeeswarm::position_beeswarm(dodge.width = 0.07, method = "center")){
   
   var_meanreplicates <- paste0(variable, "_mean")
+  var_meanreplicates_norm <- paste0(var_meanreplicates, "_norm")
   
   d_assays <- d_assays |> filter(!(LabId %in% excluded_labs))
   
   if(variable == "C_Adj"){
   d_stat_filt <- get_study_stats(flag_outlier(d_assays) |> filter(!Outlier_mp))
+    y_label <- "\U003BCmol/L (multi-point calibration)"
   } else if(variable == "C_SinglePoint"){
   d_stat_filt <- get_study_stats(flag_outlier(d_assays) |> filter(!Outlier_sp))
+    y_label <- "\U003BCmol/L (single-point calibration)"
   } else {stop("Variable not present or supported!")}
   
   d_assays <- d_assays |>
   left_join(d_stat_filt |> filter(SampleType == "SRM") |> select(ceramideName, C_SinglePoint_interlabMEAN, C_Adj_interlabMEAN)) |> 
   group_by(ceramideName, LabId) |>
-  mutate(!!sym(paste0(var_meanreplicates, "_norm")) := !!sym(var_meanreplicates)/median((!!sym(var_meanreplicates))[SampleType == normalisation_sample]) * (!!sym(paste0(variable, "_interlabMEAN")))) 
-  
+  mutate(!!sym(var_meanreplicates_norm) := !!sym(var_meanreplicates)/median((!!sym(var_meanreplicates))[SampleType == normalisation_sample]) * (!!sym(paste0(variable, "_interlabMEAN")))) 
 
   d_plot <- d_assays |> 
-    filter(SampleType %in% sample_type) |>
-    select(SampleType, ceramideName, LabId, Protocol, C_Adj_mean, C_Adj_mean_norm) |> 
-    pivot_longer(cols = C_Adj_mean:C_Adj_mean_norm, names_to = "norm_type",values_to = "Concentration")
+    filter(SampleType %in% sample_type, ceramideName %in% selected_ceramides) |>
+    select(SampleType, ceramideName, LabId, Protocol, !!sym(var_meanreplicates), !!sym(var_meanreplicates_norm)) |> 
+    pivot_longer(cols = !!sym(var_meanreplicates):!!sym(var_meanreplicates_norm), names_to = "norm_type",values_to = "Concentration")
 
   d_plot_stats <- d_plot |> 
     group_by(SampleType, ceramideName) |> 
     summarise(
-      MEAN = mean(Concentration[norm_type=="C_Adj_mean"]),
-      MEAN_norm = mean(Concentration[norm_type=="C_Adj_mean_norm"]),
-      CV = sd(Concentration[norm_type=="C_Adj_mean"])/mean(Concentration[norm_type=="C_Adj_mean"])*100,
-      CV_norm = sd(Concentration[norm_type=="C_Adj_mean_norm"])/mean(Concentration[norm_type=="C_Adj_mean_norm"])*100
+      MEAN = mean(Concentration[norm_type==var_meanreplicates]),
+      MEAN_norm = mean(Concentration[norm_type==var_meanreplicates_norm]),
+      CV = sd(Concentration[norm_type==var_meanreplicates])/mean(Concentration[norm_type==var_meanreplicates])*100,
+      CV_norm = sd(Concentration[norm_type==var_meanreplicates_norm])/mean(Concentration[norm_type==var_meanreplicates_norm])*100
     )
   
-  write_csv(x = d_plot_stats, file = here("manuscript/output/Stats_norm.csv"))
-  
-  
+  write_csv(x = d_plot_stats, file = here(glue("manuscript/output/Stats_norm_{sample_type}.csv")))
     
   set.seed(1334)
   pos_points <- position_jitterdodge(dodge.width = 0.75, jitter.width = 0.2 )
@@ -188,13 +290,13 @@ plot_comparison_norm <- function(d_assays, variable, sample_type, normalisation_
     scale_color_manual(values = c("SOP" = "#e30202", "OTHER" = "darkblue"), labels=c("SOP", "OTHER")) +
     expand_limits(y=0) +
     
-    scale_x_discrete(labels = c("C_Adj_mean" = "None",
-                                "C_Adj_mean_norm" = "SRM1950")) +
+    scale_x_discrete(labels = c("None",
+                                "SRM1950")) +
 
     #scale_linetype_manual(values = c("SOP" = "solid", "OTHER" = "dotted"))+
     labs(color=NULL, fill = NULL)+
     theme_classic(base_size = 7) +
-    labs(y="\U003BCmol/L (calibration curve)", x="Recalibration")+
+    labs(y=y_label, x="Recalibration") +
     #scale_x_discrete(drop = FALSE, expand = expansion(mult = c(.03, .05))) +
     theme(
       axis.text.x = element_text(size = 6, face = "plain", angle = 0),
