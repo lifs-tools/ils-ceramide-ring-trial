@@ -496,19 +496,6 @@
       ],
       "Hash": "e8a1e41acf02548751f45c718d55aa6a"
     },
-    "crosstalk": {
-      "Package": "crosstalk",
-      "Version": "1.2.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R6",
-        "htmltools",
-        "jsonlite",
-        "lazyeval"
-      ],
-      "Hash": "6aa54f69598c32177e920eb3402e8293"
-    },
     "curl": {
       "Package": "curl",
       "Version": "5.0.2",
@@ -802,16 +789,6 @@
         "methods"
       ],
       "Hash": "15e9634c0fcd294799e9b2e929ed1b86"
-    },
-    "getopt": {
-      "Package": "getopt",
-      "Version": "1.20.3",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "stats"
-      ],
-      "Hash": "ad68e3263f0bc9269aab8c2039440117"
     },
     "ggbeeswarm": {
       "Package": "ggbeeswarm",
@@ -1336,16 +1313,6 @@
       ],
       "Hash": "0b8a6d63c8770f02a8b5635f3c431e6b"
     },
-    "lazyeval": {
-      "Package": "lazyeval",
-      "Version": "0.2.2",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R"
-      ],
-      "Hash": "d908914ae53b04d4c0c0fd72ecc35370"
-    },
     "lifecycle": {
       "Package": "lifecycle",
       "Version": "1.0.3",
@@ -1564,18 +1531,6 @@
       ],
       "Hash": "273a6bb4a9844c296a459d2176673270"
     },
-    "optparse": {
-      "Package": "optparse",
-      "Version": "1.7.3",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "getopt",
-        "methods"
-      ],
-      "Hash": "aa4a7717b5760a769c7fd3d34614f2a2"
-    },
     "parallelly": {
       "Package": "parallelly",
       "Version": "1.36.0",
@@ -1670,38 +1625,6 @@
         "withr"
       ],
       "Hash": "a7f498a1b2a4a6816148e498509f6e1d"
-    },
-    "plotly": {
-      "Package": "plotly",
-      "Version": "4.10.2",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "RColorBrewer",
-        "base64enc",
-        "crosstalk",
-        "data.table",
-        "digest",
-        "dplyr",
-        "ggplot2",
-        "htmltools",
-        "htmlwidgets",
-        "httr",
-        "jsonlite",
-        "lazyeval",
-        "magrittr",
-        "promises",
-        "purrr",
-        "rlang",
-        "scales",
-        "tibble",
-        "tidyr",
-        "tools",
-        "vctrs",
-        "viridisLite"
-      ],
-      "Hash": "6c00a09ba7d34917d9a3e28b15dd74e3"
     },
     "polynom": {
       "Package": "polynom",
