@@ -1,11 +1,14 @@
 require("tidyverse")
 require("ggsci")
 
-if(Sys.getenv("REPORTS_DIR")!="") {
-  reportsDir <- Sys.getenv("REPORTS_DIR")
+if(Sys.getenv("DATA_DIR")!="") {
+  dataDir <- Sys.getenv("DATA_DIR")
 }else{
-  reportsDir <- "data"
+  dataDir <- "data"
 }
+reportsDir <- file.path(dataDir, "reports")
+outputDir <- "output"
+
 
 datasetSummaryColumnNames <- c(
   "LabId",
@@ -54,7 +57,7 @@ calibrationLineSamplesToUse <-
  c("STD 1", "STD 2", "STD 3", "STD 4", "STD 5", "STD 6")
 
 standardReportsToInclude <- c(
-  "02a", # remove for final evaluation
+  #"02a", # removed for final evaluation, replaced by #02b which has now triplicate injections
   "02b",
   "04",
   #"06", # replaced by 18a, which is more complete 
@@ -76,7 +79,9 @@ standardReportsToInclude <- c(
   # matrix blank, total blank
   "19",
   # missing replicates 2 and 3 for NIST samples (NA), 3 x total blank, 3 x matrix blank, NA
-  #"21", # only three qc samples instead of 6 with 3 replicates
+  "20a", 
+  # no ISTD signals for sample yA-A 4, set all to empty
+  "21", ### REMOVED BEFORE  only three qc samples instead of 6 with 3 replicates
   # missing replicates 2 and 3 for NIST samples, no blanks, empty for missing values
   "22",
   # renamed sheet "Main LC-MRM-Intra Assay QC Res" to "LC-MRM - Intra Assay QC Res", three blank rows, N/A
@@ -85,7 +90,7 @@ standardReportsToInclude <- c(
   "24", 
   # matrix blank, total blank, not inj / <LOD for missing values, missing replicates 2 and 3, two-times calibration lines 1 and 2
   #"25", 
-  # edited by switching STD 4 and 5 rows for calibration line 2
+   ### REMOVED BEFORE edited by switching STD 4 and 5 rows for calibration line 2
   "27",
   "28",
   "29a",
@@ -104,11 +109,17 @@ preferredReportsToInclude <- c(
   "07",
   "09", # FIA-MRM, table layout is different, HQC and HLQC seem to be too high
   "10b",
-  #"13", only raw areas
+  "13", ### REMOVED BEFORE only raw areas
+  "16",
+  "17a",
+  # missing replicates 2 and 3 for NIST samples, matrix blank, total blank, no QC samples
   #"17b", table layout is totally different, sheets missing, not all ceramides included, onl 18:1/16:0, 18:1/18:0 and 18:1/24:0 as labeled
-  # "20", # has 4 replicates instead of three, removed smallest one
-  #"26", FIA results, table layout is different
+  "20b", 
+  ### REMOVED BEFORE has 4 replicates instead of three, removed smallest one, only 1 STD curve, issue with table? Zero value, high var of replicates. Bo: FTT communicated with lab, purple sheet is a differernt non-SOP extraction. #20a is the SOP
+  #"26a", ### QQQ -  REMOVED BEFORE  FIA and QQresults, table layout is different, after communination lab provided peak areas intesities, added to template sheet by Bo 
+  #"26b", ### FIA -  REMOVED BEFORE  FIA and QQresults, table layout is different, after communination lab provided peak areas intesities. added to template sheet by Bo 
   "29b", # UHPSFC different sheet name,
+  "32",
   "33", # additional STD dilutions, using only defaults
   "35",
   "37"
@@ -119,7 +130,7 @@ singlePointCalibrationSamples <- c()
 CalibrationLineSamples <- c()
 
 expectedHeavyStdsConcentrations <-
-  read_csv(file.path(reportsDir, "definitions", "labeledISConcentrations.csv"),
+  read_csv(file.path(dataDir, "definitions", "labeledISConcentrations.csv"),
     col_types = cols(
       ceramideName = col_character(),
       ceramideId = col_character(),
@@ -128,7 +139,7 @@ expectedHeavyStdsConcentrations <-
   ) |> rename(ISConcentration = Concentration)
 
 expectedLightStdsConcentrations <-
-  read_csv(file.path(reportsDir, "definitions", "nonlabeledStandardsConcentrations.csv"),
+  read_csv(file.path(dataDir, "definitions", "nonlabeledStandardsConcentrations.csv"),
     col_types = cols(
       ceramideName = col_character(),
       ceramideId = col_character(),
@@ -137,7 +148,7 @@ expectedLightStdsConcentrations <-
   )
 
 expectedCalibrationLineConcentrations <-
-  read_csv(file.path(reportsDir, "definitions", "calibrationLineConcentrations.csv"),
+  read_csv(file.path(dataDir, "definitions", "calibrationLineConcentrations.csv"),
     col_types = cols(
       ceramideName = col_character(),
       ceramideId = col_character(),
@@ -150,7 +161,7 @@ expectedCalibrationLineConcentrations <-
   )
 
 instruments <- 
-  read_csv(file.path(reportsDir, "definitions", "instruments.csv"),
+  read_csv(file.path(dataDir, "definitions", "instruments.csv"),
     col_types = cols(
       LabId = col_character(),
       Instrument = col_character(),
@@ -159,7 +170,7 @@ instruments <-
   )
 
 blankTypesTable <- 
-  read_csv(file.path(reportsDir, "definitions", "blanktypes.csv"),
+  read_csv(file.path(dataDir, "definitions", "blanktypes.csv"),
     col_types = cols(
       LabId = col_character(),
       BlankReportType = col_character()

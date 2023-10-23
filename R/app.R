@@ -9,8 +9,8 @@
 library(shiny)
 library(progress)
 library(tidyverse)
-reportsDir <- "../data"
-Sys.setenv("REPORTS_DIR"=reportsDir)
+dataDir <- "../data"
+Sys.setenv("DATA_DIR"=dataDir)
 source("definitions.R")
 source("functions_io.R")
 source("functions_steps.R")

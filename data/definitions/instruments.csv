@@ -5,11 +5,13 @@ LabId,Vendor,Instrument,MassAnalyzerType
 03,Bruker,Bruker EVOQ Elite,QQQ
 04,Sciex,QTRAP 6500+,QQQ
 05,Sciex,QTRAP 6500+,QQQ
+06,Unknown,Unknown,Unknown
 07,Thermo,QE,Orbitrap
 08,Sciex,QTRAP 5500,QQQ
 09,Sciex,QTRAP 5500,QQQ
 10a,Agilent,6495,QQQ
 10b,Agilent,6495,QQQ
+11,Unknown,Unknown,Unknown
 12,Sciex,QTRAP 6500,QQQ
 13,Sciex,QTRAP 6500+,QQQ
 14,Sciex,QTRAP 5500,QQQ
@@ -21,6 +23,8 @@ LabId,Vendor,Instrument,MassAnalyzerType
 18b,Waters,Xevo TQ-S,QQQ
 19,Agilent,6490,QQQ
 20,Agilent,6460,QQQ
+20a,Agilent,6460,QQQ
+20b,Agilent,6460,QQQ
 21,Sciex,QTRAP 6500,QQQ
 22,Sciex,QTRAP 6500+,QQQ
 23,Agilent,6495,QQQ

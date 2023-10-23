@@ -1,5 +1,5 @@
 ceramideName,ceramideId,isotope,Concentration,Unit
-"Cer 18:1;O2/16:0",1,h,0.125,pmol/µL [µM]
-"Cer 18:1;O2/18:0",2,h,0.050,pmol/µL [µM]
-"Cer 18:1;O2/24:0",3,h,1.500,pmol/µL [µM]
-"Cer 18:1;O2/24:1",4,h,0.500,pmol/µL [µM]
+"Cer 18:1;O2/16:0",1,h,0.125,µmol/L
+"Cer 18:1;O2/18:0",2,h,0.050,µmol/L
+"Cer 18:1;O2/24:0",3,h,1.500,µmol/L
+"Cer 18:1;O2/24:1",4,h,0.500,µmol/L

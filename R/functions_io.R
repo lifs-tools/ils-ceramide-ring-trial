@@ -212,12 +212,13 @@ loadLabDataAndBindRows <- function(labIds, ceramideColNames, filePrefix="Report 
     )
 }
 
-loadAndCombineRingTrialData <- function(nistAveragedConcentrations) {
-  # d_ils_orig <- read_csv(here("data/Cer-ILS-Ringtrial_FullDataset_SLING_V1.csv"))
-  d_bowden_orig <- read_csv(here("data/ring-trial-comparison/Bowden_InterlabStudy_Ceramides_Conc.csv"))
-  d_quehenberger_orig <- read_csv(here("data/ring-trial-comparison/Quehenberger_Ceramides_Conc.csv"))
-  d_biocrates <- read_csv(here("data/ring-trial-comparison/Biocrates_Ringtrial_Ceramides.csv"))
-  d_sum_giera_orig <- read_csv(here("data/ring-trial-comparison/Giera_MEDM_COD_V1.csv"))
+loadAndCombineRingTrialData <- function(nistAveragedConcentrations, reportsDir="data") {
+  # d_ils_orig <- read_csv(here:here("data/Cer-ILS-Ringtrial_FullDataset_SLING_V1.csv"))
+  d_bowden_orig <- read_csv(file.path(reportsDir, "ring-trial-comparison","Bowden_InterlabStudy_Ceramides_Conc.csv"))
+  d_quehenberger_orig <- read_csv(file.path(reportsDir, "ring-trial-comparison","Quehenberger_Ceramides_Conc.csv"))
+  d_biocrates <- read_csv(file.path(reportsDir, "ring-trial-comparison","Biocrates_Ringtrial_Ceramides.csv"))
+  d_sum_giera_orig <- read_csv(file.path(reportsDir, "ring-trial-comparison","Giera_MEDM_COD_V1.csv"))
+  
   d_ils <- nistAveragedConcentrations |> 
     dplyr::select(LabID = LabId, SampleName = SampleType, Replicate = replicate, 
                   Compound = ceramideName, Protocol, MassAnalyzer = MassAnalyzerType, 
