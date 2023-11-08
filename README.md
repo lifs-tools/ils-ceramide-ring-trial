@@ -97,7 +97,7 @@ Please [file an issue](https://github.com/lifs-tools/ils-ceramide-ring-trial/iss
 
 # Acknowledgements
 
-We would like to thank all members of the International Lipidomics Society's interest group for Reference materials and biological reference ranges for their support and valuable input and all participants of the ring trial for their feedback and patience.
+We would like to thank all members of the International Lipidomics Society's [interest group for Reference materials and biological reference ranges](https://lipidomicssociety.org/interest_groups/reference-materials-and-biological-reference-ranges/) for their support and valuable input and all participants of the ring trial for their feedback and patience.
 
 # Inquiring about your lab id
 
@@ -106,13 +106,19 @@ Please note that the data analysis team had no access to lab identities due to t
 # References
 
 Main publication
+
 [1] TBD
 
 ---
 
 [2] A. Gustavo González, M. Ángeles Herrador. A practical guide to analytical method validation, including measurement uncertainty and accuracy profiles. TrAC Trends in Analytical Chemistry 2007;26(3). doi: 10.1016/j.trac.2007.01.009
+
 [3] FDA, Bioanalytical Method Validation - Guidance for Industry. 2018 May. https://www.fda.gov/files/drugs/published/Bioanalytical-Method-Validation-Guidance-for-Industry.pdf 
+
 [4] DA Armbruster, T Pry. Limit of blank, limit of detection and limit of quantitation. Clin Biochem Rev. 2008 Aug;29 Suppl 1(Suppl 1):S49-52. https://pubmed.ncbi.nlm.nih.gov/18852857
+
 [5] V. Barwick (Ed), Eurachem/CITAC Guide: Guide to Quality in Analytical Chemistry: An Aid to Accreditation (3rd ed. 2016). ISBN 978-0-948926-32-7. Available from https://www.eurachem.org.
+
 [6] B. Magnusson and U. Örnemark (eds.) Eurachem Guide: The Fitness for Purpose of Analytical Methods – A Laboratory Guide to Method Validation and Related Topics, (2nd ed. 2014). ISBN 978-91-87461-59-0. Available from www.eurachem.org.
+
 [7] D. Kauhanen, M. Sysi-Ah, KM. Koistinen, R. Laaksonen, J. Sinisalo, K. Ekroos. Development and validation of a high-throughput LC-MS/MS assay for routine measurement of molecular ceramides. Anal Bioanal Chem. 2016 May;408(13):3475-83. doi: 10.1007/s00216-016-9425-z
