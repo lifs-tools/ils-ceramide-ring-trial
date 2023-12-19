@@ -2,6 +2,7 @@ readAssayTables <- function(standardReportsToInclude,
                             preferredReportsToInclude, 
                             ceramideColNames,
                             reportsDir,
+                            outputDir,
                             na,
                             blankTypes) {
   print(paste("Creating Preferred Method Reports Table"))
@@ -28,6 +29,7 @@ readAssayTables <- function(standardReportsToInclude,
   print(paste("Combining Method Reports Tables"))
   # combine standard and preferred protocols
   intraAssayTable <- bind_rows(intraAssayTable, preferredIntraAssayTable) |> as_tibble()
+  readr::write_csv(intraAssayTable, file.path(outputDir, "intraAssayTable.csv"))
   
   filteredIntraAssayTable <- intraAssayTable |>
     filter(LabId != "14" |

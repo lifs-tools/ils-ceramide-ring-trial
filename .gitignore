@@ -7,6 +7,5 @@
 _targets
 .RDatabak
 figures
-*.png
 .DS_store
-output
+*.xlsx

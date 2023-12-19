@@ -74,9 +74,14 @@ list(
       preferredReports,
       ceramideColumnNames,
       reportsDirectory,
+      outputDirectory,
       naValueDefaults,
       blankTypes
     )
+  ),
+  tar_target(
+    intraAssayTableOutput,
+    readr::write_csv(intraAssayTable, file.path(outputDirectory, "intraAssayTableFiltered.csv"))
   ),
   ################################################################################
   # Stop execution if we have any unassigned instruments
