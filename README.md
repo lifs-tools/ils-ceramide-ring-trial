@@ -87,6 +87,15 @@ The `R` folder contains reusable portions of code used within the evaluation wor
 
 The file `R/definitions.R` contains configurable options for data input, calibration curve calculation, NA value definitions, ceramide names and plotting defaults. 
 
+### Manuscript folder
+
+The `manuscript` folder contains additional data used by the `manuscript-figures-tables.Rmd` Rmarkdown notebook that was used as the last step in the targets pipeline to generate figures, tables and supplementary files for use in the final manuscript. The notebook uses the data created by the previous pipeline steps and combines them with detailed data from the other ring trials for comparison.
+
+### Supplementary Data
+
+To simplify review and comparison of the raw and quantified values for all labs, we provide the file `Suppl table concentration values.xlsx`.
+This spreadsheet contains three result sheets: `Results table 1` with the full dataset of all labs, `Results table 2`, which reports mean and SD of injection replicates and `Results table 3`, which reports mean and SD of extraction replicates (injection replicates averaged). Please see the `Legend` sheet for an explanation of the column headers and remarks concerning missing values.
+
 ## Contributors
 
 - Nils Hoffmann - data integration workflow and plots
