@@ -100,6 +100,7 @@ This spreadsheet contains three result sheets: `Results table 1` with the full d
 
 - Nils Hoffmann - data integration workflow and plots
 - Bo J. Burla - ring trial comparison and plots
+- Federico T. Torta - participating lab data, supplementary tables
 
 # Help & Support
 
