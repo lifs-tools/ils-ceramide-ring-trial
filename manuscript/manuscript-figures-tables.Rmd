@@ -277,8 +277,8 @@ d_stat_all2 <- get_study_stats(d_assays) |>
     Matrix = SampleType,
     Ceramide = ceramideName,
     'N (All)' = n,
-    
     '\U003BCmol/L (All)\n(mean)' = C_Adj_interlabMEAN,
+    '\U003BCmol/L (All)\n(SD)' = C_Adj_interlabSD,
     '\U003BCmol/L (All)\n(median)' = C_Adj_interlabMEDIAN,
     '%CV (All)' = C_Adj_interlabCV,
     '%RCV (All)' = C_Adj_interlabRCV
@@ -290,6 +290,7 @@ d_stat_filt2 <- d_stat_filt_mp |>
     Ceramide = ceramideName,
     'N (Filt)' = n,
     '\U003BCmol/L (Filt)\n(mean)' = C_Adj_interlabMEAN,
+    '\U003BCmol/L (Filt)\n(SD)' = C_Adj_interlabSD,
     '\U003BCmol/L (Filt)\n(median)' = C_Adj_interlabMEDIAN,
     '%CV (Filt)' = C_Adj_interlabCV,
     '%RCV (Filt)' = C_Adj_interlabRCV
@@ -334,95 +335,99 @@ p_fig1
 Molar concentrations derived from single point internal standard (ISTD) vs. calibration curve-based quantifications. The diagonal line indicates equal results between single point (horizontal axis) and calibration curve-based quantification (vertical axis). Outlier measurements were removed for each ceramide species reference plasma (see Figure 1 and text). NIST SRM 1950 (SRM, blue); hypertriglyceridemic (hTAG, red), diabetic (DB, purple), and African American (YAA, green), which are part of NIST RM 8231.
 
 ```{r fig02-plot, fig.height=5, fig.width=12, out.width="100%"}
-d_assays_filt <- flag_outlier(d_assays, limit_iqr = limit_iqr) |> filter(!Outlier_sp, !Outlier_mp)
 
-d_assays_filt$SampleType <- forcats::fct_relevel(d_assays_filt$SampleType, c("DB","hTAG","YAA","SRM"))
-
-# p2 <- ggplot(d_assays_filt  |> arrange(SampleType) , aes(x = C_SinglePoint_mean, y = C_Adj_mean, color = SampleType, fill = SampleType)) +
-p2 <-
-  ggplot(
-    d_assays_filt  |> arrange(SampleType) ,
-    aes(
-      x = C_SinglePoint_mean,
-      y = C_Adj_mean,
-      color = SampleType,
-      fill = SampleType
+plot_single_vs_multipoint <- function(data, xy_lim) {
+  p <-
+    ggplot(
+      data  |> arrange(SampleType) ,
+      aes(
+        x = C_SinglePoint_mean,
+        y = C_Adj_mean,
+        color = SampleType,
+        fill = SampleType
+      )
+    ) +
+    geom_abline(
+      slope = 1,
+      intercept = 0,
+      color = "#6c9694",
+      size = .3,
+      linetype = "longdash"
+    ) +
+    geom_point(
+      shape = 21,
+      stroke = 0.33,
+      size = 1.2,
+      alpha = .6
+    ) +
+    facet_wrap(vars(ceramideName), scales = "free", ncol = 4) +
+    #stat_smooth(method = "lm", aes( x = C_SinglePoint, y = C_Adj), inherit.aes = FALSE) +
+    scale_x_continuous(limits = c(0, NA)) +
+    scale_y_continuous(limits = c(0, NA)) +
+    
+    labs(x = "\U003BCmol/L (single-point calibration)", y = "\U003BCmol/L (multi-point calibration)") +
+    facetted_pos_scales(
+      y = list(
+        ceramideName == "Cer 18:1;O2/16:0" ~ scale_y_continuous(limits = c(0, xy_lim[1])),
+        ceramideName == "Cer 18:1;O2/18:0" ~ scale_y_continuous(limits = c(0, xy_lim[2])),   
+        ceramideName == "Cer 18:1;O2/24:0" ~ scale_y_continuous(limits = c(0, xy_lim[3])),
+        ceramideName == "Cer 18:1;O2/24:1" ~ scale_y_continuous(limits = c(0, xy_lim[4]))
+      ),
+      x = list(
+        ceramideName == "Cer 18:1;O2/16:0" ~ scale_x_continuous(limits = c(0, xy_lim[1])),
+        ceramideName == "Cer 18:1;O2/18:0" ~ scale_x_continuous(limits = c(0, xy_lim[2])),
+        ceramideName == "Cer 18:1;O2/24:0" ~ scale_x_continuous(limits = c(0, xy_lim[3])),
+        ceramideName == "Cer 18:1;O2/24:1" ~ scale_x_continuous(limits = c(0, xy_lim[4]))
+      )
+    ) + 
+    scale_color_manual(
+      values = c(
+        "SRM" = "#0791fa",
+        "hTAG" = "red",
+        "YAA" = "#02ba83",
+        "DB" = "#a013b0"
+      ),
+      breaks = c('SRM', 'hTAG', 'DB', 'YAA'),
+      labels = c('SRM', 'hTAG', 'DB', 'YAA')
+    ) +
+    scale_fill_manual(
+      values = c(
+        "SRM" = "#c2e4ff",
+        "hTAG" = "#ffc2c2",
+        "YAA" = "#e1faf2",
+        "DB" = "#f0c8f7"
+      ),
+      breaks = c('SRM', 'hTAG', 'DB', 'YAA'),
+      labels = c('SRM', 'hTAG', 'DB', 'YAA')
+    ) +
+    labs(color = NULL, fill = NULL) +
+    #guides(fill = "none") +
+    theme_classic( base_size =  9) +  
+    #scale_x_discrete(drop = FALSE, expand = expansion(mult = c(.03, .05))) +
+    theme(
+      axis.text = element_text(size = 7),
+      axis.title = element_text(size = 8, face = "bold"),
+      #panel.grid.major.x = element_line(colour = "grey70", linewidth = 0.2, linetype = "dotted"),
+      strip.background = element_rect(fill = "grey99")
+    ) + theme(aspect.ratio = 1) +
+    theme(
+      legend.position = c(.97, .20),
+      legend.key.size = unit(0.1, "cm"),
+      legend.text = element_text(size = 6),
+      legend.spacing.y = unit(.001, 'cm')
     )
-  ) +
-  geom_abline(
-    slope = 1,
-    intercept = 0,
-    color = "#6c9694",
-    size = .3,
-    linetype = "longdash"
-  ) +
-  geom_point(
-    shape = 21,
-    stroke = 0.33,
-    size = 1.2,
-    alpha = .6
-  ) +
-  facet_wrap(vars(ceramideName), scales = "free", ncol = 4) +
-  #stat_smooth(method = "lm", aes( x = C_SinglePoint, y = C_Adj), inherit.aes = FALSE) +
-  scale_x_continuous(limits = c(0, NA)) +
-  scale_y_continuous(limits = c(0, NA)) +
   
-  labs(x = "\U003BCmol/L (single-point calibration)", y = "\U003BCmol/L (multi-point calibration)") +
-  facetted_pos_scales(
-    y = list(
-      ceramideName == "Cer 18:1;O2/16:0" ~ scale_y_continuous(limits = c(0, 0.6)),
-      ceramideName == "Cer 18:1;O2/18:0" ~ scale_y_continuous(limits = c(0, 0.125)),
-      ceramideName == "Cer 18:1;O2/24:0" ~ scale_y_continuous(limits = c(0, 5.5)),
-      ceramideName == "Cer 18:1;O2/24:1" ~ scale_y_continuous(limits = c(0, 1.8))
-    ),
-    x = list(
-      ceramideName == "Cer 18:1;O2/16:0" ~ scale_x_continuous(limits = c(0, 0.6)),
-      ceramideName == "Cer 18:1;O2/18:0" ~ scale_x_continuous(limits = c(0, 0.125)),
-      ceramideName == "Cer 18:1;O2/24:0" ~ scale_x_continuous(limits = c(0, 5.5)),
-      ceramideName == "Cer 18:1;O2/24:1" ~ scale_x_continuous(limits = c(0, 1.8))
-    )
-  ) + 
-  scale_color_manual(
-    values = c(
-      "SRM" = "#0791fa",
-      "hTAG" = "red",
-      "YAA" = "#02ba83",
-      "DB" = "#a013b0"
-    ),
-    breaks = c('SRM', 'hTAG', 'DB', 'YAA'),
-    labels = c('SRM', 'hTAG', 'DB', 'YAA')
-  ) +
-  scale_fill_manual(
-    values = c(
-      "SRM" = "#c2e4ff",
-      "hTAG" = "#ffc2c2",
-      "YAA" = "#e1faf2",
-      "DB" = "#f0c8f7"
-    ),
-    breaks = c('SRM', 'hTAG', 'DB', 'YAA'),
-    labels = c('SRM', 'hTAG', 'DB', 'YAA')
-  ) +
-  labs(color = NULL, fill = NULL) +
-  #guides(fill = "none") +
-  theme_classic( base_size =  9) +  
-  #scale_x_discrete(drop = FALSE, expand = expansion(mult = c(.03, .05))) +
-  theme(
-    axis.text = element_text(size = 7),
-    axis.title = element_text(size = 8, face = "bold"),
-    #panel.grid.major.x = element_line(colour = "grey70", linewidth = 0.2, linetype = "dotted"),
-    strip.background = element_rect(fill = "grey99")
-  ) + theme(aspect.ratio = 1) +
-  theme(
-    legend.position = c(.97, .20),
-    legend.key.size = unit(0.1, "cm"),
-    legend.text = element_text(size = 6),
-    legend.spacing.y = unit(.001, 'cm')
-  )
+    p
+}
 
-  ggsave(plot = p2, filename = here("manuscript/output/Fig02_Comparison_SingleVsMultiCalib.png"), device = "png",
+  d_assays_filt <- flag_outlier(d_assays, limit_iqr = limit_iqr)  |> filter(!Outlier_sp, !Outlier_mp)
+  d_assays_filt$SampleType <- forcats::fct_relevel(d_assays_filt$SampleType, c("DB","hTAG","YAA","SRM"))
+
+  p_fig2 <- plot_single_vs_multipoint(d_assays_filt, c(0.6, 0.125, 5.5, 1.6))
+  ggsave(plot = p_fig2, filename = here("manuscript/output/Fig02_Comparison_SingleVsMultiCalib-AllDatasets.png"), device = "png",
   dpi = 600, width =160, height =60, units = "mm")
-
-p2
+  
+  p_fig2
 ```
 
 # 03. Figure 3: SRM comparisons
@@ -430,124 +435,135 @@ p2
 Concentrations of the 4 ceramides in different NIST reference plasma samples. Each circle corresponds to the values reported by one laboratory. P values are based on paired t-tests of complete datasets. The horizontal bars correspond to the mean and ±1 SD of all points per group. SOP (red) and OTHER (blue) refer to the Standard vs Other methods, respectively. Outlier measurements were removed for ceramide species in each reference plasma (see Figure 1 and text). 
 
 ```{r fig03-plot, fig.height=8, fig.width=12, out.width="100%"}
-pos_points <- ggbeeswarm::position_beeswarm(cex = 1, dodge.width = 0.2)
 
-d_assays_filt <- flag_outlier(d_assays, limit_iqr = limit_iqr) |> filter(!Outlier_mp)
-
-d_assays_filt$SampleType <- forcats::fct_relevel(d_assays_filt$SampleType, c("SRM","hTAG","DB","YAA")) 
-
-p_Fig3 <- ggplot(
-  data = d_assays_filt,
-  mapping = aes(
-    x = SampleType,
-    y = C_Adj_mean,
-    color = Protocol,
-    fill = Protocol
-  )
-) +
-  ggbeeswarm::geom_beeswarm(
-    cex = 2.5,
-    size = 1.2,
-    stroke = .2,
-    method = "swarm",
-    priority = "random",
-    alpha = .7,
-    shape = 21
-  ) +  
-  stat_summary(
-    aes(x = SampleType, y = C_Adj_mean),
-    geom = "errorbar",
-    inherit.aes = FALSE,
-    width = .3,
-    color = "darkred",
-    linewidth = 0.25,
-    alpha = 0.6,
-    fun.min = \(x) mean(x) - sd(x),
-    fun.max = \(x) mean(x) + sd(x)
-  ) +
-  stat_summary(
-    aes(x = SampleType, y = C_Adj_mean),
-    fun = "mean",
-    geom = "crossbar",
-    inherit.aes = FALSE,
-    width = .7,
-    color = "darkred",
-    linewidth = 0.2,
-    alpha = 0.7
-  )+
-  facet_wrap(vars(ceramideName), ncol = 4, scales = "free") +
-  scale_y_continuous(limits = c(0,NA))+
-  ggsignif::geom_signif(
-    aes(x = SampleType, y = C_Adj_mean),
-    inherit.aes = FALSE,
-    comparisons = list(c("SRM", "hTAG"), c("SRM", "DB"), c("SRM", "YAA")),
-    test = "t.test",
-    test.args = list(
-      paired = FALSE,
-      alternative = "two.sided",
-      var.equal = FALSE,
-      na.action = "ommit"
-    ),
-    margin_top = 0.05,
-    step_increase = 0.07,
-    color = "grey30",
-    
-    size = 0.1 ,
-    vjust = 0.1,
-    tip_length = 0.01,
-    textsize = 1.4,
-    map_signif_level = sig_annot
-  ) +
-  scale_fill_manual(values = c("SOP" = "#ffc2c2", "OTHER" = "#d1dcff")) +
-  scale_color_manual(values = c("SOP" = "#e30202", "OTHER" = "darkblue")) +
-  labs(color = NULL, fill = NULL) +
-  labs(x = "NIST reference plasma", y = "\U003BCmol/L (multi-point calibration)") +
-  theme_classic(base_size = 7) +
-  #scale_x_discrete(drop = FALSE, expand = expansion(mult = c(.1, .05))) +
-  theme(
-    axis.text.x = element_text(size = 6, face = "plain", angle = 0),
-    axis.text.y = element_text(size = 6, face = "plain", angle = 0),
-    axis.title.x = element_text(
-      size = 7,
-      face = "bold",
-      angle = 0,
-      margin = margin(
-        t = 8,
-        r = 0,
-        b = 0,
-        l = 0
-      )
-    ),
-    axis.title.y = element_text(
-      size = 6,
-      face = "bold",
-      angle = 90,
-      margin = margin(
-        t = 0,
-        r = 7,
-        b = 0,
-        l = 8
-      )
+plot_all_refmaterials <- function(data, xy_lim) {
+  p <- ggplot(
+    data = data,
+    mapping = aes(
+      x = SampleType,
+      y = C_Adj_mean,
+      color = Protocol,
+      fill = Protocol
     )
   ) +
-  theme(
-    legend.position = c(.97, .07),
-    legend.key.size = unit(0.2, "cm"),
-    legend.spacing.y = unit(.001, 'cm')
-  )
+    ggbeeswarm::geom_beeswarm(
+      cex = 2.5,
+      size = 1.2,
+      stroke = .2,
+      method = "swarm",
+      priority = "random",
+      alpha = .7,
+      shape = 21
+    ) +  
+    stat_summary(
+      aes(x = SampleType, y = C_Adj_mean),
+      geom = "errorbar",
+      inherit.aes = FALSE,
+      width = .3,
+      color = "darkred",
+      linewidth = 0.25,
+      alpha = 0.6,
+      fun.min = \(x) mean(x) - sd(x),
+      fun.max = \(x) mean(x) + sd(x)
+    ) +
+    stat_summary(
+      aes(x = SampleType, y = C_Adj_mean),
+      fun = "mean",
+      geom = "crossbar",
+      inherit.aes = FALSE,
+      width = .7,
+      color = "darkred",
+      linewidth = 0.2,
+      alpha = 0.7
+    )+
+    facet_wrap(vars(ceramideName), ncol = 4, scales = "free") +
+    facetted_pos_scales(
+        y = list(
+          ceramideName == "Cer 18:1;O2/16:0" ~ scale_y_continuous(limits = c(0, xy_lim[1])),
+          ceramideName == "Cer 18:1;O2/18:0" ~ scale_y_continuous(limits = c(0, xy_lim[2])),   
+          ceramideName == "Cer 18:1;O2/24:0" ~ scale_y_continuous(limits = c(0, xy_lim[3])),
+          ceramideName == "Cer 18:1;O2/24:1" ~ scale_y_continuous(limits = c(0, xy_lim[4]))
+        )) +
+    ggsignif::geom_signif(
+      aes(x = SampleType, y = C_Adj_mean),
+      inherit.aes = FALSE,
+      comparisons = list(c("SRM", "hTAG"), c("SRM", "DB"), c("SRM", "YAA")),
+      test = "t.test",
+      test.args = list(
+        paired = FALSE,
+        alternative = "two.sided",
+        var.equal = FALSE,
+        na.action = "ommit"
+      ),
+      margin_top = 0.05,
+      step_increase = 0.07,
+      color = "grey30",
+      
+      size = 0.1 ,
+      vjust = 0.1,
+      tip_length = 0.01,
+      textsize = 1.4,
+      map_signif_level = sig_annot
+    ) +
+    scale_fill_manual(values = c("SOP" = "#ffc2c2", "OTHER" = "#d1dcff")) +
+    scale_color_manual(values = c("SOP" = "#e30202", "OTHER" = "darkblue")) +
+    labs(color = NULL, fill = NULL) +
+    labs(x = "NIST reference plasma", y = "\U003BCmol/L (multi-point calibration)") +
+    theme_classic(base_size = 7) +
+    #scale_x_discrete(drop = FALSE, expand = expansion(mult = c(.1, .05))) +
+    theme(
+      axis.text.x = element_text(size = 6, face = "plain", angle = 0),
+      axis.text.y = element_text(size = 6, face = "plain", angle = 0),
+      axis.title.x = element_text(
+        size = 7,
+        face = "bold",
+        angle = 0,
+        margin = margin(
+          t = 8,
+          r = 0,
+          b = 0,
+          l = 0
+        )
+      ),
+      axis.title.y = element_text(
+        size = 6,
+        face = "bold",
+        angle = 90,
+        margin = margin(
+          t = 0,
+          r = 7,
+          b = 0,
+          l = 8
+        )
+      )
+    ) +
+    theme(
+      legend.position = c(.97, .07),
+      legend.key.size = unit(0.2, "cm"),
+      legend.spacing.y = unit(.001, 'cm')
+    )
+  
+  p
+}
 
-  ggsave(plot = p_Fig3, filename = here("manuscript/output/Fig03_SRMs_Dotplots.png"), device = "png",
-  dpi = 600, width =160, height =65, units = "mm")
+
+
+pos_points <- ggbeeswarm::position_beeswarm(cex = 1, dodge.width = 0.2)
+d_assays_filt <- flag_outlier(d_assays, limit_iqr = limit_iqr) |> filter(!Outlier_mp)
+d_assays_filt$SampleType <- forcats::fct_relevel(d_assays_filt$SampleType, c("SRM","hTAG","DB","YAA")) 
+p_Fig3 <- plot_all_refmaterials(d_assays_filt, xy_lim = c(0.45, 0.145, 5.6, 1.9))
+
+ggsave(plot = p_Fig3, filename = here("manuscript/output/Fig03_SRMs_Dotplots.png"), device = "png",
+dpi = 600, width =160, height =65, units = "mm")
 
 p_Fig3
 ```
 
 # 04. Figure 4: Interlaboratory Study Comparisons
 
-Comparison of inter-laboratory and/or cross-platform trials reporting ceramide concentrations in NIST SRM 1950. Each open circle corresponds to the reported value from one laboratory in each of the respective studies referenced by first author and year of publication. (SP) refers to a single, standardized protocol and platform employed by all laboratories while (MP) denotes studies in which multiple protocols and platforms were used. The red boxes and numbers indicate median ± MAD (mean absolute deviation) and the number of participating laboratories respectively. Depending on the precise nature of the study and/or reporting laboratory, concentrations were either reported with sphingoid-base and fatty details (e.g. Cer 18:1;O2/16:0, left panel) or as sum compositions (i.e. Cer 34:1;O2, left panel). In the latter case, isobaric ceramide species other than the 4 ceramides targeted in this study may therefore have contributed to the reported concentrations. Details of the individual studies are presented in Table S3. No outlier removal has been applied for each of the studies. 
+Comparison of inter-laboratory and/or cross-platform trials reporting ceramide concentrations in NIST SRM 1950. Each open circle corresponds to the reported value from one laboratory in each of the respective studies referenced by first author and year of publication. (SP) refers to a single, standardized protocol and platform employed by all laboratories while (MP) denotes studies in which multiple protocols and platforms were used. The red boxes and numbers indicate median ± MAD (mean absolute deviation) and the number of participating laboratories respectively. Depending on the precise nature of the study and/or reporting laboratory, concentrations were either reported with sphingoid-base and fatty details (e.g. Cer 18:1;O2/16:0, left panel) or as sum compositions (i.e. Cer 34:1;O2, left panel). In the latter case, isobaric ceramide species other than the 4 ceramides targeted in this study may therefore have contributed to the reported concentrations. Details of the individual studies are presented in Table S3. No outlier removal has been applied for each of the studies. 
 
 ```{r fig04-dataprep-plot, fig.height=8, fig.width=12, out.width="100%"}
-d_ils_orig <- read_csv(here("manuscript/data/Cer-ILS-Ringtrial_FullDataset_SLING_V1.csv"))
 d_bowden_orig <- read_csv(here("manuscript/data/Bowden_InterlabStudy_Ceramides_Conc.csv"))
 d_quehenberger_orig <- read_csv(here("manuscript/data/Quehenberger_Ceramides_Conc.csv"))
 d_biocrates <- read_csv(here("manuscript/data/Biocrates_Ringtrial_Ceramides.csv"))
@@ -592,63 +608,67 @@ d_quehenberger <- d_quehenberger_orig |>
   mutate(LabID = as.character(LabID)) |> 
   mutate(Study = "Quehenberger 2010")
 
-d_plot_1 <- d_ils_labs |> 
-  filter(SampleType == "SRM") |> 
-  select(
-    Study,
-    LabID = LabId,
-    Compound = ceramideName,
-    Conc_mean = C_Adj_mean,
-    CV_intra = C_Adj_intralabCV
-  ) |>  
-  bind_rows(d_biocrates_mean) |> 
-  bind_rows(d_bowden) |> 
-  bind_rows(d_quehenberger) |> 
-  bind_rows(d_giera_mean) |> 
-  mutate(Study = factor(
-    Study,
-    levels = c(
-      "Quehenberger 2010",
-      "Bowden 2017 (MP)",
-      "Thompson 2019 (SP)" ,
-      "Ghorasaini 2021 (SP)",
-      "ILS Ceramides (MP)"
-    )
-  )) |> 
-  arrange(Study) |> 
-  mutate(Compound = str_replace(Compound, fixed("d18:1"), "18:1;O2")) |> 
-  mutate(Compound = case_when(
-    Compound  == "Cer 18:1;O2/16:0" ~ "Cer 34:1;O2 | Cer 18:1;O2/16:0",
-    Compound  == "Cer 18:1;O2/18:0" ~ "Cer 36:1;O2 | Cer 18:1;O2/18:0",
-    Compound  == "Cer 18:1;O2/24:0" ~ "Cer 42:1;O2 | Cer 18:1;O2/24:0",
-    Compound  == "Cer 18:1;O2/24:1" ~ "Cer 42:2;O2 | Cer 18:1;O2/24:1",
-        .default = as.character(Compound)
-  ))
-
-d_sum_1 <- d_plot_1 |> 
-  group_by(Compound, Study) |> 
-  summarise(
-    n_labs = n(),
-    MEAN = mean(Conc_mean, na.rm = TRUE),
-    SD = sd(Conc_mean, na.rm = TRUE),
-    CV = SD/MEAN *100,
-    SEM = SD/sqrt(n_labs),
-    CV_SEM = SEM/MEAN *100,
-    MAD = mad(Conc_mean, constant = 1.4826, na.rm = TRUE),
-    MEDM = median(Conc_mean, na.rm = TRUE),
-    MADM = MAD/MEDM * 100, 
-    Uncertainty = std_uncert(Conc_mean), 
-    COD = Uncertainty/MEDM *100, 
-    Conc_max = max(Conc_mean, na.rm = TRUE))  |> 
-  ungroup() 
-
-write_csv(x = d_sum_1, file = here("manuscript/data/processed/ILS-Ceramides_Conc_Summary_20230518.csv"))
-
 d_lipidyzer <- d_sum_giera |> 
   select(Study, Compound = Species, everything()) |> 
   mutate(MADM = MAD/MEDM *100) |> 
   mutate(Study = "Ghorasaini 2021 (SP)") |>
   mutate(Compound = str_replace(Compound, fixed("d18:1"), "18:1;O2")) 
+
+plot_studycomp <- function(data_ils_study){ 
+  d_plot_1 <- data_ils_study |> 
+    filter(SampleType == "SRM") |> 
+    select(
+      Study,
+      LabID = LabId,
+      Compound = ceramideName,
+      Conc_mean = C_Adj_mean,
+      CV_intra = C_Adj_intralabCV
+    ) |>  
+    bind_rows(d_biocrates_mean) |> 
+    bind_rows(d_bowden) |> 
+    bind_rows(d_quehenberger) |> 
+    bind_rows(d_giera_mean) |> 
+    mutate(Study = factor(
+      Study,
+      levels = c(
+        "Quehenberger 2010",
+        "Bowden 2017 (MP)",
+        "Thompson 2019 (SP)" ,
+        "Ghorasaini 2021 (SP)",
+        "ILS Ceramides (MP)"
+      )
+    )) |> 
+    arrange(Study) |> 
+    mutate(Compound = str_replace(Compound, fixed("d18:1"), "18:1;O2")) |> 
+    mutate(Compound = case_when(
+      Compound  == "Cer 18:1;O2/16:0" ~ "Cer 34:1;O2 | Cer 18:1;O2/16:0",
+      Compound  == "Cer 18:1;O2/18:0" ~ "Cer 36:1;O2 | Cer 18:1;O2/18:0",
+      Compound  == "Cer 18:1;O2/24:0" ~ "Cer 42:1;O2 | Cer 18:1;O2/24:0",
+      Compound  == "Cer 18:1;O2/24:1" ~ "Cer 42:2;O2 | Cer 18:1;O2/24:1",
+          .default = as.character(Compound)
+    ))
+  
+  d_sum_1 <- d_plot_1 |> 
+    group_by(Compound, Study) |> 
+    summarise(
+      n_labs = n(),
+      MEAN = mean(Conc_mean, na.rm = TRUE),
+      SD = sd(Conc_mean, na.rm = TRUE),
+      CV = SD/MEAN *100,
+      SEM = SD/sqrt(n_labs),
+      CV_SEM = SEM/MEAN *100,
+      MAD = mad(Conc_mean, constant = 1.4826, na.rm = TRUE),
+      MEDM = median(Conc_mean, na.rm = TRUE),
+      MADM = MAD/MEDM * 100, 
+      Uncertainty = std_uncert(Conc_mean), 
+      COD = Uncertainty/MEDM *100, 
+      Conc_max = max(Conc_mean, na.rm = TRUE))  |> 
+    ungroup() 
+  d_sum_1
+
+
+write_csv(x = d_sum_1, file = here("manuscript/data/processed/ILS-Ceramides_Conc_Summary_20230518.csv"))
+
 
 d_sum <- d_sum_1 |> 
   #bind_rows(d_lipidyzer) |> 
@@ -703,9 +723,13 @@ p_Fig4 <- ggplot(d_plot_1, aes(x = Study, y = Conc_mean)) +
     theme(legend.position = c(.63,.93), 
           legend.key.size = unit(0.2, "cm"),
         legend.spacing.y = unit(.001, 'cm'))
+p_Fig4
+}
 
-  ggsave(plot = p_Fig4, filename = here("manuscript/output/Fig04_Comparison_Studies.png"), device = "png",
-  dpi = 600, width =160, height =75, units = "mm")
+p_Fig4 <- plot_studycomp(d_ils_labs)
+
+ggsave(plot = p_Fig4, filename = here("manuscript/output/Fig04_Comparison_Studies.png"), device = "png",
+dpi = 600, width =160, height =75, units = "mm")
 
 p_Fig4
 ```
@@ -997,11 +1021,124 @@ singlePointSRM1950Plot <- plot_labscatter(
 
 singlePointSRM1950Plot
 ```
-# 11. Figure S3: Normalization with different ISTDs (single-point calibration)
+
+# 11. Figure S3: Single vs multi-point calibration with and without outliers
+
+Molar concentrations derived from single point internal standard (ISTD) vs. calibration curve-based quantifications of the full (A) and outlier-filtered (B) dataset. The diagonal line indicates equal results between single point (horizontal axis) and calibration curve-based quantification (vertical axis). Outlier measurements were removed for each ceramide species reference plasma (see Figure 1 and text). NIST SRM 1950 (SRM, blue); hypertriglyceridemic (hTAG, red), diabetic (DB, purple), and African American (YAA, green), which are part of NIST RM 8231.
+
+```{r figS03-plot, fig.height=5, fig.width=12, out.width="100%"}
+d_assays_plot <- flag_outlier(d_assays, limit_iqr = limit_iqr)  #|> filter(!Outlier_sp, !Outlier_mp)
+d_assays_plot$SampleType <- forcats::fct_relevel(d_assays_plot$SampleType, c("DB","hTAG","YAA","SRM"))
+p_fig2A <- plot_single_vs_multipoint(d_assays_plot, c(0.8, 0.22, 7.2, 2.6))
+
+d_assays_filt <- flag_outlier(d_assays, limit_iqr = limit_iqr)  |> filter(!Outlier_sp, !Outlier_mp)
+d_assays_filt$SampleType <- forcats::fct_relevel(d_assays_filt$SampleType, c("DB","hTAG","YAA","SRM"))
+p_fig2B <- plot_single_vs_multipoint(d_assays_filt, c(0.8, 0.22, 7.2, 2.6))
+
+pS3 <- p_fig2A / p_fig2B + patchwork::plot_annotation(tag_levels = c("A", "B"))
+
+ggsave(plot = pS3, filename = here("manuscript/output/FigS03_Comparison_SingleVsMultiCalib-All-FilteredDatasets.png"), device = "png",
+dpi = 600, width =160, height =120, units = "mm")
+
+pS3
+```
+
+# 12. Figure S4: SRM comparisons
+
+Concentrations of the 4 ceramides in different NIST reference plasma samples of the full (A) and outlier-filtered (B) dataset. Each circle corresponds to the values reported by one laboratory. P values are based on paired t-tests of complete datasets. The horizontal bars correspond to the mean and ±1 SD of all points per group. SOP (red) and OTHER (blue) refer to the Standard vs Other methods, respectively. Outlier measurements in (B) were removed for ceramide species in each reference plasma (see Figure 1 and text). 
+
+```{r figS04-plot, fig.height=8, fig.width=12, out.width="100%"}
+pos_points <- ggbeeswarm::position_beeswarm(cex = 1, dodge.width = 0.2)
+
+d_assays_plot <- flag_outlier(d_assays, limit_iqr = limit_iqr) # |> filter(!Outlier_mp)
+d_assays_plot$SampleType <- forcats::fct_relevel(d_assays_plot$SampleType, c("SRM","hTAG","DB","YAA")) 
+
+p_Fig3A <- plot_all_refmaterials(d_assays_plot, xy_lim = c(0.7, 0.25, 9, 3))
+
+
+d_assays_filt <- flag_outlier(d_assays, limit_iqr = limit_iqr) |> filter(!Outlier_mp)
+d_assays_filt$SampleType <- forcats::fct_relevel(d_assays_filt$SampleType, c("SRM","hTAG","DB","YAA")) 
+
+p_Fig3B <- plot_all_refmaterials(d_assays_filt, xy_lim = c(0.7, 0.25, 9, 3))
+
+
+pS4 <- p_Fig3A / p_Fig3B + patchwork::plot_annotation(tag_levels = c("A", "B"))
+
+ggsave(plot = pS4, filename = here("manuscript/output/FigS04_SRMs_Dotplots-All-FilteredDataset.png"), device = "png",
+dpi = 600, width =160, height =130, units = "mm")
+
+pS4
+```
+
+# 13. Figure S5: Interlaboratory Study Comparisons
+
+Comparison of inter-laboratory and/or cross-platform trials reporting ceramide concentrations in NIST SRM 1950 with the full (A) and outlier-filtered (B) ILS ceramide dataset. Each open circle corresponds to the reported value from one laboratory in each of the respective studies referenced by first author and year of publication. (SP) refers to a single, standardized protocol and platform employed by all laboratories while (MP) denotes studies in which multiple protocols and platforms were used. The red boxes and numbers indicate median ± MAD (mean absolute deviation) and the number of participating laboratories respectively. Depending on the precise nature of the study and/or reporting laboratory, concentrations were either reported with sphingoid-base and fatty details (e.g. Cer 18:1;O2/16:0, left panel) or as sum compositions (i.e. Cer 34:1;O2, left panel). In the latter case, isobaric ceramide species other than the 4 ceramides targeted in this study may therefore have contributed to the reported concentrations. Details of the individual studies are presented in Table S3. No outlier removal has been applied for each of the studies. 
+
+```{r figS05-dataprep-plot, fig.height=8, fig.width=12, out.width="100%"}
+d_ils_labs_filt <- d_assays_filt_mp |> mutate(Study = "ILS Ceramides (MP)", .before = 1) 
+
+p_Fig4B <- plot_studycomp(d_ils_labs_filt)
+
+pS5 <- p_Fig4 / p_Fig4B + patchwork::plot_annotation(tag_levels = c("A", "B"))
+
+ggsave(plot = pS5, filename = here("manuscript/output/FigS05_Comparison_Studies.png"), device = "png",
+dpi = 600, width =160, height = 150, units = "mm")
+
+pS5
+```
+
+# 14. Figure S6: Normalization with different ISTDs
+
+Authentic vs class-specific internal standard normalization and its effects on bias and variability of concentrations from multi-point calibration of the full (A) and outlier-filtered (B) dataset.  The horizontal bars correspond to the mean and ±1 SD of all points per group. Data originating from the same laboratory are connected by dashed lines. Dataset 15 was excluded for Cer 18:1;O2/16:0 as it had 15x higher concentrations than the second highest point for C24:0 d7. SOP (red) and OTHER (blue) refer to the Standard vs Other methods, respectively. Outlier in the authentic internal standard groups have been removed (see Figure 1 and text).
+
+```{r figS06-plot, fig.height=8, fig.width=6, out.width="100%"}
+
+d_istd <- read_csv(here("data/definitions/labeledISConcentrations.csv")) |>   
+  mutate(ceramideName = str_replace(ceramideName, fixed("d18:1"), "18:1;O2"),
+         conc_istd = Concentration) 
+d_prot <- readxl::read_xlsx(here("data/definitions/LabProtocolDetails.xlsx"), sheet = "Sheet1")
+
+d_plot <- d_assays |> 
+  filter(SampleType == "SRM") |>
+  select(SampleType, LabId, ceramideName, Protocol, C_Adj_mean, C_Adj_C16_mean, C_Adj_C24_mean) |> 
+  pivot_longer(-SampleType:-Protocol, names_to = c("ISTD"), values_to = "Concentration") |> 
+  filter(!(ceramideName == "Cer 18:1;O2/16:0" & ISTD == "C_Adj_C16_mean")) |> 
+  filter(!(ceramideName == "Cer 18:1;O2/24:0" & ISTD == "C_Adj_C24_mean")) |> 
+  filter(LabId != "15") |> 
+  filter(ceramideName == "Cer 18:1;O2/16:0" | ceramideName == "Cer 18:1;O2/24:0" ) |> 
+  left_join(d_prot |> select(LabId, Protocol,LC, SOURCE_TEMP_CAT)) |> 
+  relocate("LC", "SOURCE_TEMP_CAT", .after = LabId)
+
+
+
+
+p_fig5A  <- plot_diffistd(d_plot, "\U003BCmol/L (multi-point calibration)")
+
+pS6 <- p_fig5A / p_fig5 + patchwork::plot_annotation(tag_levels = c("A", "B"))
+
+ggsave(plot = pS6, filename = here("manuscript/output/FigS06_DifferentISTDs-All-FiltDataset.png"), device = "png",
+dpi = 600, width =80, height =130, units = "mm")
+
+pS6
+
+d_plot_stats <- d_plot |> 
+  ungroup() |> 
+  #filter(str_detect(ceramideName, "24\\:0"),  ISTD != "C18_ISTD") |> 
+  group_by(ceramideName, ISTD) |> 
+  dplyr::summarise(
+    N = n(),
+    Mean = mean(Concentration),
+    SD = sd(Concentration),
+        CV = sd(Concentration)/mean(Concentration) *100)
+write_csv(x = d_plot_stats, here("manuscript/output/Fig05_stats-mp.csv"))
+
+```
+
+# 15. Figure S7: Normalization with different ISTDs (single-point calibration)
 
 Authentic vs class-specific internal standard normalization and its effects on bias and variability of concentrations from single-point calibration. The horizontal bars correspond to the mean and ±1 SD of all points per group. Data originating from the same laboratory are connected by dashed lines. Dataset 15 was excluded for Cer 18:1;O2/16:0 as it had 15x higher concentrations than the second highest point for C24:0 d7. SOP (red) and OTHER (blue) refer to the Standard vs Other methods, respectively. Outlier in the authentic internal standard groups have been removed (see Figure 1 and text).
 
-```{r figS3-plot, fig.height=8, fig.width=6, out.width="100%"}
+```{r figS07-plot, fig.height=8, fig.width=6, out.width="100%"}
 
 #Calculate 
 
@@ -1085,7 +1222,7 @@ d_plot <- d_calc_plot |> filter(str_detect(ceramideName, "16|24\\:0"), ISTD != "
 
 p_figS4  <- plot_diffistd(d_plot, "\U003BCmol/L (single-point calibration)")
 
-ggsave(plot = p_figS4, filename = here("manuscript/output/FigS03_DifferentISTDs-SP.png"), device = "png",
+ggsave(plot = p_figS4, filename = here("manuscript/output/FigS07_DifferentISTDs-SP.png"), device = "png",
 dpi = 600, width =80, height =65, units = "mm")
 
 p_figS4
@@ -1103,15 +1240,15 @@ write_csv(x = d_plot_stats, here("manuscript/output/FigS03_stats-sp.csv"))
 
 ```
 
-# 12. Figure S4: Normalization to NIST SRM 1950 for hTAG
+# 16. Figure S8: Normalization to NIST SRM 1950 for hTAG
 
 Re-calibration of hTAG using SRM 1950 after multi-point calibration. All datasets are shown here, but the indicated %CVs are based on a datasets where outliers in the SRM1950 were excluded (see Figure 1 and text).
 
-```{r figS04, fig.height=8, fig.width=12, out.width="100%"}
+```{r figS08-plot, fig.height=8, fig.width=12, out.width="100%"}
 inputs <- list(
-  list(sample_type="hTAG", plot_file_prefix="FigS04"),
-  list(sample_type="DB", plot_file_prefix="FigS05"),
-  list(sample_type="YAA", plot_file_prefix="FigS06")
+  list(sample_type="hTAG", plot_file_prefix="FigS08"),
+  list(sample_type="DB", plot_file_prefix="FigS09"),
+  list(sample_type="YAA", plot_file_prefix="FigS10")
 )
 
 labScatterPlots <- inputs |> map(\(x) labScatterPlot(sample_type = x$sample_type, d_samples = d_samples, d_assays = d_assays, variable = "C_Adj", normalisation_sample = "SRM", plot_file_prefix = x$plot_file_prefix))
@@ -1120,20 +1257,20 @@ labScatterPlots[[1]]$p_comb
 ```
 
 
-# 13. Figure S6: Normalization to NIST SRM 1950 for DB
+# 17. Figure S9: Normalization to NIST SRM 1950 for DB
 
 Re-calibration of hTAG using SRM 1950 after single-point calibration. All datasets are shown here, but the indicated %CVs are based on a datasets where outliers in the SRM1950 were excluded (see Figure 1 and text).
 
-```{r figS05, fig.height=8, fig.width=12, out.width="100%"}
+```{r figS09-plot, fig.height=8, fig.width=12, out.width="100%"}
 
 labScatterPlots[[2]]$p_comb
 ```
 
-# 13. Figure S6: Normalization to NIST SRM 1950 for YAA
+# 18. Figure S10: Normalization to NIST SRM 1950 for YAA
 
 Re-calibration of DB using SRM 1950 after multi-point calibration. All datasets are shown here, but the indicated %CVs are based on a datasets where outliers in the SRM1950 were excluded (see Figure 1 and text).
 
-```{r figS06, fig.height=8, fig.width=12, out.width="100%"}
+```{r figS10-plot, fig.height=8, fig.width=12, out.width="100%"}
 labScatterPlots[[3]]$p_comb
 ```
 

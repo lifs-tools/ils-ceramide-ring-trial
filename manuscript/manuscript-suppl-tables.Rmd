@@ -1,0 +1,88 @@
+---
+title: "ILS Ceramide Ring Trial Manuscript Suppl"
+output:
+  html_document:
+    df_print: paged
+  html_notebook:
+    code_folding: hide
+params:
+  run_in_targets: no
+---
+
+```{r setup}
+library(tidyverse)
+library(readxl)
+library(readr)
+library(fs)
+
+if(params$run_in_targets) {
+  library(targets)
+  library(tarchetypes)
+}
+
+here::i_am("manuscript/manuscript-suppl-tables.Rmd")
+```
+
+```{r}
+if (params$run_in_targets) {
+  print(paste("Running in targets pipeline!"))
+  print("manuscript-suppl-tables data not yet in pipeline, this code will not run!")
+  return()
+  #d_orig <- tar_read(nistAveragedConcentrationsFile)
+} else {
+  print(paste("Running stand-alone!"))
+  d_data_orig <- readxl::read_xlsx( here("output/Summary_nistCal1Cal2AveragedConcentrations.xlsx"), na = c("NA"))
+  d_ids <- readr::read_csv( here("manuscript/output/Ids.csv"), na = c("NA"))
+}
+
+d_data <- d_data_orig |>
+  mutate(LabId = str_replace(LabId, "^[1-9]$", paste0("0", LabId))) |> 
+  select(-LabNum) |> 
+  left_join(d_ids, by = c("LabId")) |> 
+  relocate(LabNum, .before = LabId)
+
+d_sum_spl <- d_data |> 
+  group_by(LabNum,	LabId,	SampleType,	Sample, ceramideName, Protocol, MassAnalyzerType) |> 
+  summarise(
+    Area_light_rep_mean = mean(Area_light, na.rm = TRUE),
+    Area_light_rep_sd = sd(Area_light, na.rm = TRUE),
+    Area_heavy_rep_mean = mean(Area_heavy, na.rm = TRUE),
+    Area_heavy_rep_sd = sd(Area_heavy, na.rm = TRUE),
+    Area_Ratio_rep_mean = mean(Area_Ratio, na.rm = TRUE),
+    Area_Ratio_rep_sd = sd(Area_Ratio, na.rm = TRUE),
+    Conc_SinglePoint_rep_mean = mean(Conc_SinglePoint, na.rm = TRUE),
+    Conc_SinglePoint_rep_sd = sd(Conc_SinglePoint, na.rm = TRUE),
+    Conc_MultiPoint_rep_mean = mean(Conc_MultiPoint_Average, na.rm = TRUE),
+    Conc_MultiPoint_rep_sd = sd(Conc_MultiPoint_Average, na.rm = TRUE),
+    Conc_MultiPoint_CalibLine1_rep_mean = mean(Conc_MultiPoint_CalibLine1, na.rm = TRUE),
+    Conc_MultiPoint_CalibLine1_rep_sd = sd(Conc_MultiPoint_CalibLine1, na.rm = TRUE),
+    Conc_MultiPoint_CalibLine2_rep_mean = mean(Conc_MultiPoint_CalibLine2, na.rm = TRUE),
+    Conc_MultiPoint_CalibLine2_rep_sd = sd(Conc_MultiPoint_CalibLine2, na.rm = TRUE)
+  ) |> 
+  ungroup()
+
+d_sum_labs <- d_sum_spl |> 
+  group_by(LabNum,	LabId,	SampleType, ceramideName, Protocol, MassAnalyzerType) |> 
+  summarise(
+    Area_light_mean = mean(Area_light_rep_mean, na.rm = TRUE),
+    Area_light_sd = sd(Area_light_rep_mean, na.rm = TRUE),
+    Area_heavy_mean = mean(Area_heavy_rep_mean, na.rm = TRUE),
+    Area_heavy_sd = sd(Area_heavy_rep_mean, na.rm = TRUE),
+    Area_Ratio_mean = mean(Area_Ratio_rep_mean, na.rm = TRUE),
+    Area_Ratio_sd = sd(Area_Ratio_rep_mean, na.rm = TRUE),
+    Conc_SinglePoint_mean = mean(Conc_SinglePoint_rep_mean, na.rm = TRUE),
+    Conc_SinglePoint_sd = sd(Conc_SinglePoint_rep_mean, na.rm = TRUE),
+    Conc_MultiPoint_mean = mean(Conc_MultiPoint_rep_mean, na.rm = TRUE),
+    Conc_MultiPoint_sd = sd(Conc_MultiPoint_rep_mean, na.rm = TRUE),
+    Conc_MultiPoint_CalibLine1_mean = mean(Conc_MultiPoint_CalibLine1_rep_mean, na.rm = TRUE),
+    Conc_MultiPoint_CalibLine1_sd = sd(Conc_MultiPoint_CalibLine1_rep_mean, na.rm = TRUE),
+    Conc_MultiPoint_CalibLine2_mean = mean(Conc_MultiPoint_CalibLine2_rep_mean, na.rm = TRUE),
+    Conc_MultiPoint_CalibLine2_sd = sd(Conc_MultiPoint_CalibLine2_rep_mean, na.rm = TRUE)
+  ) |> 
+  ungroup()
+
+write_csv(d_sum_labs, here("manuscript/output/CerRingTrial_DataSummary_RM_Average_Results.csv"))
+write_csv(d_sum_spl, here("manuscript/output/CerRingTrial_DataSummary_RM_Sample_Results.csv"))
+write_csv(d_sum, here("manuscript/output/CerRingTrial_DataSummary_RM_All_Results.csv"))
+```
+
