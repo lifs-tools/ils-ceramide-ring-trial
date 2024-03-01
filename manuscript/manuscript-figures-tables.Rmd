@@ -309,6 +309,37 @@ d_outlier_all <-
                                                           Outlier_sp,
                                                           Outlier_mp)
 write_csv(d_outlier_all, here("manuscript/output/Outlier_SRM_IQR15.csv"))
+
+# create combined table with LC method, MS platform, sample type and lab id, with single and multi-point outlier flags
+d_lab_prot <- readxl::read_xlsx(here("data/definitions/LabProtocolDetails.xlsx"), sheet = "Sheet1")
+d_outlier_all_w_lab_prot <- flag_outlier(d_assays, limit_iqr = limit_iqr) |> 
+  select(SampleType,
+         LabNum,
+         LabId,
+         ceramideName,
+         Protocol,
+         MassAnalyzerResolution,
+         MassAnalyzerType,
+         C_SinglePoint_mean,  
+         C_Adj_mean,
+         Outlier_sp,
+         Outlier_mp) |>
+  left_join(d_lab_prot |> select(LabId, LC), by = c("LabId" = "LabId")) |>
+  select(
+    SampleType, 
+    LabNum, 
+    LabId, 
+    ceramideName, 
+    Protocol, 
+    LC,	
+    MassAnalyzerType, 
+    MassAnalyzerResolution,	
+    C_SinglePoint_mean,	
+    C_Adj_mean,	
+    Outlier_sp,	
+    Outlier_mp
+)
+write_csv(d_outlier_all_w_lab_prot, here("manuscript/output/SXX-ILS-Ceramide-Ring-Trial-Estimates.csv"))
 ```
 
 # 01. Figure 1: All samples from all labs
