@@ -1,3 +1,39 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:fb55f9cda0f8d03e5bf3eb6dae68795c4b0100e9bc9b2935004b5dbcbe4d29a5
-size 3995
+LabId,Type,Processing Status,Calibration Line 1,Calibration Line 2,NIST SRM,NIST hTAG,NIST T1D,NIST Young AA,LLQC,LQC,MQC,HQC,HLQC,Blank
+02b,Standard,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes (with remarks)
+04,Standard,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+10a,Standard,Yes,Yes,Yes,Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes
+12,Standard,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes (with remarks),Yes (with remarks)
+14,Standard,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+15,Standard,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+18a,Standard,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes (with remarks)
+18b,Standard,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes (with remarks)
+19,Standard,Yes,Yes,Yes,Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes,Yes,Yes,Yes,Yes,Yes (with remarks)
+20a,Standard,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes (with remarks)
+21,Standard,Yes,Yes,Yes,Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes,Yes,Yes,Yes,Yes,No
+22,Standard,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+23,Standard,Yes,Yes,Yes,Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes,Yes,Yes,Yes,Yes,Yes (with remarks)
+24,Standard,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes (with remarks)
+25,Standard,No,Yes,Yes,Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes,Yes,Yes,Yes,Yes,Yes (with remarks)
+27,Standard,Yes,Yes,Yes,Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes,Yes,Yes,Yes,Yes,Yes
+28,Standard,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+29a,Standard,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+30,Standard,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+31,Standard,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+34,Standard,Yes,Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes
+36,Standard,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+38,Standard,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+03,Preferred,Yes,Yes,Yes,Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes,Yes,Yes,Yes,Yes,Yes
+05,Preferred,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes (with remarks)
+07,Standard,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+09,Preferred,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks)
+10b,Preferred,Yes,Yes,Yes,Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes
+13,Preferred,Yes,Yes,Yes,Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),No,No,No,No,No,Yes (with remarks)
+16,Preferred,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+17a,Preferred,Yes,Yes,Yes,Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),No,No,No,No,No,Yes (with remarks)
+20b,Preferred,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes (with remarks)
+26a,Preferred,Yes,Yes (with remarks),No,Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),No,No,No,No,No,Yes
+26b,Preferred,Yes,Yes (with remarks),No,Yes (with remarks),Yes (with remarks),Yes (with remarks),Yes (with remarks),No,No,No,No,No,Yes
+29b,Preferred,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+32,Standard,Yes,Yes (with remarks),Yes (with remarks),Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+33,Preferred,Yes,Yes (with remarks),Yes (with remarks),Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+35,Preferred,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
