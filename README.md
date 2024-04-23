@@ -118,7 +118,7 @@ Please note that the data analysis team had no access to lab identities due to t
 
 Main publication
 
-[1] TBD
+[1] Torta F, Hoffmann N, Burla B *et al.*, Concordant inter-laboratory derived concentrations of ceramides in human plasma reference materials via authentic standards. 2024
 
 ---
 
