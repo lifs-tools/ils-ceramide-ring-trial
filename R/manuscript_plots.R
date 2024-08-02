@@ -253,8 +253,13 @@ plot_comparison_norm <- function(d_assays, variable, sample_type, normalisation_
     summarise(
       MEAN = mean(Concentration[norm_type==var_meanreplicates]),
       MEAN_norm = mean(Concentration[norm_type==var_meanreplicates_norm]),
+      SD = sd(Concentration[norm_type==var_meanreplicates]),
+      SD_norm = sd(Concentration[norm_type==var_meanreplicates_norm]),
+      SEM = sd(Concentration[norm_type==var_meanreplicates])/length(Concentration[norm_type==var_meanreplicates]),,
+      SEM_norm = sd(Concentration[norm_type==var_meanreplicates_norm])/length(Concentration[norm_type==var_meanreplicates_norm]),
       CV = sd(Concentration[norm_type==var_meanreplicates])/mean(Concentration[norm_type==var_meanreplicates])*100,
-      CV_norm = sd(Concentration[norm_type==var_meanreplicates_norm])/mean(Concentration[norm_type==var_meanreplicates_norm])*100
+      CV_norm = sd(Concentration[norm_type==var_meanreplicates_norm])/mean(Concentration[norm_type==var_meanreplicates_norm])*100,
+      p_value = t.test(y = Concentration[norm_type==var_meanreplicates], x = Concentration[norm_type==var_meanreplicates_norm], paired = T)$p.value
     )
   
   write_csv(x = d_plot_stats, file = here(glue("manuscript/output/Stats_norm_{sample_type}.csv")))
