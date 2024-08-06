@@ -30,9 +30,15 @@ get_study_stats <- function(d, limit_iqr = 1.5){
       C_Adj_C16_interlabMEAN = mean(C_Adj_C16_mean, na.rm = TRUE),
       C_Adj_C16_interlabSD = sd(C_Adj_C16_mean, na.rm = TRUE), 
       C_Adj_C16_interlabCV = C_Adj_C16_interlabSD/C_Adj_C16_interlabMEAN *100,
+      C_Adj_C18_interlabMEAN = mean(C_Adj_C18_mean, na.rm = TRUE),
+      C_Adj_C18_interlabSD = sd(C_Adj_C18_mean, na.rm = TRUE), 
+      C_Adj_C18_interlabCV = C_Adj_C18_interlabSD/C_Adj_C18_interlabMEAN *100,
       C_Adj_C24_interlabMEAN = mean(C_Adj_C24_mean, na.rm = TRUE),
       C_Adj_C24_interlabSD = sd(C_Adj_C24_mean, na.rm = TRUE), 
       C_Adj_C24_interlabCV = C_Adj_C24_interlabSD/C_Adj_C24_interlabMEAN *100,
+      C_Adj_C241_interlabMEAN = mean(C_Adj_C241_mean, na.rm = TRUE),
+      C_Adj_C241_interlabSD = sd(C_Adj_C241_mean, na.rm = TRUE), 
+      C_Adj_C241_interlabCV = C_Adj_C241_interlabSD/C_Adj_C241_interlabMEAN *100,
       C_Adj_IQR = IQR(C_Adj_mean, na.rm = TRUE),
       C_Adj_limitQ1 = quantile(C_Adj_mean, 0.25, na.rm = TRUE) -  (C_Adj_IQR * limit_iqr),
       C_Adj_limitQ3 = quantile(C_Adj_mean, 0.75, na.rm = TRUE) +  (C_Adj_IQR * limit_iqr),
@@ -61,9 +67,9 @@ flag_outlier <- function(data, include_calibdata, limit_iqr = 1.5){
 }
 
 sig_annot = function(x){
-  if(x < 1e-9) {"p < 1e-9"}
-  else if(x < 1e-4) {paste0("p = ", formatC(x, format = "e", digits = 2))}
-  else if(x <= 1) {paste0("p = ", formatC(x, digits = 4))}      
+  #if(x < 1e-9) {"p < 1e-9"}
+  if(x < 1e-3) {paste0("p = ", formatC(x, format = "e", digits = 2))}
+  else if(x <= 1) {paste0("p = ", formatC(x, digits = 3))}      
   else{NA}
 }
 
@@ -151,7 +157,7 @@ plot_labscatter <- function(d_samples, d_assays, variable, sample_type, labid_co
   set.seed(1334)
   pos_points <- position_jitterdodge(dodge.width = 0.75, jitter.width = 0.2 )
   
-  x_labels <- if(labid_col == "LabNo") x_labels <- d_samples_subset$LabNo |> unique() else x_labels <- d_samples_subset$LabNum |> unique() |> str_pad( 2, pad = "0")
+  x_labels <- if(labid_col == "LabId_group") x_labels <- d_samples_subset$LabId_group |> unique() else x_labels <- d_samples_subset$LabNum |> unique() |> str_pad( 2, pad = "0")
   
   plt2 <- ggplot(data = d_samples_subset , mapping = aes(x = LabNum+0.5, y = !!ensym(var_meanreplicates), group = MethodNo, color = Protocol, fill = Protocol)) +
     geom_rect(data = d_stat_filt, 
@@ -187,7 +193,7 @@ plot_labscatter <- function(d_samples, d_assays, variable, sample_type, labid_co
     facet_wrap(vars(ceramideName), ncol = 1, scales = "free") +
     scale_y_continuous(limits = c(0,NA))+
     scale_x_continuous(limits = c(.5,NA), 
-                       breaks = c(1:(length(d_assays$LabNo |> unique()))), 
+                       breaks = c(1:(length(d_assays$LabId_group |> unique()))), 
                        labels = x_labels,
                        expand = expansion(mult = c(0,0.01)))+
     scale_fill_manual(values = c("SOP" = "#faafaf", "OTHER" = "#b4c5fa")) +
@@ -223,7 +229,7 @@ plot_labscatter <- function(d_samples, d_assays, variable, sample_type, labid_co
 plot_comparison_norm <- function(d_assays, variable, sample_type, normalisation_sample = NULL, 
                             excluded_labs = "", save_plot = TRUE, filename_prefix,
                             selected_ceramides = c("Cer 18:1;O2/16:0", "Cer 18:1;O2/18:0", "Cer 18:1;O2/24:0", "Cer 18:1;O2/24:1"),
-                            pos = ggbeeswarm::position_beeswarm(dodge.width = 0.07, method = "center")){
+                            pos = ggbeeswarm::position_beeswarm(dodge.width = 0.07, method = "center"), show_n = TRUE){
   
   var_meanreplicates <- paste0(variable, "_mean")
   var_meanreplicates_norm <- paste0(var_meanreplicates, "_norm")
@@ -262,6 +268,16 @@ plot_comparison_norm <- function(d_assays, variable, sample_type, normalisation_
       p_value = t.test(y = Concentration[norm_type==var_meanreplicates], x = Concentration[norm_type==var_meanreplicates_norm], paired = T)$p.value
     )
   
+  
+  d_sum <- d_plot |> 
+    ungroup() |> 
+    mutate(y_max = max(Concentration), .by = ceramideName) |> 
+    summarise(
+      n_labs = paste0("n=",n()), 
+      conc_min = min(Concentration) - y_max/20,
+      .by = c(norm_type, ceramideName)
+    )
+  
   write_csv(x = d_plot_stats, file = here(glue("manuscript/output/Stats_norm_{sample_type}.csv")))
     
   set.seed(1334)
@@ -295,9 +311,17 @@ plot_comparison_norm <- function(d_assays, variable, sample_type, normalisation_
     scale_color_manual(values = c("SOP" = "#e30202", "OTHER" = "darkblue"), labels=c("SOP", "OTHER")) +
     expand_limits(y=0) +
     
-    scale_x_discrete(labels = c("None",
-                                "SRM1950")) +
-
+    scale_x_discrete(labels = c("None", "SRM1950"))
+  
+  if(show_n){
+    plt <- plt + geom_text(
+      data = d_sum,
+      aes(label = n_labs, x = norm_type , y = conc_min),
+      size = 1.3, nudge_x = 0.0,inherit.aes = FALSE, color = "grey70", fontface = "italic"
+    )
+  }
+  
+  plt <- plt + 
     #scale_linetype_manual(values = c("SOP" = "solid", "OTHER" = "dotted"))+
     labs(color=NULL, fill = NULL)+
     theme_classic(base_size = 7) +
