@@ -47,7 +47,9 @@ prepareCalibLinesWithStandardConcs <- function(assayTable, expectedStdsConcentra
     ) |>
     mutate(
       RatioLipidToIS_C16 = area / if_else(length(ceramideName[isotope == "h" & ceramideName == "Cer 18:1;O2/16:0"]) > 0, (area[isotope == "h" & ceramideName == "Cer 18:1;O2/16:0"])[1], NA_real_),
-      RatioLipidToIS_C24 = area / if_else(length(ceramideName[isotope == "h" & ceramideName == "Cer 18:1;O2/24:0"]) > 0, (area[isotope == "h" & ceramideName == "Cer 18:1;O2/24:0"])[1], NA_real_)
+      RatioLipidToIS_C18 = area / if_else(length(ceramideName[isotope == "h" & ceramideName == "Cer 18:1;O2/18:0"]) > 0, (area[isotope == "h" & ceramideName == "Cer 18:1;O2/18:0"])[1], NA_real_),
+      RatioLipidToIS_C24 = area / if_else(length(ceramideName[isotope == "h" & ceramideName == "Cer 18:1;O2/24:0"]) > 0, (area[isotope == "h" & ceramideName == "Cer 18:1;O2/24:0"])[1], NA_real_),
+      RatioLipidToIS_C241 = area / if_else(length(ceramideName[isotope == "h" & ceramideName == "Cer 18:1;O2/24:1"]) > 0, (area[isotope == "h" & ceramideName == "Cer 18:1;O2/24:1"])[1], NA_real_)
     ) |> 
     filter(isotope == "l") |>  
      pivot_wider(names_from=isotope, values_from=area, names_prefix="area_") |> 
@@ -56,7 +58,7 @@ prepareCalibLinesWithStandardConcs <- function(assayTable, expectedStdsConcentra
   #readr::write_csv(d_part2, file.path(outputDirectory, "debug_2.csv"))
       
   d_final <- d_part1 |> 
-    inner_join(d_part2 |> dplyr::select(Sample, SampleType, LabId, ceramideName, replicate, RatioLipidToIS_C16, RatioLipidToIS_C24), by = c("Sample", "SampleType", "LabId","ceramideName", "replicate" ))
+    inner_join(d_part2 |> dplyr::select(Sample, SampleType, LabId, ceramideName, replicate, RatioLipidToIS_C16, RatioLipidToIS_C18, RatioLipidToIS_C24, RatioLipidToIS_C241), by = c("Sample", "SampleType", "LabId","ceramideName", "replicate" ))
   #readr::write_csv(d_final, file.path(outputDirectory, "debug.csv"))
   d_final
 }
@@ -170,10 +172,12 @@ createQcConcentrationsStats <- function(qcAveragedConcentrations, outputDirector
 }
 
 
-analyteConcentrationsFromCalibLines_function <- function(Auth, C16, C24) {
+analyteConcentrationsFromCalibLines_function <- function(Auth, C16, C18, C24, C241) {
   Auth |>
     left_join(C16 |> select(LabId, ceramideName, replicate, Sample, SampleType, C_Adj_C16)) |> 
-    left_join(C24 |> select(LabId, ceramideName, replicate, Sample, SampleType, C_Adj_C24))
+    left_join(C18 |> select(LabId, ceramideName, replicate, Sample, SampleType, C_Adj_C18)) |> 
+    left_join(C24 |> select(LabId, ceramideName, replicate, Sample, SampleType, C_Adj_C24)) |> 
+    left_join(C241 |> select(LabId, ceramideName, replicate, Sample, SampleType, C_Adj_C241))
 }
 
 
@@ -194,7 +198,9 @@ get_nistAveragedConcentrations <- function(data){
       CalibrationLine,
       C_Adj,
       C_Adj_C16,
+      C_Adj_C18,
       C_Adj_C24,
+      C_Adj_C241,
       C_SinglePoint,
       RatioLipidToIS
     ) |>
@@ -209,12 +215,14 @@ get_nistAveragedConcentrations <- function(data){
     ) |>
     pivot_wider(
       names_from = CalibrationLine,
-      values_from = c(C_Adj, C_Adj_C16, C_Adj_C24, C_SinglePoint, RatioLipidToIS)
+      values_from = c(C_Adj, C_Adj_C16, C_Adj_C18, C_Adj_C24, C_Adj_C241, C_SinglePoint, RatioLipidToIS)
     ) |>
     mutate(
       Avg_C_Adj = rowMeans(cbind(`C_Adj_Calibration Line 1`, `C_Adj_Calibration Line 2`), na.rm=TRUE),
       Avg_C_Adj_C16 = rowMeans(cbind(`C_Adj_C16_Calibration Line 1`, `C_Adj_C16_Calibration Line 2`), na.rm=TRUE),
+      Avg_C_Adj_C18 = rowMeans(cbind(`C_Adj_C18_Calibration Line 1`, `C_Adj_C18_Calibration Line 2`), na.rm=TRUE),
       Avg_C_Adj_C24 =  rowMeans(cbind(`C_Adj_C24_Calibration Line 1`, `C_Adj_C24_Calibration Line 2`), na.rm=TRUE),
+      Avg_C_Adj_C241 =  rowMeans(cbind(`C_Adj_C241_Calibration Line 1`, `C_Adj_C241_Calibration Line 2`), na.rm=TRUE),
       C_SinglePoint =  rowMeans(cbind(`C_SinglePoint_Calibration Line 1`, `C_SinglePoint_Calibration Line 2`), na.rm=TRUE),
       RatioLipidToIS = rowMeans(cbind(`RatioLipidToIS_Calibration Line 1`, `RatioLipidToIS_Calibration Line 2`), na.rm=TRUE))
     
