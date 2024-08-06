@@ -3,6 +3,7 @@ library(future)
 library(future.callr)
 plan(callr)
 options(tidyverse.quiet = TRUE)
+
 tar_option_set(
   packages = c(
     "tidyverse",
@@ -23,7 +24,7 @@ tar_option_set(
 )
 
 # print debug output for specific function
-#tar_option_set(debug = "readAssayTables")
+#tar_option_set(debug = "readAssayTables")  
 
 source("R/definitions.R")
 source("R/functions_io.R")
@@ -208,9 +209,23 @@ list(
             data = data
           )
       )) |>
+      dplyr::mutate(CalibrationLine_C18 = list(
+        lm(
+          RatioLipidToIS_C18 ~ Concentration,
+          weights = 1 / Concentration ^ 2,
+          data = data
+        )
+      )) |>
       dplyr::mutate(CalibrationLine_C24 = list(
         lm(
           RatioLipidToIS_C24 ~ Concentration,
+          weights = 1 / Concentration ^ 2,
+          data = data
+        )
+      )) |>
+      dplyr::mutate(CalibrationLine_C241 = list(
+        lm(
+          RatioLipidToIS_C241 ~ Concentration,
           weights = 1 / Concentration ^ 2,
           data = data
         )))
@@ -244,6 +259,20 @@ list(
     )
   ),
   tar_target(
+    calibLineDataLmCoeffs_C18,
+    calibLineDataLm |> summarise(broom::tidy(CalibrationLine_C18))
+  ),
+  tar_target(
+    calibLineDataLmSumm_C18,
+    calibLineDataLm |> summarise(broom::glance(CalibrationLine_C18))
+  ),
+  tar_target(
+    calibLineDataLmPred_C18,
+    calibLineDataLm |> summarise(
+      broom::augment(CalibrationLine_C18, se_fit = TRUE, interval = "confidence")
+    )
+  ),
+  tar_target(
     calibLineDataLmCoeffs_C24,
     calibLineDataLm |> summarise(broom::tidy(CalibrationLine_C24))
   ),
@@ -255,6 +284,21 @@ list(
     calibLineDataLmPred_C24,
     calibLineDataLm |> summarise(
       broom::augment(CalibrationLine_C24, se_fit = TRUE, interval = "confidence")
+    )
+  ),
+
+  tar_target(
+    calibLineDataLmCoeffs_C241,
+    calibLineDataLm |> summarise(broom::tidy(CalibrationLine_C241))
+  ),
+  tar_target(
+    calibLineDataLmSumm_C241,
+    calibLineDataLm |> summarise(broom::glance(CalibrationLine_C241))
+  ),
+  tar_target(
+    calibLineDataLmPred_C241,
+    calibLineDataLm |> summarise(
+      broom::augment(CalibrationLine_C241, se_fit = TRUE, interval = "confidence")
     )
   ),
   tar_target(
@@ -342,6 +386,31 @@ list(
       )
   ),
   tar_target(
+    calibLineDataLmCoeffsWide_C18,
+    calibLineDataLmCoeffs_C18 |>
+      select(-statistic, -p.value) |>
+      group_by(LabId, SampleType, ceramideId, ceramideName, estimate) |>
+      pivot_wider(names_from = term, values_from = c(estimate, std.error)) |>
+      rename(
+        Intercept_C18 = `estimate_(Intercept)`,
+        Intercept_SE_C18 = `std.error_(Intercept)`,
+        SlopeX_C18 = `estimate_Concentration`,
+        SlopeX_C18_SE = `std.error_Concentration`
+      ) |>
+      left_join(
+        calibLineDataLmSumm_C18 |> select(sigma_C18 = sigma),
+        by = c("LabId", "SampleType", "ceramideId", "ceramideName")
+      )
+  ),
+  tar_target(
+    combinedCalibLinesWithConcs_C18,
+    calibLineDataLm |> unnest(cols = c(data)) |>
+      left_join(
+        calibLineDataLmCoeffsWide_C18,
+        by = c("LabId", "SampleType", "ceramideId", "ceramideName")
+      )
+  ),
+  tar_target(
     calibLineDataLmCoeffsWide_C24,
     calibLineDataLmCoeffs_C24 |>
       select(-statistic, -p.value) |>
@@ -363,6 +432,31 @@ list(
     calibLineDataLm |> unnest(cols = c(data)) |>
       left_join(
         calibLineDataLmCoeffsWide_C24,
+        by = c("LabId", "SampleType", "ceramideId", "ceramideName")
+      )
+  ),
+  tar_target(
+    calibLineDataLmCoeffsWide_C241,
+    calibLineDataLmCoeffs_C241 |>
+      select(-statistic, -p.value) |>
+      group_by(LabId, SampleType, ceramideId, ceramideName, estimate) |>
+      pivot_wider(names_from = term, values_from = c(estimate, std.error)) |>
+      rename(
+        Intercept_C241 = `estimate_(Intercept)`,
+        Intercept_SE_C241 = `std.error_(Intercept)`,
+        SlopeX_C241 = `estimate_Concentration`,
+        SlopeX_C241_SE = `std.error_Concentration`
+      ) |>
+      left_join(
+        calibLineDataLmSumm_C241 |> select(sigma_C241 = sigma),
+        by = c("LabId", "SampleType", "ceramideId", "ceramideName")
+      )
+  ),
+  tar_target(
+    combinedCalibLinesWithConcs_C241,
+    calibLineDataLm |> unnest(cols = c(data)) |>
+      left_join(
+        calibLineDataLmCoeffsWide_C241,
         by = c("LabId", "SampleType", "ceramideId", "ceramideName")
       )
   ),
@@ -408,6 +502,18 @@ list(
       )
   ),
   tar_target(
+    analyteConcentrationsFromCalibLines_C18,
+    combinedCalibLinesWithConcs_C18 |>
+      mutate(
+        ReagentBlank = 0,
+        C_Adj_C18 = C_A_cal(
+          S_A = RatioLipidToIS_C18,
+          a = SlopeX_C18,
+          b = Intercept_C18 - ReagentBlank
+        )
+      )
+  ),
+  tar_target(
     analyteConcentrationsFromCalibLines_C24,
     combinedCalibLinesWithConcs_C24 |>
       mutate(
@@ -419,13 +525,27 @@ list(
         )
       )
   ),
+  tar_target(
+    analyteConcentrationsFromCalibLines_C241,
+    combinedCalibLinesWithConcs_C241 |>
+      mutate(
+        ReagentBlank = 0,
+        C_Adj_C241 = C_A_cal(
+          S_A = RatioLipidToIS_C241,
+          a = SlopeX_C241,
+          b = Intercept_C241 - ReagentBlank
+        )
+      )
+  ),
 
   tar_target(
     analyteConcentrationsFromCalibLines,
     analyteConcentrationsFromCalibLines_function(
       analyteConcentrationsFromCalibLines_Auth,
       analyteConcentrationsFromCalibLines_C16,
-      analyteConcentrationsFromCalibLines_C24
+      analyteConcentrationsFromCalibLines_C18,
+      analyteConcentrationsFromCalibLines_C24,
+      analyteConcentrationsFromCalibLines_C241
     )
   ),
 
@@ -525,17 +645,7 @@ list(
     ),
     pattern = map(labIds)
   ),
-  # Bo
-  tar_target(
-    analyteConcentrationsFromCalibLines_C24File,
-    readr::write_csv(
-      file = file.path(
-        outputDirectory,
-        "analyteConcentrationsFromCalibLines_C24.csv"
-      ),
-      analyteConcentrationsFromCalibLines_C24
-    )
-  ),
+
   ################################################################################
   # Calibration Curves: Adjust concentrations as mean corrected values of Calibration Curves 1 and 2
   ################################################################################
@@ -560,7 +670,9 @@ list(
         ISConcentration,
         C_Adj,
         C_Adj_C16,
+        C_Adj_C18,
         C_Adj_C24,
+        C_Adj_C241,
         C_LoD_C,
         C_LoQ_C,
         C_SinglePoint
@@ -568,7 +680,7 @@ list(
       group_by(LabId, Sample, ceramideId, ceramideName, Unit, replicate) |>
       pivot_wider(
         names_from = SampleType,
-        values_from = c(C_Adj, C_Adj_C16, C_Adj_C24, C_LoD_C, C_LoQ_C, C_SinglePoint)
+        values_from = c(C_Adj, C_Adj_C16, C_Adj_C18, C_Adj_C24, C_Adj_C241, C_LoD_C, C_LoQ_C, C_SinglePoint)
       ) |>
       # remove NAs that may have been introduced by grouping over replicates
       # some datasets only have two replicates at this point and pivot_wider may
@@ -580,9 +692,13 @@ list(
       mutate(
         Avg_C_Adj = (`C_Adj_Calibration Line 1` + `C_Adj_Calibration Line 2`) /
           2,
-        Avg_C_Adj_C16 = (`C_Adj_Calibration Line 1` + `C_Adj_Calibration Line 2`) /
+        Avg_C_Adj_C16 = (`C_Adj_C16_Calibration Line 1` + `C_Adj_C16_Calibration Line 2`) /
           2,
-        Avg_C_Adj_C24 = (`C_Adj_Calibration Line 1` + `C_Adj_Calibration Line 2`) /
+        Avg_C_Adj_C18 = (`C_Adj_C18_Calibration Line 1` + `C_Adj_C18_Calibration Line 2`) /
+          2,
+        Avg_C_Adj_C24 = (`C_Adj_C24_Calibration Line 1` + `C_Adj_C24_Calibration Line 2`) /
+          2,
+        Avg_C_Adj_C241 = (`C_Adj_C241_Calibration Line 1` + `C_Adj_C241_Calibration Line 2`) /
           2,
         Avg_C_LoD_C = (`C_LoD_C_Calibration Line 1` + `C_LoD_C_Calibration Line 2`) /
           2,
@@ -837,7 +953,9 @@ list(
     ) |>
     mutate(
       RatioLipidToIS_C16 = area / area[isotope == "h" & ceramideName == "Cer 18:1;O2/16:0"],
+      RatioLipidToIS_C18 = area / area[isotope == "h" & ceramideName == "Cer 18:1;O2/18:0"],
       RatioLipidToIS_C24 = area / area[isotope == "h" & ceramideName == "Cer 18:1;O2/24:0"],
+      RatioLipidToIS_C241 = area / area[isotope == "h" & ceramideName == "Cer 18:1;O2/24:1"]
     ) |>
     filter(isotope == "l") |>
     pivot_wider(
@@ -853,7 +971,9 @@ list(
            ceramideName,
            replicate,
            RatioLipidToIS_C16,
-           RatioLipidToIS_C24
+           RatioLipidToIS_C18,
+           RatioLipidToIS_C24,
+           RatioLipidToIS_C241
          ),
          by = c("Sample", "LabId", "ceramideName", "replicate")
      )}
@@ -881,7 +1001,19 @@ list(
         by = c("LabId", "ceramideId", "ceramideName", "CalibrationLine")
       ) |>
       left_join(
+        calibLineDataLmCoeffsWide_C18 |>
+          ungroup() |>
+          mutate(CalibrationLine = SampleType) |> select(-SampleType),
+        by = c("LabId", "ceramideId", "ceramideName", "CalibrationLine")
+      ) |>
+      left_join(
         calibLineDataLmCoeffsWide_C24 |>
+          ungroup() |>
+          mutate(CalibrationLine = SampleType) |> select(-SampleType),
+        by = c("LabId", "ceramideId", "ceramideName", "CalibrationLine")
+      ) |>
+      left_join(
+        calibLineDataLmCoeffsWide_C241 |>
           ungroup() |>
           mutate(CalibrationLine = SampleType) |> select(-SampleType),
         by = c("LabId", "ceramideId", "ceramideName", "CalibrationLine")
@@ -898,7 +1030,9 @@ list(
       mutate(
         C_Adj = C_A_cal(S_A = 2* RatioLipidToIS, a = SlopeX, b = Intercept),
         C_Adj_C16 = C_A_cal(S_A = 2*RatioLipidToIS_C16, a = SlopeX_C16, b = Intercept_C16),
+        C_Adj_C18 = C_A_cal(S_A = 2*RatioLipidToIS_C18, a = SlopeX_C18, b = Intercept_C18),
         C_Adj_C24 = C_A_cal(S_A = 2*RatioLipidToIS_C24, a = SlopeX_C24, b = Intercept_C24),
+        C_Adj_C241 = C_A_cal(S_A = 2*RatioLipidToIS_C241, a = SlopeX_C241, b = Intercept_C241),
         #ISConcentration is only half as large in the QC and NIST samples, compensate by multiplying by 2
         C_SinglePoint = 2 * area_l / area_h * ISConcentration
       )
@@ -1025,13 +1159,17 @@ list(
       mutate(
         C_CalibCurve_Avg = Avg_C_Adj,
         C_CalibCurve_Avg_C16 = Avg_C_Adj_C16,
-        C_CalibCurve_Avg_C24 = Avg_C_Adj_C24
+        C_CalibCurve_Avg_C18 = Avg_C_Adj_C18,
+        C_CalibCurve_Avg_C24 = Avg_C_Adj_C24,
+        C_CalibCurve_Avg_C241 = Avg_C_Adj_C241
       ) |>
       pivot_longer(
         cols = c(
           "C_CalibCurve_Avg",
           "C_CalibCurve_Avg_C16",
+          "C_CalibCurve_Avg_C18",
           "C_CalibCurve_Avg_C24",
+          "C_CalibCurve_Avg_C241",
           "C_SinglePoint"
         ),
         names_to = "Calibration",
