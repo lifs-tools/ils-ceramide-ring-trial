@@ -59,7 +59,9 @@ d_full <- d_orig |>
     C_SinglePoint,
     C_Adj = Avg_C_Adj,
     C_Adj_C16 = Avg_C_Adj_C16,
-    C_Adj_C24 = Avg_C_Adj_C24
+    C_Adj_C18 = Avg_C_Adj_C18,
+    C_Adj_C24 = Avg_C_Adj_C24,
+    C_Adj_C241 = Avg_C_Adj_C241
   ) |>
   mutate(ceramideName = str_replace(ceramideName, fixed("d18:1"), "18:1;O2")) |>
   group_by(SampleType,
@@ -71,7 +73,7 @@ d_full <- d_orig |>
            MassAnalyzerType) |>
   separate(
     LabId,
-    into = c("LabNo", "MethodNo"),
+    into = c("LabId_group", "MethodNo"),
     convert = FALSE,
     remove = FALSE,
     sep = "[abc]",
@@ -85,7 +87,7 @@ d_full <- d_orig |>
     SampleType = if_else(SampleType == "T1D", "DB", SampleType),
     MassAnalyzerResolution = if_else(MassAnalyzerType == "QQQ", "LowRes", "HighRes")
   ) |>
-  group_by(LabNo) |>
+  group_by(LabId_group) |>
   mutate(LabNum = dplyr::cur_group_id()) |>
   ungroup() |>
   distinct()
@@ -107,7 +109,7 @@ d_samples <- d_full |>
     ceramideName,
     Sample,
     LabId,
-    LabNo,
+    LabId_group,
     LabNum,
     MethodNo,
     Protocol,
@@ -126,7 +128,9 @@ d_samples <- d_full |>
     C_SinglePoint_RepCV = if_else(C_SinglePoint_RepCV == 0, NA_real_, C_SinglePoint_RepCV),
     C_Adj_mean = mean(C_Adj, na.rm = TRUE),
     C_Adj_C16_mean = mean(C_Adj_C16, na.rm = TRUE),
+    C_Adj_C18_mean = mean(C_Adj_C18, na.rm = TRUE),
     C_Adj_C24_mean = mean(C_Adj_C24, na.rm = TRUE),
+    C_Adj_C241_mean = mean(C_Adj_C241, na.rm = TRUE),
     C_Adj_SD = sd(C_Adj, na.rm = TRUE),
     C_Adj_RepCV =  C_Adj_SD / C_Adj_mean * 100,
     C_Adj_RepCV = if_else(C_Adj_RepCV == 0, NA_real_, C_Adj_RepCV)
@@ -137,7 +141,7 @@ d_samples <- d_full |>
     C_SinglePoint_SD = 0,
     C_Adj_SD = 0
   )) |>
-  group_by(LabNo) |>
+  group_by(LabId_group) |>
   mutate(LabNum = cur_group_id()) |>
   ungroup()
 
@@ -146,7 +150,7 @@ d_assays <- d_samples |>
     SampleType,
     ceramideName,
     LabId,
-    LabNo,
+    LabId_group,
     LabNum,
     MethodNo,
     Protocol,
@@ -165,7 +169,9 @@ d_assays <- d_samples |>
     C_Adj_sd = sd(C_Adj_mean, na.rm = TRUE),
     C_Adj_mean = mean(C_Adj_mean, na.rm = TRUE),
     C_Adj_C16_mean = mean(C_Adj_C16_mean, na.rm = TRUE),
+    C_Adj_C18_mean = mean(C_Adj_C18_mean, na.rm = TRUE),
     C_Adj_C24_mean = mean(C_Adj_C24_mean, na.rm = TRUE),
+    C_Adj_C241_mean = mean(C_Adj_C241_mean, na.rm = TRUE),
     C_Adj_intralabCV = C_Adj_sd / C_Adj_mean * 100
   ) |>
   ungroup() |>
@@ -179,7 +185,7 @@ d_assays_filt_mp <- flag_outlier(d_assays, limit_iqr = limit_iqr) |> filter(!Out
 d_stat_all_mp <- get_study_stats(d_assays, limit_iqr = limit_iqr)
 d_stat_filt_mp <- get_study_stats(d_assays_filt_mp, limit_iqr = limit_iqr)
 
-d_assays |> select(LabId, LabNo, LabNum) |> distinct() |>  write_csv(file = here("manuscript/output/Ids.csv")
+d_assays |> select(LabId, LabId_group, LabNum) |> distinct() |>  write_csv(file = here("manuscript/output/Ids.csv")
 )
 ```
 
@@ -232,7 +238,6 @@ d_stats <- d_assays_filt_mp |>
   mutate(res = purrr::map(data, \(x) broom::tidy(
     t.test(
       C_Adj_mean ~ Protocol,
-      paired = FALSE,
       var.equal = FALSE,
       alternative = "two.sided",
       data = x
@@ -468,6 +473,15 @@ Concentrations of the 4 ceramides in different NIST reference plasma samples. Ea
 ```{r fig03-plot, fig.height=8, fig.width=12, out.width="100%"}
 
 plot_all_refmaterials <- function(data, xy_lim) {
+  
+  d_sum <- data |> 
+    mutate(y_max = max(C_Adj_mean), .by = ceramideName) |> 
+    summarise(
+      n_labs = paste0("n=",n()), 
+      conc_min = min(C_Adj_mean) - y_max/20,
+      .by = c(SampleType, ceramideName)
+    )
+  
   p <- ggplot(
     data = data,
     mapping = aes(
@@ -521,7 +535,6 @@ plot_all_refmaterials <- function(data, xy_lim) {
       comparisons = list(c("SRM", "hTAG"), c("SRM", "DB"), c("SRM", "YAA")),
       test = "t.test",
       test.args = list(
-        paired = FALSE,
         alternative = "two.sided",
         var.equal = FALSE,
         na.action = "ommit"
@@ -535,6 +548,11 @@ plot_all_refmaterials <- function(data, xy_lim) {
       tip_length = 0.01,
       textsize = 1.4,
       map_signif_level = sig_annot
+    ) +
+    geom_text(
+      data = d_sum,
+      aes(label = n_labs, x = SampleType , y = conc_min),
+      size = 1.3, nudge_x = 0.0,inherit.aes = FALSE, color = "grey70", fontface = "italic"
     ) +
     scale_fill_manual(values = c("SOP" = "#ffc2c2", "OTHER" = "#d1dcff")) +
     scale_color_manual(values = c("SOP" = "#e30202", "OTHER" = "darkblue")) +
@@ -776,7 +794,7 @@ d_istd <- read_csv(here("data/definitions/labeledISConcentrations.csv")) |>
          conc_istd = Concentration) 
 d_prot <- readxl::read_xlsx(here("data/definitions/LabProtocolDetails.xlsx"), sheet = "Sheet1")
 
-d_plot <- d_assays_filt_mp |> 
+d_plot_norm_istd_mp <- d_assays_filt_mp |> 
   filter(SampleType == "SRM") |>
   select(SampleType, LabId, ceramideName, Protocol, C_Adj_mean, C_Adj_C16_mean, C_Adj_C24_mean) |> 
   pivot_longer(-SampleType:-Protocol, names_to = c("ISTD"), values_to = "Concentration") |> 
@@ -788,13 +806,25 @@ d_plot <- d_assays_filt_mp |>
   relocate("LC", "SOURCE_TEMP_CAT", .after = LabId)
 
 
-plot_diffistd <- function(data, y_title) {
+plot_diffistd <- function(data, y_title, n_label_offset = 20, legend_x_offset = 0.11) {
   
-  data$ISTD <- forcats::fct_recode(data$ISTD, "AuthISTD" = "C_Adj_mean", "C16_ISTD" = "C_Adj_C16_mean" , C24_ISTD = "C_Adj_C24_mean" )
-  data$ISTD <- forcats::fct_relevel(data$ISTD, c("AuthISTD", "C16_ISTD", "C24_ISTD"))
+
+  
+  data$ISTD <- forcats::fct_recode(data$ISTD, "AuthISTD" = "C_Adj_mean", "C16_ISTD" = "C_Adj_C16_mean" , "C18_ISTD" = "C_Adj_C18_mean" , "C24_ISTD" = "C_Adj_C24_mean", "C241_ISTD" = "C_Adj_C241_mean"  )
+  data$ISTD <- forcats::fct_relevel(data$ISTD, c("AuthISTD", "C16_ISTD", "C18_ISTD", "C24_ISTD", "C241_ISTD"))
   data$Protocol <- forcats::fct_relevel(forcats::as_factor(data$Protocol), c("SOP", "OTHER"))
   data$LC <- forcats::fct_relevel(data$LC, c("RP", "FIA", "SFC"))
   data <- data |> arrange( ISTD)
+  
+  
+  d_sum <- data |> 
+    ungroup() |> 
+    mutate(y_max = max(Concentration), .by = ceramideName) |> 
+    summarise(
+      n_labs = paste0("n=",n()), 
+      conc_min = min(Concentration) - y_max/n_label_offset,
+      .by = c(ISTD, ceramideName)
+    )
   
   pos <- ggbeeswarm::position_beeswarm(dodge.width = 0.07, method = "center")
   plt <- ggplot(data |> arrange(ISTD), 
@@ -835,19 +865,31 @@ plot_diffistd <- function(data, y_title) {
       x = list(
         ceramideName == "Cer 18:1;O2/16:0" ~ 
           scale_x_discrete(labels = c("AuthISTD" = "C16:0 d7\n(Authentic)", 
-                                      "C24_ISTD" = "C24:0 d7")),
+                                      "C18_ISTD" = "C18:0 d7", 
+                                      "C24_ISTD" = "C24:0 d7",
+                                      "C241_ISTD" = "C24:1 d7")),
         ceramideName == "Cer 18:1;O2/18:0" ~ 
           scale_x_discrete(labels = c("AuthISTD" = "C18:0 d7\n(Authentic)", 
                                       "C16_ISTD" = "C16:0 d7", 
-                                      "C24_ISTD" = "C24:0 d7")),
+                                      "C24_ISTD" = "C24:0 d7",
+                                      "C241_ISTD" = "C24:1 d7")),
         ceramideName == "Cer 18:1;O2/24:0" ~ 
           scale_x_discrete(labels = c("AuthISTD" = "C24:0 d7\n(Authentic)", 
-                                      "C16_ISTD" = "C16:0 d7")),
+                                      "C16_ISTD" = "C16:0 d7",
+                                      "C18_ISTD" = "C18:0 d7",
+                                      "C241_ISTD" = "C24:1 d7")),
         ceramideName == "Cer 18:1;O2/24:1" ~ 
           scale_x_discrete(labels = c( "AuthISTD" = "C24:1 d7\n(Authentic)", 
                                        "C24_ISTD" = "C24:0 d7", 
-                                       "C16_ISTD" = "C16:0 d7"))
-      ))+ 
+                                       "C16_ISTD" = "C16:0 d7",
+                                       "C18_ISTD" = "C18:0 d7"))
+      )) + 
+    
+    geom_text(
+      data = d_sum,
+      aes(label = n_labs, x = ISTD , y = conc_min),
+      size = 1.3, nudge_x = 0.0,inherit.aes = FALSE, color = "grey70", fontface = "italic"
+    ) +
     
     #scale_linetype_manual(values = c("SOP" = "solid", "OTHER" = "dotted"))+
     labs(color=NULL, fill = NULL)+
@@ -857,25 +899,26 @@ plot_diffistd <- function(data, y_title) {
     theme(
       axis.text.x = element_text(size = 6, face = "plain", angle = 0),
       # axis.text.y = element_text(size = 6, face = "plain", angle = 0),
-      axis.title.x = element_text(size = 7, face = "bold", angle = 0, margin = margin(t = 8, r = 0, b = 0, l = 0)),
+      axis.title.x = element_text(size = 6, face = "bold", angle = 0, margin = margin(t = 8, r = 0, b = 0, l = 0)),
       axis.title.y = element_text(size = 6, face = "bold", angle = 90, margin = margin(t = 0, r = 7, b = 0, l = 8)),
+      plot.title = element_text(size=6, face = "bold"),
       #panel.grid.major.x = element_line(colour = "grey70", linewidth = 0.2, linetype = "dotted"),
       strip.background = element_rect(fill="grey99")) +
-      theme(legend.position = c(.11,.83), 
+      theme(legend.position = c(legend_x_offset, 0.83), 
             legend.key.size = unit(0.1, "cm"),
           legend.spacing.y = unit(.001, 'cm'))
   
     plt
   }
 
-p_fig5  <- plot_diffistd(d_plot, "\U003BCmol/L (multi-point calibration)")
+p_fig5  <- plot_diffistd(d_plot_norm_istd_mp, "\U003BCmol/L (multi-point calibration)", n_label_offset = 20)
 
 ggsave(plot = p_fig5, filename = here("manuscript/output/Fig05_DifferentISTDs.png"), device = "png",
 dpi = 600, width =80, height =65, units = "mm")
 
 p_fig5
 
-d_plot_stats <- d_plot |> 
+d_plot_stats <- d_plot_norm_istd_mp |> 
   ungroup() |> 
   #filter(str_detect(ceramideName, "24\\:0"),  ISTD != "C18_ISTD") |> 
   group_by(ceramideName, ISTD) |> 
@@ -883,7 +926,7 @@ d_plot_stats <- d_plot |>
     N = n(),
     Mean = mean(Concentration),
     SD = sd(Concentration),
-        CV = sd(Concentration)/mean(Concentration) *100)
+    CV = sd(Concentration)/mean(Concentration) *100)
 write_csv(x = d_plot_stats, here("manuscript/output/Fig05_stats-mp.csv"))
 
 ```
@@ -894,11 +937,11 @@ Concentration of the 4 reported ceramides in NIST DB plasma before and after re-
 
 ```{r fig06-plot, fig.height=8, fig.width=12, out.width="100%"}
 
-d_plot <- flag_outlier(d_assays, limit_iqr = limit_iqr) |> filter(!(Outlier_mp & SampleType != "SRM"))
 d_plot <- flag_outlier(d_assays, limit_iqr = limit_iqr)
 
 
-p_Fig6 <- plot_comparison_norm(d_assays = d_plot,variable = "C_Adj",sample_type = "DB",normalisation_sample = "SRM",save_plot = TRUE,filename_prefix = "Fig06_", pos = pos) + 
+p_Fig6 <- plot_comparison_norm(d_assays = d_plot,variable = "C_Adj",sample_type = "DB",normalisation_sample = "SRM",
+                               save_plot = TRUE,filename_prefix = "Fig06_", pos = pos, show_n = TRUE) + 
   ggplot2::labs(y = "NIST DB, \U003BCmol/L (multi-point calibration)")
 
 ggsave(plot = p_Fig6, filename = here("manuscript/output/Fig06_normNIST_DB.png"), device = "png",
@@ -937,7 +980,7 @@ d_assays_filt$SampleType <- forcats::fct_relevel(d_assays_filt$SampleType, c("SR
 d_stats <- d_assays_filt |> 
   group_by(ceramideName, SampleType) |> 
   nest() |> 
-    mutate(res = purrr::map(data, \(x) broom::tidy(t.test(C_SinglePoint_mean ~ MassAnalyzerResolution, paired = FALSE, var.equal = FALSE, alternative = "two.sided", data = x))
+    mutate(res = purrr::map(data, \(x) broom::tidy(t.test(C_SinglePoint_mean ~ MassAnalyzerResolution, var.equal = FALSE, alternative = "two.sided", data = x))
     )) |>
   unnest(res) |> 
   ungroup() |> 
@@ -958,7 +1001,7 @@ d_stat_LHres <- d_stats2 |>  left_join(d_stats)
 d_stats <- d_assays_filt |> 
   group_by(ceramideName, SampleType) |> 
   nest() |> 
-    mutate(res = purrr::map(data, \(x) broom::tidy(t.test(C_SinglePoint_mean ~ Protocol, paired = FALSE, var.equal = FALSE, alternative = "two.sided", data = x))
+    mutate(res = purrr::map(data, \(x) broom::tidy(t.test(C_SinglePoint_mean ~ Protocol, var.equal = FALSE, alternative = "two.sided", data = x))
     )) |>
   unnest(res) |> 
   ungroup() |> 
@@ -981,7 +1024,7 @@ write_csv(x = d_stat_Protocol, file = here("manuscript/output/stats_by_RM-protco
 d_stats <- d_assays_filt |> 
   group_by(ceramideName, SampleType) |> 
   nest() |> 
-    mutate(res = purrr::map(data, \(x) broom::tidy(t.test(C_SinglePoint_mean ~ Protocol, paired = FALSE, var.equal = FALSE, alternative = "two.sided", data = x))
+    mutate(res = purrr::map(data, \(x) broom::tidy(t.test(C_SinglePoint_mean ~ Protocol, var.equal = FALSE, alternative = "two.sided", data = x))
     )) |>
   unnest(res) |> 
   ungroup() |> 
@@ -1119,9 +1162,9 @@ dpi = 600, width =160, height = 150, units = "mm")
 pS5
 ```
 
-# 14. Figure S6: Normalization with different ISTDs
+# 14. Figure S6: Normalization with different ISTDs (full and outlier-filtered datasets)
 
-Authentic vs class-specific internal standard normalization and its effects on bias and variability of concentrations from multi-point calibration of the full (A) and outlier-filtered (B) dataset.  The horizontal bars correspond to the mean and ±1 SD of all points per group. Data originating from the same laboratory are connected by dashed lines. Dataset 15 was excluded for Cer 18:1;O2/16:0 as it had 15x higher concentrations than the second highest point for C24:0 d7. SOP (red) and OTHER (blue) refer to the Standard vs Other methods, respectively. Outlier in the authentic internal standard groups have been removed (see Figure 1 and text).
+Authentic vs class-specific internal standard normalization and its effects on bias and variability. Concentrations are based on multi-point calibration. The horizontal bars correspond to the mean and ±1×SD of all points per group. Data originating from the same laboratory are connected by dashed lines. SOP (red) and OTHER (blue) refer to the Standard vs other methods, respectively. Outliers in the authentic internal standard groups have been removed (see Figure 1 and text). For panel B, outliers in the authentic internal standard groups have been removed in all groups for each ceramide species (see Figure 1 and text). Dataset 11 was excluded for Cer16:0 in panels A and B as it had 15x higher concentrations than the second highest data point for C24:0 D7 normalization. The number of data points is indicated below each group. 
 
 ```{r figS06-plot, fig.height=8, fig.width=6, out.width="100%"}
 
@@ -1130,43 +1173,61 @@ d_istd <- read_csv(here("data/definitions/labeledISConcentrations.csv")) |>
          conc_istd = Concentration) 
 d_prot <- readxl::read_xlsx(here("data/definitions/LabProtocolDetails.xlsx"), sheet = "Sheet1")
 
-d_plot <- d_assays |> 
+d_plot_allistd_mp <- d_assays |> 
   filter(SampleType == "SRM") |>
-  select(SampleType, LabId, ceramideName, Protocol, C_Adj_mean, C_Adj_C16_mean, C_Adj_C24_mean) |> 
+  select(SampleType, LabId, ceramideName, Protocol, C_Adj_mean, C_Adj_C16_mean, C_Adj_C18_mean, C_Adj_C24_mean, C_Adj_C241_mean) |> 
   pivot_longer(-SampleType:-Protocol, names_to = c("ISTD"), values_to = "Concentration") |> 
   filter(!(ceramideName == "Cer 18:1;O2/16:0" & ISTD == "C_Adj_C16_mean")) |> 
+  filter(!(ceramideName == "Cer 18:1;O2/18:0" & ISTD == "C_Adj_C18_mean")) |> 
   filter(!(ceramideName == "Cer 18:1;O2/24:0" & ISTD == "C_Adj_C24_mean")) |> 
+  filter(!(ceramideName == "Cer 18:1;O2/24:1" & ISTD == "C_Adj_C241_mean")) |> 
   filter(LabId != "15") |> 
-  filter(ceramideName == "Cer 18:1;O2/16:0" | ceramideName == "Cer 18:1;O2/24:0" ) |> 
+  filter(ceramideName == "Cer 18:1;O2/16:0" | ceramideName == "Cer 18:1;O2/18:0" | ceramideName == "Cer 18:1;O2/24:0" | ceramideName == "Cer 18:1;O2/24:1" ) |> 
+  left_join(d_prot |> select(LabId, Protocol,LC, SOURCE_TEMP_CAT)) |> 
+  relocate("LC", "SOURCE_TEMP_CAT", .after = LabId)
+
+d_plot_allistd_mp_filt <- d_assays_filt_mp |> 
+  filter(SampleType == "SRM") |>
+  select(SampleType, LabId, ceramideName, Protocol, C_Adj_mean, C_Adj_C16_mean, C_Adj_C18_mean, C_Adj_C24_mean, C_Adj_C241_mean) |> 
+  pivot_longer(-SampleType:-Protocol, names_to = c("ISTD"), values_to = "Concentration") |> 
+  filter(!(ceramideName == "Cer 18:1;O2/16:0" & ISTD == "C_Adj_C16_mean")) |> 
+  filter(!(ceramideName == "Cer 18:1;O2/18:0" & ISTD == "C_Adj_C18_mean")) |> 
+  filter(!(ceramideName == "Cer 18:1;O2/24:0" & ISTD == "C_Adj_C24_mean")) |> 
+  filter(!(ceramideName == "Cer 18:1;O2/24:1" & ISTD == "C_Adj_C241_mean")) |> 
+  filter(LabId != "15") |> 
+  filter(ceramideName == "Cer 18:1;O2/16:0" | ceramideName == "Cer 18:1;O2/18:0" | ceramideName == "Cer 18:1;O2/24:0" | ceramideName == "Cer 18:1;O2/24:1" ) |> 
   left_join(d_prot |> select(LabId, Protocol,LC, SOURCE_TEMP_CAT)) |> 
   relocate("LC", "SOURCE_TEMP_CAT", .after = LabId)
 
 
+p_fig6B_allistd_mp  <- plot_diffistd(d_plot_allistd_mp, "\U003BCmol/L (multi-point calibration)", n_label_offset = 25, legend_x_offset = 0.963) + ggtitle("Full dataset") + xlab("")
+p_fig6B_allistd_mp_filt  <- plot_diffistd(d_plot_allistd_mp_filt, "\U003BCmol/L (multi-point calibration)", n_label_offset = 20, legend_x_offset = 0.9633) + ggtitle("Outlier-filtered dataset")
 
+pS6AB <- p_fig6B_allistd_mp / p_fig6B_allistd_mp_filt + patchwork::plot_annotation(tag_levels = c("A", "B"))
 
-p_fig5A  <- plot_diffistd(d_plot, "\U003BCmol/L (multi-point calibration)")
+ggsave(plot = pS6AB, filename = here("manuscript/output/FigS06_DifferentISTDs-MP-OutlierWithWithout.png"), device = "png",
+dpi = 600, width =200, height =150, units = "mm")
 
-pS6 <- p_fig5A / p_fig5 + patchwork::plot_annotation(tag_levels = c("A", "B"))
+pS6AB
 
-ggsave(plot = pS6, filename = here("manuscript/output/FigS06_DifferentISTDs-All-FiltDataset.png"), device = "png",
-dpi = 600, width =80, height =130, units = "mm")
-
-pS6
-
-d_plot_stats <- d_plot |> 
+d_plot_allistd_mp_stats <- d_plot_allistd_mp |> mutate(Outlier_filt  = FALSE) |> 
+  bind_rows(d_plot_allistd_mp_filt |> mutate(Outlier_filt  = TRUE)) |> 
   ungroup() |> 
   #filter(str_detect(ceramideName, "24\\:0"),  ISTD != "C18_ISTD") |> 
-  group_by(ceramideName, ISTD) |> 
+  group_by(ceramideName, ISTD, Outlier_filt) |> 
   dplyr::summarise(
+    Outlier_filt = Outlier_filt[1],
     N = n(),
     Mean = mean(Concentration),
     SD = sd(Concentration),
-        CV = sd(Concentration)/mean(Concentration) *100)
-write_csv(x = d_plot_stats, here("manuscript/output/Fig05_stats-mp.csv"))
+    CV = sd(Concentration)/mean(Concentration) *100) |> 
+  arrange(Outlier_filt,ceramideName)
+
+write_csv(x = d_plot_allistd_mp_stats, here("manuscript/output/Fig06_stats.csv"))
 
 ```
 
-# 15. Figure S7: Normalization with different ISTDs (single-point calibration)
+# 15. Figure S7: Normalization with different ISTDs (single- vs multi-point calibration, full dataset)
 
 Authentic vs class-specific internal standard normalization and its effects on bias and variability of concentrations from single-point calibration. The horizontal bars correspond to the mean and ±1 SD of all points per group. Data originating from the same laboratory are connected by dashed lines. Dataset 15 was excluded for Cer 18:1;O2/16:0 as it had 15x higher concentrations than the second highest point for C24:0 d7. SOP (red) and OTHER (blue) refer to the Standard vs Other methods, respectively. Outlier in the authentic internal standard groups have been removed (see Figure 1 and text).
 
@@ -1186,14 +1247,14 @@ d_raw <- bind_rows(d_raw_OTHER, d_raw_sop) |>
   select(SampleType, isotope, ceramideName, ceramideId, Protocol, Sample, replicate, LabId, MassAnalyzerType,  Intensity = area) |> 
   mutate(ceramideName = str_replace(ceramideName, fixed("d18:1"), "18:1;O2")) |> 
   group_by(SampleType, ceramideName, Protocol, Sample, replicate, LabId, MassAnalyzerType) |> 
-  separate(LabId, into = c("LabNo", "MethodNo"), convert = FALSE, remove = FALSE, sep = "[abc]", fill = "right") |> 
+  separate(LabId, into = c("LabId_group", "MethodNo"), convert = FALSE, remove = FALSE, sep = "[abc]", fill = "right") |> 
   mutate(
     MethodNo = str_extract(LabId, "[abc]"),
     MethodNo = if_else(is.na(MethodNo), "a", MethodNo),
     Protocol = if_else(Protocol == "Standard", "SOP", "OTHER"), 
     SampleType = str_replace(SampleType, "NIST ", ""),
     MassAnalyzerResolution = if_else(MassAnalyzerType == "QQQ", "LowRes", "HighRes")) |> 
-  group_by(LabNo) |> 
+  group_by(LabId_group) |> 
   mutate(LabNum = dplyr::cur_group_id()) |> 
   ungroup() |> 
   distinct() 
@@ -1209,66 +1270,85 @@ d_calc <- d_raw |>
     AuthISTD = Intensity[isotope == "l"]/Intensity[isotope == "h"],
     C16_ISTD = Intensity[isotope == "l"]/Intensity[isotope == "h" & ceramideName == "Cer 18:1;O2/16:0"],
     C18_ISTD = Intensity[isotope == "l"]/Intensity[isotope == "h" & ceramideName == "Cer 18:1;O2/18:0"],
-    C24_ISTD = Intensity[isotope == "l"]/Intensity[isotope == "h" & ceramideName == "Cer 18:1;O2/24:0"]) |> 
+    C24_ISTD = Intensity[isotope == "l"]/Intensity[isotope == "h" & ceramideName == "Cer 18:1;O2/24:0"],
+    C241_ISTD = Intensity[isotope == "l"]/Intensity[isotope == "h" & ceramideName == "Cer 18:1;O2/24:1"]) |> 
   group_by(SampleType, ceramideName, LabId,LabNum,MethodNo, Protocol, Sample) |>
   summarise(
     AuthISTD = mean(AuthISTD, na.rm = TRUE),
     C16_ISTD = mean(C16_ISTD, na.rm = TRUE),
     C18_ISTD = mean(C18_ISTD, na.rm = TRUE),
-    C24_ISTD = mean(C24_ISTD, na.rm = TRUE)
+    C24_ISTD = mean(C24_ISTD, na.rm = TRUE),
+    C241_ISTD = mean(C241_ISTD, na.rm = TRUE)
   ) |> 
   group_by(SampleType, ceramideName, Protocol, LabId, MethodNo, LabNum) |>
   summarise(
     AuthISTD = mean(AuthISTD, na.rm = TRUE),
     C16_ISTD = mean(C16_ISTD, na.rm = TRUE),
     C18_ISTD = mean(C18_ISTD, na.rm = TRUE),
-    C24_ISTD = mean(C24_ISTD, na.rm = TRUE)
+    C24_ISTD = mean(C24_ISTD, na.rm = TRUE),
+    C241_ISTD = mean(C241_ISTD, na.rm = TRUE)
   ) |> 
   left_join(d_istd) |> 
   mutate(
     AuthISTD = AuthISTD * conc_istd,
     C16_ISTD = C16_ISTD * d_istd[d_istd$ceramideId == 1,] |> pull(conc_istd),
     C18_ISTD = C18_ISTD * d_istd[d_istd$ceramideId == 2,] |> pull(conc_istd),
-    C24_ISTD = C24_ISTD * d_istd[d_istd$ceramideId == 3,] |> pull(conc_istd))
+    C24_ISTD = C24_ISTD * d_istd[d_istd$ceramideId == 3,] |> pull(conc_istd),
+    C241_ISTD = C241_ISTD * d_istd[d_istd$ceramideId == 4,] |> pull(conc_istd))
  
 d_outlier <- flag_outlier(d_assays, limit_iqr = limit_iqr) |> select(SampleType, LabId, ceramideName, Protocol, Outlier_sp, Outlier_mp)
 
 d_calc_plot <- d_calc |> 
-  select(LabId, LabNum,ceramideName, Protocol, MethodNo, AuthISTD, C16_ISTD, C18_ISTD,C24_ISTD) |> 
-  pivot_longer(names_to = "ISTD", values_to = "Concentration", cols = AuthISTD:C24_ISTD) |> 
+  select(LabId, LabNum,ceramideName, Protocol, MethodNo, AuthISTD, C16_ISTD, C18_ISTD,C24_ISTD, C241_ISTD) |> 
+  pivot_longer(names_to = "ISTD", values_to = "Concentration", cols = AuthISTD:C241_ISTD) |> 
   filter(!LabId %in% c("04", "15", "18b", "31", "38")) |> 
+  #filter(!LabId %in% c("15")) |> 
   filter(!(ceramideName == "Cer 18:1;O2/16:0" & ISTD == "C16_ISTD")) |> 
   filter(!(ceramideName == "Cer 18:1;O2/18:0" & ISTD == "C18_ISTD")) |> 
-    filter(!(ceramideName == "Cer 18:1;O2/24:0" & ISTD == "C24_ISTD")) |> 
+  filter(!(ceramideName == "Cer 18:1;O2/24:0" & ISTD == "C24_ISTD")) |> 
+  filter(!(ceramideName == "Cer 18:1;O2/24:1" & ISTD == "C241_ISTD")) |> 
   #filter(!(ISTD == "C24_ISTD")) |> 
-  left_join(d_outlier |> select(ceramideName, SampleType, LabId, Outlier_sp, Outlier_mp), by = c("ceramideName", "LabId", "SampleType")) |> 
-  filter(!Outlier_sp|is.na(Outlier_sp)) |> 
+  #left_join(d_outlier |> select(ceramideName, SampleType, LabId, Outlier_sp, Outlier_mp), by = c("ceramideName", "LabId", "SampleType")) |> 
+  #filter(!Outlier_sp|is.na(Outlier_sp)) |> 
   left_join(d_prot |> select(LabId, Protocol,LC, SOURCE_TEMP_CAT)) |> 
   relocate("LC", "SOURCE_TEMP_CAT", .after = LabId)
 
 
 pos <- ggbeeswarm::position_beeswarm(dodge.width = 0.07, method = "center")
 
-d_plot <- d_calc_plot |> filter(str_detect(ceramideName, "16|24\\:0"), ISTD != "C18_ISTD") 
+d_plot_allistd_sp <- d_calc_plot #|> filter(str_detect(ceramideName, "16|24\\:0"), ISTD != "C18_ISTD") 
 
 
-p_figS4  <- plot_diffistd(d_plot, "\U003BCmol/L (single-point calibration)")
+p_figS7A_allistd_sp  <- plot_diffistd(d_plot_allistd_sp, "\U003BCmol/L (single-point calibration)", n_label_offset = 15, legend_x_offset = 0.9633) + 
+  ggtitle("Single-point calibration") + 
+  xlab("") +
+  scale_y_continuous(expand = expansion(mult = 0.07, add = 0))
 
-ggsave(plot = p_figS4, filename = here("manuscript/output/FigS07_DifferentISTDs-SP.png"), device = "png",
-dpi = 600, width =80, height =65, units = "mm")
+pS7AB <- p_figS7A_allistd_sp / (p_fig6B_allistd_mp + ggtitle("Multi-point calibration")) + patchwork::plot_annotation(tag_levels = c("A", "B"))
 
-p_figS4
 
-d_plot_stats <- d_plot |> 
+
+ggsave(plot = pS7AB, filename = here("manuscript/output/FigS07_DifferentISTDs-MP-SP_fulldataset-4filt.png"), device = "png",
+dpi = 600, width =200, height =150, units = "mm")
+
+
+
+pS7AB
+
+d_plot_allistd_spmp_stats <- d_plot_allistd_mp |> mutate(Calibration  = "Multi-Point") |> 
+  bind_rows(d_plot_allistd_sp |> mutate(Calibration  = "Single-Point")) |> 
   ungroup() |> 
   #filter(str_detect(ceramideName, "24\\:0"),  ISTD != "C18_ISTD") |> 
-  group_by(ceramideName, ISTD) |> 
+  group_by(ceramideName, ISTD, Calibration) |> 
   dplyr::summarise(
+    Calibration = Calibration[1],
     N = n(),
     Mean = mean(Concentration),
     SD = sd(Concentration),
-        CV = sd(Concentration)/mean(Concentration) *100)
-write_csv(x = d_plot_stats, here("manuscript/output/FigS03_stats-sp.csv"))
+    CV = sd(Concentration)/mean(Concentration) *100) |> 
+  arrange(Calibration,ceramideName)
+
+write_csv(x = d_plot_allistd_mp_stats, here("manuscript/output/Fig07_stats.csv"))
 
 ```
 
