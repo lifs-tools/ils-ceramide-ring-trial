@@ -18,7 +18,7 @@ library(patchwork)
 library(glue)
 library(ggh4x)
 library(fs)
-source(here("R/manuscript_plots.R"))
+source(here("R/manuscript_functions.R"))
 if(params$run_in_targets) {
   library(targets)
   library(tarchetypes)
@@ -26,18 +26,20 @@ if(params$run_in_targets) {
 
 here::i_am("manuscript/manuscript-figures-tables.Rmd")
 
-pos <- ggbeeswarm::position_beeswarm(dodge.width = 0.07, method = "center")
+pos <- ggbeeswarm::position_beeswarm(dodge.width = 0.07, method = "center") 
 ```
 
 
-# 00. Data preparation
+# 01. Data preparation
 
-ToDo:
-- For lab 26 a, there are duplicate entries, for Ratio/C_SinglePoint and for C_Adj
+Outlier filter based on Tukey's 1.5x IQR fences: 1st quantile (Q1) -1.5 × interquartile range (IQR) and 3rd quantile (Q3) + 1.5 × IQR 
 
-```{r 00-dataprep, message=FALSE}
+```{r dataprep, message=FALSE}
+
 limit_iqr = 1.5
-####
+
+# Import data from the targets pipeline ----
+
 if (params$run_in_targets) {
   print(paste("Running in targets pipeline!"))
   d_orig <- tar_read(nistAveragedConcentrationsFile)
@@ -46,6 +48,9 @@ if (params$run_in_targets) {
   d_orig <-
     readr::read_csv(file = here("output/nistCal1Cal2AveragedConcentrations.csv"))
 }
+
+# Prepare variable `d_full` containing the full annotated dataset -------------------
+
 d_full <- d_orig |>
   select(
     SampleType,
@@ -64,13 +69,13 @@ d_full <- d_orig |>
     C_Adj_C241 = Avg_C_Adj_C241
   ) |>
   mutate(ceramideName = str_replace(ceramideName, fixed("d18:1"), "18:1;O2")) |>
-  group_by(SampleType,
-           ceramideName,
-           Protocol,
-           Sample,
-           replicate,
-           LabId,
-           MassAnalyzerType) |>
+  # group_by(SampleType,
+  #          ceramideName,
+  #          Protocol,
+  #          Sample,
+  #          replicate,
+  #          LabId,
+  #          MassAnalyzerType) |>
   separate(
     LabId,
     into = c("LabId_group", "MethodNo"),
@@ -92,6 +97,7 @@ d_full <- d_orig |>
   ungroup() |>
   distinct()
 
+# TODO: Add explanation
 d_full <- d_full |>
   mutate(
     C_SinglePoint = if_else(LabId %in% c("26a", "26b"), C_SinglePoint * 3, C_SinglePoint),
@@ -99,9 +105,15 @@ d_full <- d_full |>
   )
 
 
-d_full$Protocol <- forcats::fct_relevel(d_full$Protocol, c("SOP", "OTHER"))
-d_full$SampleType <- forcats::fct_relevel(d_full$SampleType, c("SRM", "hTAG", "DB", "YAA"))
-d_full$MassAnalyzerResolution <- forcats::fct_relevel(d_full$MassAnalyzerResolution, c("LowRes", "HighRes"))
+d_full$Protocol <- forcats::fct_relevel(d_full$Protocol, 
+                                        c("SOP", "OTHER"))
+d_full$SampleType <- forcats::fct_relevel(d_full$SampleType, 
+                                          c("SRM", "hTAG", "DB", "YAA"))
+d_full$MassAnalyzerResolution <- forcats::fct_relevel(d_full$MassAnalyzerResolution, 
+                                                      c("LowRes", "HighRes"))
+
+
+# Prepare variable `d_samples` with injection replicates averaged and calculated corresponding replicate CVs ------
 
 d_samples <- d_full |>
   group_by(
@@ -145,6 +157,9 @@ d_samples <- d_full |>
   mutate(LabNum = cur_group_id()) |>
   ungroup()
 
+
+# Prepare variable `d_assays` with sample replicates averaged by SRM and calculated corresponding intra-lab CVs ------
+
 d_assays <- d_samples |>
   group_by(
     SampleType,
@@ -177,50 +192,66 @@ d_assays <- d_samples |>
   ungroup() |>
   arrange(SampleType)
 
+
+# Calculate outlier flags (based on Tukey's 1.5x IQR fences) and prepare outlier filter data subsets ------
+
+## Outlier filtering of single-point calibrated dataset and calculate data summaries
 d_assays_filt_sp <- flag_outlier(d_assays, limit_iqr = limit_iqr) |> filter(!Outlier_sp)
 d_stat_all_sp <- get_study_stats(d_assays |> filter(SampleType == "SRM"), limit_iqr = limit_iqr)
 d_stat_filt_sp <- get_study_stats(d_assays_filt_sp, limit_iqr = limit_iqr)
 
+## Outlier filtering of single-point calibrated dataset and calculate data summaries
 d_assays_filt_mp <- flag_outlier(d_assays, limit_iqr = limit_iqr) |> filter(!Outlier_mp)
 d_stat_all_mp <- get_study_stats(d_assays, limit_iqr = limit_iqr)
 d_stat_filt_mp <- get_study_stats(d_assays_filt_mp, limit_iqr = limit_iqr)
 
-d_assays |> select(LabId, LabId_group, LabNum) |> distinct() |>  write_csv(file = here("manuscript/output/Ids.csv")
-)
+
+# Save the used mappsing of LabId and LabNo. 
+#  LabId is the ID used for data submission and processing within the pipeline, the LabNo 
+#  corresponds to renumbered LabIds, which are used in the text and in figures 1 and S2 and in the
+
+d_assays |> select(LabId, LabId_group, LabNum) |> distinct() |>  write_csv(file = here("manuscript/output/LabId-LabNum_mapping.csv"))
+
 ```
 
-```{r fig01-tables}
-# Figure 1
-tb1_1_sp <- d_stat_filt_sp |>
+
+# 02. Table 2: Consensus concentrations and CVs of the 4 measured ceramides in the 4 NIST Reference Materials
+SOP and OTH refer to the standard and OTHER methods, respectively. n indicates the number of datasets that were included in the calculation of the variables given in this table after removal of outliers of the single-point (SP) or multi-point (MP) calibration, respectively, using Tukey’s 1.5×IQR method (see text). The total number of datasets before removal was 39 (26 SOP/13 OTHER). Intra-lab %CV corresponds to the median of individual intra-lab %CVs. 
+
+```{r manusript-table-2}
+
+
+# Table 2 (main text) ------
+table2_sp <- d_stat_filt_sp |>
   mutate(n_text = glue::glue("{n} ({n_SOP}/{n-n_SOP})")) |>
   select(
     Matrix = SampleType,
     Ceramide = ceramideName,
-    'N (SP)\n(SOP/Others)' = n_text,
+    'n (SP)\n(SOP/Others)' = n_text,
     '\U003BCmol/L (SP)\nmean' =  C_SinglePoint_interlabMEAN,
     '\U003BCmol/L (SP)\nSEM' =  C_SinglePoint_interlabSEM,
     'Inter-lab %CV\n(SP)' = C_SinglePoint_interlabCV
   )
 
-tb1_1_mp <- d_stat_filt_mp |>
+table2_mp <- d_stat_filt_mp |>
   mutate(n_text = glue::glue("{n} ({n_SOP}/{n-n_SOP})")) |>
   select(
     Matrix = SampleType,
     Ceramide = ceramideName,
-    'N (CAL)\n(SOP/Others)' = n_text,
+    'n (CAL)\n(SOP/Others)' = n_text,
     '\U003BCmol/L (CAL)\nmean' =  C_Adj_interlabMEAN,
     '\U003BCmol/L (CAL)\nSEM' =  C_Adj_interlabSEM,
     'Inter-lab %CV\n(CAL)' = C_Adj_interlabCV,
     'Intra-lab %CV\n(CAL, median)' = C_Adj_median_intralabCV,
   )
 
-tb1 <- tb1_1_sp |>
-  left_join(tb1_1_mp, by = c("Matrix", "Ceramide")) |>
+table2_final <- table2_sp |>
+  left_join(table2_mp, by = c("Matrix", "Ceramide")) |>
   select(
     "Matrix",
     "Ceramide",
-    'N (SP)\n(SOP/Others)',
-    'N (CAL)\n(SOP/Others)',
+    'n (SP)\n(SOP/Others)',
+    'n (CAL)\n(SOP/Others)',
     '\U003BCmol/L (SP)\nmean',
     '\U003BCmol/L (SP)\nSEM',
     '\U003BCmol/L (CAL)\nmean',
@@ -230,9 +261,49 @@ tb1 <- tb1_1_sp |>
     'Intra-lab %CV\n(CAL, median)'
   )
 
-write_csv(tb1, here("manuscript/output/Table2_DataSummary.csv"))
+write_excel_csv(table2_final, here("manuscript/output/Table2_Consensus-Concentrations-CVs.csv"))
+```
 
-d_stats <- d_assays_filt_mp |>
+# 03. Suppl Table S1: Concentrations and inter-lab %CVs in all reference materials in the full and outlier-filtered datasets
+Concentrations and inter-lab %CVs in all reference materials. ALL and Filt correspond to values calculated from the full or the outlier-filtered dataset, respectively. All concentrations were calculated using multi-point calibration. n corresponds to the number of datasets.
+
+```{r manusript-suppl-table-S1}
+
+tableS1_stats_all_datasets <- get_study_stats(d_assays) |>
+  select(
+    Matrix = SampleType,
+    Ceramide = ceramideName,
+    'n (All)' = n,
+    '\U003BCmol/L (All)\n(mean)' = C_Adj_interlabMEAN,
+    '\U003BCmol/L (All)\n(SD)' = C_Adj_interlabSD,
+    '\U003BCmol/L (All)\n(median)' = C_Adj_interlabMEDIAN,
+    '%CV (All)' = C_Adj_interlabCV,
+    '%RCV (All)' = C_Adj_interlabRCV
+  )
+
+tableS1_stats_outlierfilt_datasets <- d_stat_filt_mp |>
+  select(
+    Matrix = SampleType,
+    Ceramide = ceramideName,
+    'n (Filt)' = n,
+    '\U003BCmol/L (Filt)\n(mean)' = C_Adj_interlabMEAN,
+    '\U003BCmol/L (Filt)\n(SD)' = C_Adj_interlabSD,
+    '\U003BCmol/L (Filt)\n(median)' = C_Adj_interlabMEDIAN,
+    '%CV (Filt)' = C_Adj_interlabCV,
+    '%RCV (Filt)' = C_Adj_interlabRCV
+  )
+
+tableS1_stats_all_datasets |> 
+  left_join(tableS1_stats_outlierfilt_datasets) |> 
+  write_excel_csv(file = here("manuscript/output/Suppl-TableS1_Concentrations-CVs_ALL-vs-Outlierfilt-datasets.csv"))
+```
+
+# 04. Suppl Table S2: Concentrations and inter-lab %CV of ceramide species from the two protocol types
+The mean concentrations are given in µmol/L are based on multi-point calibration with outliers removed. The P values are from the comparison of individual values reported by SOP vs OTHER protocols (Welch’s two-sided t-test). n corresponds to the number of datasets after outlier removal.
+
+```{r manusript-suppl-table-S2}
+
+tableS2_stats_part1 <- d_assays_filt_mp |>
   group_by(ceramideName, SampleType) |>
   nest() |>
   mutate(res = purrr::map(data, \(x) broom::tidy(
@@ -247,7 +318,7 @@ d_stats <- d_assays_filt_mp |>
   ungroup() |>
   select(SampleType, ceramideName, p.value)
 
-d_stats2 <- d_assays_filt_mp |>
+tableS2_stats_part2 <- d_assays_filt_mp |>
   group_by(SampleType, ceramideName) |>
   summarise(
     n_SOP = length(C_Adj_mean[Protocol == "SOP"]),
@@ -258,66 +329,32 @@ d_stats2 <- d_assays_filt_mp |>
     CV_OTHER = sd(C_Adj_mean[Protocol == "OTHER"]) / mean_OTHER * 100
   )
 
-d_stat_Protocol <- d_stats2 |>
-  left_join(d_stats) |>
+tableS2_final <- tableS2_stats_part2 |>
+  left_join(tableS2_stats_part1) |>
   select(
     Matrix = SampleType,
     Ceramide = ceramideName,
-    'N\n(SOP)' = n_SOP,
-    'N\n(OTHER)' = n_OTHER,
-    '\U003BC\n(SOP)' = mean_SOP,
-    '\U003BC\n(OTHER)' = mean_OTHER,
+    'n\n(SOP)' = n_SOP,
+    'n\n(OTHER)' = n_OTHER,
+    '\U003BCmol/L\n(SOP)' = mean_SOP,
+    '\U003BCmol/L\n(OTHER)' = mean_OTHER,
     'P value' = p.value,
     '%CV\n(SOP)' = CV_SOP,
     '%CV\n(OTHER)' = CV_OTHER
   )
 
-write_csv(
-  x = d_stat_Protocol,
-  file = here("manuscript/output/TableS2_stats_by_RM-protcol.csv")
+write_excel_csv(
+  x = tableS2_final,
+  file = here("manuscript/output/Suppl-TableS2_Concentrations-CVs_SOP-vs_OTHER-MP.csv")
 )
+```
 
-d_stat_all2 <- get_study_stats(d_assays) |>
-  select(
-    Matrix = SampleType,
-    Ceramide = ceramideName,
-    'N (All)' = n,
-    '\U003BCmol/L (All)\n(mean)' = C_Adj_interlabMEAN,
-    '\U003BCmol/L (All)\n(SD)' = C_Adj_interlabSD,
-    '\U003BCmol/L (All)\n(median)' = C_Adj_interlabMEDIAN,
-    '%CV (All)' = C_Adj_interlabCV,
-    '%RCV (All)' = C_Adj_interlabRCV
-  )
-
-d_stat_filt2 <- d_stat_filt_mp |>
-  select(
-    Matrix = SampleType,
-    Ceramide = ceramideName,
-    'N (Filt)' = n,
-    '\U003BCmol/L (Filt)\n(mean)' = C_Adj_interlabMEAN,
-    '\U003BCmol/L (Filt)\n(SD)' = C_Adj_interlabSD,
-    '\U003BCmol/L (Filt)\n(median)' = C_Adj_interlabMEDIAN,
-    '%CV (Filt)' = C_Adj_interlabCV,
-    '%RCV (Filt)' = C_Adj_interlabRCV
-  )
-
-
-tS1 <- d_stat_all2 |> left_join(d_stat_filt2)
-write_csv(x = tS1,
-          file = here("manuscript/output/TableS1_AllvsFiltered.csv"))
-
-d_outlier_all <-
-  flag_outlier(d_assays, limit_iqr = limit_iqr) |> select(SampleType,
-                                                          LabId,
-                                                          ceramideName,
-                                                          Protocol,
-                                                          Outlier_sp,
-                                                          Outlier_mp)
-write_csv(d_outlier_all, here("manuscript/output/Outlier_SRM_IQR15.csv"))
+# 05. Suppl Dataset: Concentrations of all species in all samples from all labs (SP and MP) with Outlier status (TRUE/FALSE) ------
+```{r manusript-suppl-dataset}
 
 # create combined table with LC method, MS platform, sample type and lab id, with single and multi-point outlier flags
 d_lab_prot <- readxl::read_xlsx(here("data/definitions/LabProtocolDetails.xlsx"), sheet = "Sheet1")
-d_outlier_all_w_lab_prot <- flag_outlier(d_assays, limit_iqr = limit_iqr) |> 
+table_all_data_meanreplicates <- flag_outlier(d_assays, limit_iqr = limit_iqr) |> 
   select(SampleType,
          LabNum,
          LabId,
@@ -329,25 +366,34 @@ d_outlier_all_w_lab_prot <- flag_outlier(d_assays, limit_iqr = limit_iqr) |>
          C_Adj_mean,
          Outlier_sp,
          Outlier_mp) |>
-  left_join(d_lab_prot |> select(LabId, LC), by = c("LabId" = "LabId")) |>
+  left_join(d_lab_prot |> select(LabId, LC), by = c("LabId" = "LabId")) |> 
   select(
     SampleType, 
     LabNum, 
     LabId, 
-    ceramideName, 
+    "CeramideName" = ceramideName, 
     Protocol, 
     LC,	
     MassAnalyzerType, 
     MassAnalyzerResolution,	
-    C_SinglePoint_mean,	
-    C_Adj_mean,	
+    "ConcSinglePoint" = C_SinglePoint_mean,	
     Outlier_sp,	
+    "ConcMultiPoint" = C_Adj_mean,	
     Outlier_mp
-)
-write_csv(d_outlier_all_w_lab_prot, here("manuscript/output/SXX-ILS-Ceramide-Ring-Trial-Estimates.csv"))
+  )
+
+table_all_data_meanreplicates |> 
+  select(-ConcMultiPoint:-Outlier_mp) |> 
+  rename("Outlier" = Outlier_sp) |> 
+  write_excel_csv(here("manuscript/output/Suppl_Dataset_Concentrations_OutlierStatus_Sheet-SinglePointConc.csv"))
+
+table_all_data_meanreplicates |> 
+  select(-ConcSinglePoint:-Outlier_sp) |> 
+  rename("Outlier" = Outlier_mp) |> 
+  write_excel_csv(here("manuscript/output/Suppl_Dataset_Concentrations_OutlierStatus_Sheet-MultiPointConc.csv"))
 ```
 
-# 01. Figure 1: All samples from all labs
+# 06. Figure 1: All samples from all labs
 
 Concentration of the 4 reported ceramides in NIST SRM 1950. Each circle corresponds to one measurement from a vial of NIST SRM 1950 shipped to each of the participating laboratories. Horizontal bars are mean values of the data reported form each participant, while error bars (in some instances) indicate ±1SD of replicate measurements of the same sample. The outer green dotted lines indicate Tukey’s 1st quantile (Q1) - 1.5 × interquartile range (IQR) and Q3+1.5 × IQR used for as cut-off values for outlier removal. The mean and ± 2 × SD (solid grey dashed grey lines) are based on data after outlier removal. Molar concentrations were calculated using the external calibration curve (multi-point calibration). SOP (red) and OTHER (blue) refer to the Standard vs Other methods, respectively.
 
@@ -364,9 +410,11 @@ p_fig1 <-
     save_plot = TRUE,
     filename_prefix = "Fig01_"
   )
+
 p_fig1
 ```
-# 02. Figure 2: Single vs multi-point
+
+# 07. Figure 2: Single vs multi-point
 
 Molar concentrations derived from single point internal standard (ISTD) vs. calibration curve-based quantifications. The diagonal line indicates equal results between single point (horizontal axis) and calibration curve-based quantification (vertical axis). Outlier measurements were removed for each ceramide species reference plasma (see Figure 1 and text). NIST SRM 1950 (SRM, blue); hypertriglyceridemic (hTAG, red), diabetic (DB, purple), and African American (YAA, green), which are part of NIST RM 8231.
 
@@ -466,7 +514,7 @@ plot_single_vs_multipoint <- function(data, xy_lim) {
   p_fig2
 ```
 
-# 03. Figure 3: SRM comparisons
+# 08. Figure 3: SRM comparisons
 
 Concentrations of the 4 ceramides in different NIST reference plasma samples. Each circle corresponds to the values reported by one laboratory. P values are based on paired t-tests of complete datasets. The horizontal bars correspond to the mean and ±1 SD of all points per group. SOP (red) and OTHER (blue) refer to the Standard vs Other methods, respectively. Outlier measurements were removed for ceramide species in each reference plasma (see Figure 1 and text). 
 
@@ -608,11 +656,11 @@ dpi = 600, width =160, height =65, units = "mm")
 p_Fig3
 ```
 
-# 04. Figure 4: Interlaboratory Study Comparisons
+# 09. Figure 4: Interlaboratory Study Comparisons
 
 Comparison of inter-laboratory and/or cross-platform trials reporting ceramide concentrations in NIST SRM 1950. Each open circle corresponds to the reported value from one laboratory in each of the respective studies referenced by first author and year of publication. (sp) refers to a single, standardized protocol and platform employed by all laboratories while (mp) denotes studies in which multiple protocols and platforms were used. The red boxes and numbers indicate median ± MAD (mean absolute deviation) and the number of participating laboratories respectively. Depending on the precise nature of the study and/or reporting laboratory, concentrations were either reported with sphingoid-base and fatty details (e.g. Cer 18:1;O2/16:0, left panel) or as sum compositions (i.e. Cer 34:1;O2, left panel). In the latter case, isobaric ceramide species other than the 4 ceramides targeted in this study may therefore have contributed to the reported concentrations. Details of the individual studies are presented in Table S3. No outlier removal has been applied for each of the studies. 
 
-```{r fig04-dataprep-plot, fig.height=8, fig.width=12, out.width="100%"}
+```{r fig04-plot, fig.height=8, fig.width=12, out.width="100%"}
 d_bowden_orig <- read_csv(here("manuscript/data/Bowden_InterlabStudy_Ceramides_Conc.csv"))
 d_quehenberger_orig <- read_csv(here("manuscript/data/Quehenberger_Ceramides_Conc.csv"))
 d_biocrates <- read_csv(here("manuscript/data/Biocrates_Ringtrial_Ceramides.csv"))
@@ -783,7 +831,7 @@ dpi = 600, width =160, height =75, units = "mm")
 p_Fig4
 ```
 
-# 05. Figure 5: Normalization with different ISTDs
+# 10. Figure 5: Normalization with different ISTDs
 
 Authentic vs class-specific internal standard normalization and its effects on bias and variability of concentrations from multi-point calibration.  The horizontal bars correspond to the mean and ±1 SD of all points per group. Data originating from the same laboratory are connected by dashed lines. Dataset 15 was excluded for Cer 18:1;O2/16:0 as it had 15x higher concentrations than the second highest point for C24:0 d7. SOP (red) and OTHER (blue) refer to the Standard vs Other methods, respectively. Outlier in the authentic internal standard groups have been removed (see Figure 1 and text).
 
@@ -931,7 +979,7 @@ write_csv(x = d_plot_stats, here("manuscript/output/Fig05_stats-mp.csv"))
 
 ```
 
-# 06. Figure 6: SRM-normalization
+# 11. Figure 6: SRM-normalization
 
 Concentration of the 4 reported ceramides in NIST DB plasma before and after re-calibration using the NIST SRM 1950 concentration. Each circle corresponds to one measurement from one NIST DB sample shipped to each of the participating laboratories before (None) and after (SRM 1950) re-calibration with the SRM1950 concentration of the corresponding laboratory (see text). The horizontal bars correspond to the mean and ±1 SD of all points per group. This plot contains all datasets before and after re-calibration, no outlier removal has been performed.
 
@@ -950,117 +998,7 @@ ggsave(plot = p_Fig6, filename = here("manuscript/output/Fig06_normNIST_DB.png")
 p_Fig6
 ```
 
-# 07. Comparison labelled vs non-labelled
-```{r table-res-caliblines}
-if (params$run_in_targets) {
-  d_qc <- tar_read(analyteConcentrationsFromCalibLinesFile)
-} else {
-  d_qc <- readr::read_csv(file = here("output/analyteConcentrationsFromCalibLines.csv"))
-}
-
-d_plot <- d_qc |> 
-  group_by(ceramideName, LabId, Sample) |> 
-  summarise(area_l = mean(area_l), 
-            area_h = mean(area_h))
-
-d_plot
-```
-# 08. Stats for text/tables
-```{r tables-text}
-
-d_sum_tbl <- (d_stat_filt_sp |> select(ceramideName, Conc_mean = C_SinglePoint_interlabMEAN, Conc_mean_Adj = C_Adj_interlabMEAN, IntraLab_CV_medium = RatioLipidToIS_median_intralabCV, InterLab_CV_Single = RatioLipidToIS_interlabCV, InterLab_CV_Calib = C_Adj_interlabCV))
-
-write_csv(d_sum_tbl, here("manuscript/output/Summary_FilteredDataset_V3.csv"))
-d_assays$MassAnalyzerResolution <- factor(d_assays$MassAnalyzerResolution)
-
-d_assays_filt <- flag_outlier(d_assays, limit_iqr = limit_iqr) |> filter(!Outlier_sp, !Outlier_mp)
-
-d_assays_filt$SampleType <- forcats::fct_relevel(d_assays_filt$SampleType, c("SRM","hTAG","DB","YAA")) 
-
-d_stats <- d_assays_filt |> 
-  group_by(ceramideName, SampleType) |> 
-  nest() |> 
-    mutate(res = purrr::map(data, \(x) broom::tidy(t.test(C_SinglePoint_mean ~ MassAnalyzerResolution, var.equal = FALSE, alternative = "two.sided", data = x))
-    )) |>
-  unnest(res) |> 
-  ungroup() |> 
-  select(SampleType, ceramideName, p.value)
-
-d_stats2 <- d_assays_filt |> 
-  group_by(SampleType, ceramideName) |>
-  summarise(
-    n_LR = length(C_SinglePoint_mean[MassAnalyzerResolution == "LowRes"]),
-    n_HR = length(C_SinglePoint_mean[MassAnalyzerResolution == "HighRes"]),
-    mean_LR = mean(C_SinglePoint_mean[MassAnalyzerResolution == "LowRes"]),
-    mean_HR = mean(C_SinglePoint_mean[MassAnalyzerResolution == "HighRes"]),
-    CV_LR = sd(C_SinglePoint_mean[MassAnalyzerResolution == "LowRes"])/mean_LR*100,
-    CV_HR = sd(C_SinglePoint_mean[MassAnalyzerResolution == "HighRes"])/mean_HR*100)
-
-d_stat_LHres <- d_stats2 |>  left_join(d_stats)
-
-d_stats <- d_assays_filt |> 
-  group_by(ceramideName, SampleType) |> 
-  nest() |> 
-    mutate(res = purrr::map(data, \(x) broom::tidy(t.test(C_SinglePoint_mean ~ Protocol, var.equal = FALSE, alternative = "two.sided", data = x))
-    )) |>
-  unnest(res) |> 
-  ungroup() |> 
-  select(SampleType, ceramideName, p.value)
-
-d_stats2 <- d_assays_filt_mp |> 
-  group_by(SampleType, ceramideName) |>
-  summarise(
-    n_SOP = length(C_SinglePoint_mean[Protocol == "SOP"]),
-    n_OTHER = length(C_SinglePoint_mean[Protocol == "OTHER"]),
-    mean_SOP = mean(C_SinglePoint_mean[Protocol == "SOP"]),
-    mean_OTHER = mean(C_SinglePoint_mean[Protocol == "OTHER"]),
-    CV_SOP = sd(C_SinglePoint_mean[Protocol == "SOP"])/mean_SOP*100,
-    CV_OTHER = sd(C_SinglePoint_mean[Protocol == "OTHER"])/mean_OTHER*100)
-
-d_stat_Protocol <- d_stats2 |>  left_join(d_stats)
-
-write_csv(x = d_stat_Protocol, file = here("manuscript/output/stats_by_RM-protcol.csv"))
-
-d_stats <- d_assays_filt |> 
-  group_by(ceramideName, SampleType) |> 
-  nest() |> 
-    mutate(res = purrr::map(data, \(x) broom::tidy(t.test(C_SinglePoint_mean ~ Protocol, var.equal = FALSE, alternative = "two.sided", data = x))
-    )) |>
-  unnest(res) |> 
-  ungroup() |> 
-  select(SampleType, ceramideName, p.value)
-write_csv(x = d_stat_Protocol, file = here("manuscript/output/stats_by_RM-protcol.csv"))
-
-d_stats3 <- d_assays_filt |> 
-  group_by(SampleType, ceramideName) |>
-  summarise(
-    n_SP = length(C_SinglePoint_mean[!Outlier_sp]),
-    n_MP = length(C_Adj_mean[!Outlier_mp]),
-    mean_SP = mean(C_SinglePoint_mean[!Outlier_sp]),
-    mean_MP = mean(C_Adj_mean[!Outlier_mp]),
-    sd_SP = sd(C_SinglePoint_mean[!Outlier_sp]),
-    sd_MP = sd(C_Adj_mean[!Outlier_mp]),
-    CV_SP = sd_SP/mean_SP,
-    CV_MP = sd_MP/mean_MP)
-
-d_samples_filt <- flag_outlier(d_samples |> mutate(RatioLipidToIS_mean = RatioLipidToIS_mean, C_Adj_mean = C_Adj_mean, C_SinglePoint_mean = C_SinglePoint_mean), limit_iqr = limit_iqr) 
-d_stats4 <- d_samples_filt |> 
-  group_by(SampleType, ceramideName, LabId) |>
-  summarise(
-    CV_SP_Intra = sd(C_SinglePoint_mean[!Outlier_sp], na.rm = TRUE)/mean(C_SinglePoint_mean, na.rm = TRUE)*100,
-    CV_MP_Intra = sd(C_Adj_mean[!Outlier_mp], na.rm = TRUE)/mean(C_Adj_mean, na.rm = TRUE)*100) |> 
-  group_by(SampleType, ceramideName) |> 
-  summarise(
-    CV_SP_Intra = median(CV_SP_Intra, na.rm = TRUE),
-    CV_MP_Intra = median(CV_MP_Intra, na.rm = TRUE))
-  
-d_stat_sum <- d_stats3 |> left_join(d_stats4)
-write_csv(x = d_stat_sum, file = here("manuscript/output/stats_all.csv"))
-
-d_stat_sum
-```
-
-# 09. Figure S1: External Calibration Curves
+# 12. Suppl Figure S1: External Calibration Curves
 
 Log-log plot of mean calibration lines over all participating labs and protocols. Each concentration step of the calibration line samples is depicted as a blue dot, steps are connected by a blue solid line. The blue ribbons highlight the respective mean ±1SD. Median values are indicated by black dots and connected by a gray dashed line. The green line corresponds to the theoretical equimolar response of spiked-in non-labelled and labelled standards. The red line and ribbon correspond to the actual mean area ratios in the measured NIST SRM 1950 RM samples and the mean ±1SD, respectively, illustrating the suitability of the calibration lines to capture the expected concentrations of the four ceramides.
 
@@ -1073,7 +1011,7 @@ if(params$run_in_targets) {
 fs::file_copy(path = here("output/CalibrationLinesAvgMedRangeLog10-with-NISTSRM-AvgRatio.png"), new_path = here("manuscript/output/FigS01_CalibrationLinesAvgMedRangeLog10-with-NISTSRM-AvgRatio.png"), overwrite = TRUE)
 ```
 
-# 10. Figure S2: Single Point Quantification of NIST SRM 1950
+# 13. Suppl Figure S2: Single Point Quantification of NIST SRM 1950
 
 Concentration of the 4 reported ceramides in NIST SRM 1950 based on direct quantification using the internal standard (single point). Each circle corresponds to one measurement from one NIST SRM sample shipped to each of the participating laboratories. Horizontal bars are mean values of the data reported form each participant, while error bars (in some instances) indicate ±1SD of replicate measurements of the same sample. The outer green dotted lines indicate Tukey’s Q1–1.5*interquartile range (IQR) and Q3+1.5*IQR used for as cut-off values for outlier removal. The mean ± 2SD (solid grey and dashed grey lines) is based on the data after outlier removal. SOP (red) and OTHER (blue) refer to the Standard vs OTHER methods, respectively.
 
@@ -1097,7 +1035,7 @@ singlePointSRM1950Plot <- plot_labscatter(
 singlePointSRM1950Plot
 ```
 
-# 11. Figure S3: Single vs multi-point calibration with and without outliers
+# 14. Suppl Figure S3: Single vs multi-point calibration with and without outliers
 
 Molar concentrations derived from single point internal standard (ISTD) vs. calibration curve-based quantifications of the full (A) and outlier-filtered (B) dataset. The diagonal line indicates equal results between single point (horizontal axis) and calibration curve-based quantification (vertical axis). Outlier measurements were removed for each ceramide species reference plasma (see Figure 1 and text). NIST SRM 1950 (SRM, blue); hypertriglyceridemic (hTAG, red), diabetic (DB, purple), and African American (YAA, green), which are part of NIST RM 8231.
 
@@ -1118,7 +1056,7 @@ dpi = 600, width =160, height =120, units = "mm")
 pS3
 ```
 
-# 12. Figure S4: SRM comparisons
+# 15. Suppl Figure S4: SRM comparisons
 
 Concentrations of the 4 ceramides in different NIST reference plasma samples of the full (A) and outlier-filtered (B) dataset. Each circle corresponds to the values reported by one laboratory. P values are based on paired t-tests of complete datasets. The horizontal bars correspond to the mean and ±1 SD of all points per group. SOP (red) and OTHER (blue) refer to the Standard vs Other methods, respectively. Outlier measurements in (B) were removed for ceramide species in each reference plasma (see Figure 1 and text). 
 
@@ -1145,7 +1083,7 @@ dpi = 600, width =160, height =130, units = "mm")
 pS4
 ```
 
-# 13. Figure S5: Interlaboratory Study Comparisons
+# 16. Suppl Figure S5: Interlaboratory Study Comparisons
 
 Comparison of inter-laboratory and/or cross-platform trials reporting ceramide concentrations in NIST SRM 1950 with the full (A) and outlier-filtered (B) ILS ceramide dataset. Each open circle corresponds to the reported value from one laboratory in each of the respective studies referenced by first author and year of publication. (sp) refers to a single, standardized protocol and platform employed by all laboratories while (mp) denotes studies in which multiple protocols and platforms were used. The red boxes and numbers indicate median ± MAD (mean absolute deviation) and the number of participating laboratories respectively. Depending on the precise nature of the study and/or reporting laboratory, concentrations were either reported with sphingoid-base and fatty details (e.g. Cer 18:1;O2/16:0, left panel) or as sum compositions (i.e. Cer 34:1;O2, left panel). In the latter case, isobaric ceramide species other than the 4 ceramides targeted in this study may therefore have contributed to the reported concentrations. Details of the individual studies are presented in Table S3. No outlier removal has been applied for each of the studies. 
 
@@ -1162,7 +1100,7 @@ dpi = 600, width =160, height = 150, units = "mm")
 pS5
 ```
 
-# 14. Figure S6: Normalization with different ISTDs (full and outlier-filtered datasets)
+# 17. Suppl Figure S6: Normalization with different ISTDs (full and outlier-filtered datasets)
 
 Authentic vs class-specific internal standard normalization and its effects on bias and variability. Concentrations are based on multi-point calibration. The horizontal bars correspond to the mean and ±1×SD of all points per group. Data originating from the same laboratory are connected by dashed lines. SOP (red) and OTHER (blue) refer to the Standard vs other methods, respectively. Outliers in the authentic internal standard groups have been removed (see Figure 1 and text). For panel B, outliers in the authentic internal standard groups have been removed in all groups for each ceramide species (see Figure 1 and text). Dataset 11 was excluded for Cer16:0 in panels A and B as it had 15x higher concentrations than the second highest data point for C24:0 D7 normalization. The number of data points is indicated below each group. 
 
@@ -1223,11 +1161,11 @@ d_plot_allistd_mp_stats <- d_plot_allistd_mp |> mutate(Outlier_filt  = FALSE) |>
     CV = sd(Concentration)/mean(Concentration) *100) |> 
   arrange(Outlier_filt,ceramideName)
 
-write_csv(x = d_plot_allistd_mp_stats, here("manuscript/output/Fig06_stats.csv"))
+write_csv(x = d_plot_allistd_mp_stats, here("manuscript/output/FigS06_data-summary-stats.csv"))
 
 ```
 
-# 15. Figure S7: Normalization with different ISTDs (single- vs multi-point calibration, full dataset)
+# 18. Suppl Figure S7: Normalization with different ISTDs (single- vs multi-point calibration, full dataset)
 
 Authentic vs class-specific internal standard normalization and its effects on bias and variability of concentrations from single-point calibration. The horizontal bars correspond to the mean and ±1 SD of all points per group. Data originating from the same laboratory are connected by dashed lines. Dataset 15 was excluded for Cer 18:1;O2/16:0 as it had 15x higher concentrations than the second highest point for C24:0 d7. SOP (red) and OTHER (blue) refer to the Standard vs Other methods, respectively. Outlier in the authentic internal standard groups have been removed (see Figure 1 and text).
 
@@ -1348,11 +1286,11 @@ d_plot_allistd_spmp_stats <- d_plot_allistd_mp |> mutate(Calibration  = "Multi-P
     CV = sd(Concentration)/mean(Concentration) *100) |> 
   arrange(Calibration,ceramideName)
 
-write_csv(x = d_plot_allistd_mp_stats, here("manuscript/output/Fig07_stats.csv"))
+write_csv(x = d_plot_allistd_mp_stats, here("manuscript/output/FigS07_data-summary-stats.csv"))
 
 ```
 
-# 16. Figure S8: Normalization to NIST SRM 1950 for hTAG
+# 19. Suppl Figure S8: Normalization to NIST SRM 1950 for hTAG
 
 Re-calibration of hTAG using SRM 1950 after multi-point calibration. All datasets are shown here, but the indicated %CVs are based on a datasets where outliers in the SRM1950 were excluded (see Figure 1 and text).
 
@@ -1369,7 +1307,7 @@ labScatterPlots[[1]]$p_comb
 ```
 
 
-# 17. Figure S9: Normalization to NIST SRM 1950 for DB
+# 20. Suppl Figure S9: Normalization to NIST SRM 1950 for DB
 
 Re-calibration of hTAG using SRM 1950 after single-point calibration. All datasets are shown here, but the indicated %CVs are based on a datasets where outliers in the SRM1950 were excluded (see Figure 1 and text).
 
@@ -1378,11 +1316,125 @@ Re-calibration of hTAG using SRM 1950 after single-point calibration. All datase
 labScatterPlots[[2]]$p_comb
 ```
 
-# 18. Figure S10: Normalization to NIST SRM 1950 for YAA
+# 21. Suppl Figure S10: Normalization to NIST SRM 1950 for YAA
 
 Re-calibration of DB using SRM 1950 after multi-point calibration. All datasets are shown here, but the indicated %CVs are based on a datasets where outliers in the SRM1950 were excluded (see Figure 1 and text).
 
 ```{r figS10-plot, fig.height=8, fig.width=12, out.width="100%"}
 labScatterPlots[[3]]$p_comb
+```
+
+
+# 22. Additional Tables (not part of the manuscript)
+
+## 22a - Summary calibration lines raw intensities of labelled vs non-labelled ceramide species
+
+```{r table-res-caliblines}
+if (params$run_in_targets) {
+  d_caliblines <- tar_read(analyteConcentrationsFromCalibLinesFile)
+} else {
+  d_caliblines <- readr::read_csv(file = here("output/analyteConcentrationsFromCalibLines.csv"))
+}
+
+d_caliblines_areas_mean <- d_caliblines |> 
+  group_by(ceramideName, LabId, Sample) |> 
+  summarise(area_l = mean(area_l), 
+            area_h = mean(area_h))
+
+write_csv(x = d_caliblines_areas_mean, file = here("manuscript/output/Unpublished_summary_calibration-lines_areas-light-heavy.csv"))
+
+d_caliblines_areas_mean
+```
+
+## 22b - Comparison between low- and high-resolution instruments in terms of concentration and inter-lab %CV
+
+Concentrations and inter-lab %CV of ceramide species measured by either low-resolution (QQQ) or high-resolution (QTOF/QE) MS instruments. The concentrations given in µmol/L were obtained using  multi-point calibration and filtered for outliers. The P values are from the comparison of individual values from the two instrument resolution categories (Welch’s two-sided t-test). N corresponds to the number of datasets after outlier removal.
+
+```{r other-tables-lowres-vs-highres-ms}
+
+# Table comparison low vs high-resolution MS ----
+
+d_assays_mstype <- d_assays
+d_assays_mstype$MassAnalyzerResolution <- factor(d_assays_mstype$MassAnalyzerResolution)
+
+d_assays_mstype <- flag_outlier(d_assays_mstype, limit_iqr = limit_iqr) |> filter(!Outlier_mp)
+d_assays_mstype$SampleType <- forcats::fct_relevel(d_assays_mstype$SampleType, c("SRM","hTAG","DB","YAA")) 
+
+d_assays_mstype_stats_part1 <- d_assays_mstype |> 
+  group_by(ceramideName, SampleType) |> 
+  nest() |> 
+    mutate(res = purrr::map(data, \(x) broom::tidy(t.test(C_SinglePoint_mean ~ MassAnalyzerResolution, var.equal = FALSE, alternative = "two.sided", data = x))
+    )) |>
+  unnest(res) |> 
+  ungroup() |> 
+  select(SampleType, ceramideName, 'P value' = p.value)
+
+d_assays_mstype_stats_part2 <- d_assays_mstype |> 
+  group_by(SampleType, ceramideName) |>
+  summarise(
+    'n\n(LowRes)' = length(C_Adj_mean[MassAnalyzerResolution == "LowRes"]),
+    'n\n(HighRes)' = length(C_Adj_mean[MassAnalyzerResolution == "HighRes"]),
+    '\U003BCmol/L\n(LowRes)' = mean(C_Adj_mean[MassAnalyzerResolution == "LowRes"]),
+    '\U003BCmol/L\n(HighRes)' = mean(C_Adj_mean[MassAnalyzerResolution == "HighRes"]),
+    '%CV\n(LowRes)'= sd(C_Adj_mean[MassAnalyzerResolution == "LowRes"]) / mean(C_Adj_mean[MassAnalyzerResolution == "LowRes"]) * 100,
+    '%CV\n(HighRes)' = sd(C_Adj_mean[MassAnalyzerResolution == "HighRes"])/ sd(C_Adj_mean[MassAnalyzerResolution == "HighRes"]) * 100)
+
+d_assays_mstype_stats <- d_assays_mstype_stats_part2 |>  left_join(d_assays_mstype_stats_part1)
+write_excel_csv(d_assays_mstype_stats, here("manuscript/output/Unpublished_Comparison_LowRes-vs-HighRes-MS_MultiPoint.csv"))
+
+
+```
+
+
+## 22c - Comparison SOP vs OTHER protocol types of single-point calibration derived concenctrations
+
+Concentrations and inter-lab %CV of ceramide species from the two protocol types (SOP and OTHER). The concentrations given in µmol/L were obtained using the **single-point** calibration with outlier removed. The P values are from the comparison of individual values reported by SOP vs OTHER protocols (Welch’s two-sided t-test). N corresponds to the number of datasets after outlier removal. This table corresponds to Supplementary Table S2 that depicts the equivalent comparison for multi-point calibration derived concentrations.
+
+```{r other-tables-comp-sop-other-sp}
+
+# Concentrations (Single Point Calibration) and correspoding % CV of ceramide species from the two protocol types based on Single-Point Cal  ------
+
+summary_tableS2B_sp_stats_part1 <- d_assays_filt_sp |>
+  group_by(ceramideName, SampleType) |>
+  nest() |>
+  mutate(res = purrr::map(data, \(x) broom::tidy(
+    t.test(
+      C_Adj_mean ~ Protocol,
+      var.equal = FALSE,
+      alternative = "two.sided",
+      data = x )))) |>
+  unnest(res) |>
+  ungroup() |>
+  select(SampleType, ceramideName, p.value)
+
+summary_tableS2B_sp_stats_part2 <- d_assays_filt_sp |>
+  group_by(SampleType, ceramideName) |>
+  summarise(
+    n_SOP = length(C_SinglePoint_mean[Protocol == "SOP"]),
+    n_OTHER = length(C_SinglePoint_mean[Protocol == "OTHER"]),
+    mean_SOP = mean(C_SinglePoint_mean[Protocol == "SOP"]),
+    mean_OTHER = mean(C_SinglePoint_mean[Protocol == "OTHER"]),
+    CV_SOP = sd(C_SinglePoint_mean[Protocol == "SOP"]) / mean_SOP * 100,
+    CV_OTHER = sd(C_SinglePoint_mean[Protocol == "OTHER"]) / mean_OTHER * 100
+  )
+
+summary_tableS2B_final <- summary_tableS2B_sp_stats_part2 |>
+  left_join(summary_tableS2B_sp_stats_part1) |>
+  select(
+    Matrix = SampleType,
+    Ceramide = ceramideName,
+    'n\n(SOP)' = n_SOP,
+    'n\n(OTHER)' = n_OTHER,
+    '\U003BCmol/L\n(SOP)' = mean_SOP,
+    '\U003BCmol/L\n(OTHER)' = mean_OTHER,
+    'P value' = p.value,
+    '%CV\n(SOP)' = CV_SOP,
+    '%CV\n(OTHER)' = CV_OTHER
+  )
+
+write_excel_csv(
+  x = summary_tableS2B_final,
+  file = here("manuscript/output/Unpublished_Concentrations-CVs_SOP-vs-OTHER_SinglePoint.csv")
+)
 ```
 
