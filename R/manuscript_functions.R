@@ -134,7 +134,7 @@ plot_labscatter <- function(d_samples, d_assays, variable, sample_type, labid_co
       group_by(ceramideName, LabId) |>  
       mutate(!!ensym(var_meanreplicates) := !!ensym(var_meanreplicates)/mean(lab_mean_conc[SampleType == normalisation_sample]) * (!!sym(paste0(variable, "_interlabMEAN")))) 
     
-    write_csv(x = d_samples, file = here(glue("manuscript/output/Stats_plot_labscatter_{sample_type}.csv")))
+    #write_csv(x = d_samples, file = here(glue("manuscript/output/Stats_plot_labscatter_{sample_type}.csv")))
     #View(d_samples)
   }
   
@@ -278,7 +278,7 @@ plot_comparison_norm <- function(d_assays, variable, sample_type, normalisation_
       .by = c(norm_type, ceramideName)
     )
   
-  write_csv(x = d_plot_stats, file = here(glue("manuscript/output/Stats_norm_{sample_type}.csv")))
+  #write_csv(x = d_plot_stats, file = here(glue("manuscript/output/Stats_norm_{sample_type}.csv")))
     
   set.seed(1334)
   pos_points <- position_jitterdodge(dodge.width = 0.75, jitter.width = 0.2 )
