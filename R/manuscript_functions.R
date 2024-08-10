@@ -106,7 +106,7 @@ labScatterPlot <- function(sample_type, d_samples, d_assays, variable = "C_Adj",
 
 # Plotting all samples (with replicate StDev as error bars) of all labs. 
 plot_labscatter <- function(d_samples, d_assays, variable, sample_type, labid_col, normalisation_sample = NULL, 
-                            excluded_labs = "", save_plot = TRUE, C16_max = NA, C18_max = NA, C24_max = NA, C241_max = NA, filename_prefix){
+                            excluded_labs = "", save_plot = TRUE, C16_max = NA, C18_max = NA, C24_max = NA, C241_max = NA, filename_prefix, as_pdf = FALSE){
   
   var_meanreplicates <- paste0(variable, "_mean")
   
@@ -218,8 +218,15 @@ plot_labscatter <- function(d_samples, d_assays, variable, sample_type, labid_co
           legend.spacing.y = unit(.001, 'cm'),
           legend.text=element_text(size=8)) 
   
-  if(save_plot) ggsave(plot = plt2, filename = here("manuscript/output", paste0(filename_prefix, "LabScatterPlot_", sample_type, "_", variable, if_else(is.null(normalisation_sample), "", paste0("_norm_by_",sample_type)),".png")), device = "png",
+  
+  if(save_plot) {
+    if (as_pdf) 
+      ggsave(plot = plt2, filename = here("manuscript/output", paste0(filename_prefix, "LabScatterPlot_", sample_type, "_", variable, if_else(is.null(normalisation_sample), "", paste0("_norm_by_",sample_type)),".pdf")), device=cairo_pdf,
                        dpi = 600, width = 160, height =210, units = "mm")
+    else
+      ggsave(plot = plt2, filename = here("manuscript/output", paste0(filename_prefix, "LabScatterPlot_", sample_type, "_", variable, if_else(is.null(normalisation_sample), "", paste0("_norm_by_",sample_type)),".png")), device = "png",
+                         dpi = 600, width = 160, height =210, units = "mm")
+  }
   return(list(plt = plt2, stats = d_stat_filt))
 }
 
@@ -274,7 +281,7 @@ plot_comparison_norm <- function(d_assays, variable, sample_type, normalisation_
     mutate(y_max = max(Concentration), .by = ceramideName) |> 
     summarise(
       n_labs = paste0("n=",n()), 
-      conc_min = min(Concentration) - y_max/20,
+      conc_min = min(Concentration) - mean(y_max)/20,
       .by = c(norm_type, ceramideName)
     )
   
