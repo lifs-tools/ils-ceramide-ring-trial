@@ -20,5 +20,5 @@ library(here)
 tar_option_set(memory = "transient", garbage_collection = TRUE)
 # use the following command to run independent parts of the workflow in parallel
 tar_make_future(workers = min(4, parallel::detectCores() - 1), garbage_collection = TRUE)
-# 1#tar_make_future(workers = 1)
+#tar_make_future(workers = 1)
 #tar_glimpse()
