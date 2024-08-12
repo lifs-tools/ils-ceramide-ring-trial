@@ -5,6 +5,20 @@
 
 The evaluation code requires R 4.3 or later. Additionally, some packages may require system library dependencies. Please consult the package installation output for details for your environment.
 
+This git project uses lfs. In order to clone the repository, you need to have git-lfs installed. Please see the git-lfs [installation instructions](https://docs.github.com/en/repositories/working-with-files/managing-large-files/installing-git-large-file-storage). The file `.gitattributes` contains the file extensions that are tracked by git-lfs. To add additional file extensions, please use `git lfs track "*.ext"`, replacing `ext` with the file extension you want to track.
+
+Clone the repository with:
+
+```
+git clone https://github.com/lifs-tools/ils-ceramide-ring-trial.git
+```
+
+or using ssh:
+
+```
+git clone git@github.com:lifs-tools/ils-ceramide-ring-trial.git
+```
+
 ### Ubuntu
 
 In order to run the evaluation in Ubuntu, you will need to install system packages before installing the R packages:
@@ -81,6 +95,9 @@ The folder `definitions` contains information related to blank types and ranges 
 
 The folder `ring-trial-comparison` contains tabular results for the other ring trials that we compared our ceramide concentrations against.
 
+Please note that raw data provided by the labs is not included in this repository. The data was provided by the labs to the study coordination at the [SLING](https://sling.sg/) / [SingMass](https://singmass.sg/) at NUS Singapore. 
+The data was then anonymized and provided to the data analysis team for evaluation. To maintain the privacy of the labs, the raw data was converted to mzML and uploaded to [Zenodo](https://zenodo.org/doi/10.5281/zenodo.12632988) for the labs that have provided their raw data. Please note that the lab IDs used within this repository differ from the ones used in the final manuscript. The [mapping table](https://zenodo.org/doi/10.5281/zenodo.12632988) maps the ids used in this repository ('LabId') to the ids used in the final manuscript ('LabNum').
+
 ### R folder
 
 The `R` folder contains reusable portions of code used within the evaluation workflow, e.g. for plotting, calibration curve-related calculations etc.
@@ -112,7 +129,7 @@ We would like to thank all members of the International Lipidomics Society's [in
 
 # Inquiring about your lab id
 
-Please note that the data analysis team had no access to lab identities due to the blinding of the analysis reports before transmission to us. We can therefor not provide you your lab id to re-identify your results. Please contact the study coordination at the [SLING](https://sling.sg/) / [SingMass](https://singmass.sg/) at NUS Singapore for details.
+Please note that the data analysis team had no access to lab identities due to the blinding of the analysis reports before transmission to us. We can therefor not provide you your lab id to re-identify your results. Please contact the study coordination at the [SLING](https://sling.sg/) / [SingMass](https://singmass.sg/) at NUS Singapore for details. Also, please see the [mapping table](https://zenodo.org/doi/10.5281/zenodo.12632988), which maps the ids used in this repository ('LabId') to the ids used in the final manuscript ('LabNum').
 
 # References
 
