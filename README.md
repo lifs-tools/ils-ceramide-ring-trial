@@ -1,7 +1,7 @@
 # ILS Ceramide Ring Trial Results
 
-* Lab reports, evaluation pipeline, plots and tables - [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10081970.svg)](https://doi.org/10.5281/zenodo.10081970)
-* mzML Datasets - [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.12632988.svg)](https://zenodo.org/doi/10.5281/zenodo.12632988)
+* [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10081970.svg)](https://doi.org/10.5281/zenodo.10081970) - Lab reports, evaluation pipeline, plots and tables
+* [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.12632988.svg)](https://zenodo.org/doi/10.5281/zenodo.12632988) - mzML Datasets
 
 ## Prerequisites
 
