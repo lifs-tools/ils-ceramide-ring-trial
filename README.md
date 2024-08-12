@@ -1,5 +1,5 @@
 # ILS Ceramide Ring Trial Results
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10081970.svg)](https://doi.org/10.5281/zenodo.10081970)
+[![Data Reports, Plots and Tables](https://zenodo.org/badge/DOI/10.5281/zenodo.10081970.svg)](https://doi.org/10.5281/zenodo.10081970)[![mzML Datasets](https://zenodo.org/badge/DOI/10.5281/zenodo.12632988.svg)](https://zenodo.org/doi/10.5281/zenodo.12632988)
 
 ## Prerequisites
 
@@ -136,9 +136,13 @@ Main publication
 
 [1] Torta F, Hoffmann N, Burla B *et al.*, Concordant inter-laboratory derived concentrations of ceramides in human plasma reference materials via authentic standards. 2024
 
+[1a] Evaluation code and data for the ceramide ring trial. https://doi.org/10.5281/zenodo10081970
+
+[1b] mzML datasets for the ceramide ring trial. https://doi.org/10.5281/zenodo.12632988
+
 ---
 
-[2] A. Gustavo González, M. Ángeles Herrador. A practical guide to analytical method validation, including measurement uncertainty and accuracy profiles. TrAC Trends in Analytical Chemistry 2007;26(3). doi: 10.1016/j.trac.2007.01.009
+[2] A. Gustavo González, M. Ángeles Herrador. A practical guide to analytical method validation, including measurement uncertainty and accuracy profiles. TrAC Trends in Analytical Chemistry 2007;26(3). doi: [10.1016/j.trac.2007.01.009](https://doi.org/10.1016/j.trac.2007.01.009)
 
 [3] FDA, Bioanalytical Method Validation - Guidance for Industry. 2018 May. https://www.fda.gov/files/drugs/published/Bioanalytical-Method-Validation-Guidance-for-Industry.pdf 
 
@@ -148,4 +152,4 @@ Main publication
 
 [6] B. Magnusson and U. Örnemark (eds.) Eurachem Guide: The Fitness for Purpose of Analytical Methods – A Laboratory Guide to Method Validation and Related Topics, (2nd ed. 2014). ISBN 978-91-87461-59-0. Available from www.eurachem.org.
 
-[7] D. Kauhanen, M. Sysi-Ah, KM. Koistinen, R. Laaksonen, J. Sinisalo, K. Ekroos. Development and validation of a high-throughput LC-MS/MS assay for routine measurement of molecular ceramides. Anal Bioanal Chem. 2016 May;408(13):3475-83. doi: 10.1007/s00216-016-9425-z
+[7] D. Kauhanen, M. Sysi-Ah, KM. Koistinen, R. Laaksonen, J. Sinisalo, K. Ekroos. Development and validation of a high-throughput LC-MS/MS assay for routine measurement of molecular ceramides. Anal Bioanal Chem. 2016 May;408(13):3475-83. doi: [10.1007/s00216-016-9425-z](https://doi.org/10.1007/s00216-016-9425-z)
