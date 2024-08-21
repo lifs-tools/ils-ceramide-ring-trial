@@ -21,6 +21,14 @@ or using ssh:
 git clone git@github.com:lifs-tools/ils-ceramide-ring-trial.git
 ```
 
+The repository uses git lfs. Please ensure that git lfs is installed. After the checkout, run
+
+```
+git lfs checkout
+```
+
+to replace binary file references with the real files.
+
 ### Ubuntu
 
 In order to run the evaluation in Ubuntu, you will need to install system packages before installing the R packages:

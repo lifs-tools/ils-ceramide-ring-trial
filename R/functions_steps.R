@@ -177,7 +177,8 @@ analyteConcentrationsFromCalibLines_function <- function(Auth, C16, C18, C24, C2
     left_join(C16 |> select(LabId, ceramideName, replicate, Sample, SampleType, C_Adj_C16)) |> 
     left_join(C18 |> select(LabId, ceramideName, replicate, Sample, SampleType, C_Adj_C18)) |> 
     left_join(C24 |> select(LabId, ceramideName, replicate, Sample, SampleType, C_Adj_C24)) |> 
-    left_join(C241 |> select(LabId, ceramideName, replicate, Sample, SampleType, C_Adj_C241))
+    left_join(C241 |> select(LabId, ceramideName, replicate, Sample, SampleType, C_Adj_C241)) |>
+    select(-CalibrationLine,-CalibrationLine_C16,-CalibrationLine_C18,-CalibrationLine_C24,-CalibrationLine_C241)
 }
 
 

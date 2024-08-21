@@ -2,7 +2,8 @@ library(targets)
 library(future)
 library(future.callr)
 plan(callr)
-options(tidyverse.quiet = TRUE)
+# set future globals maxSize to 1000MB
+options(tidyverse.quiet = TRUE, future.globals.maxSize= 1048576000)
 
 tar_option_set(
   packages = c(
@@ -19,7 +20,8 @@ tar_option_set(
     "patchwork",
     "glue",
     "ggh4x",
-    "tarchetypes"
+    "tarchetypes",
+    "fst"
   )
 )
 
