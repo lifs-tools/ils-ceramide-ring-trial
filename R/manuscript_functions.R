@@ -133,9 +133,6 @@ plot_labscatter <- function(d_samples, d_assays, variable, sample_type, labid_co
       mutate(lab_mean_conc = median((!!ensym(var_meanreplicates))[SampleType == normalisation_sample])) |> 
       group_by(ceramideName, LabId) |>  
       mutate(!!ensym(var_meanreplicates) := !!ensym(var_meanreplicates)/mean(lab_mean_conc[SampleType == normalisation_sample]) * (!!sym(paste0(variable, "_interlabMEAN")))) 
-    
-    #write_csv(x = d_samples, file = here(glue("manuscript/output/Stats_plot_labscatter_{sample_type}.csv")))
-    #View(d_samples)
   }
   
   if(variable == "C_Adj"){
@@ -154,6 +151,10 @@ plot_labscatter <- function(d_samples, d_assays, variable, sample_type, labid_co
   
   
   d_samples_subset <- d_samples |> filter(SampleType == sample_type) 
+  readr::write_excel_csv(d_samples_subset, file = here(paste0("manuscript/output/", filename_prefix, "_sourcedata_points.csv")))
+  readr::write_excel_csv(d_stat_filt, file = here(paste0("manuscript/output/", filename_prefix, "_sourcedata_stats.csv")))
+  
+  
   set.seed(1334)
   pos_points <- position_jitterdodge(dodge.width = 0.75, jitter.width = 0.2 )
   
@@ -182,7 +183,7 @@ plot_labscatter <- function(d_samples, d_assays, variable, sample_type, labid_co
     geom_linerange(aes(x = LabNum+0.5, 
                        ymin = !!sym(paste0(variable, "_mean")) - !!sym(paste0(variable, "_SD")), 
                        ymax = !!sym(paste0(variable, "_mean")) + !!sym(paste0(variable, "_SD"))), 
-                    position = pos_points, size = .3,  alpha = 0.25) + 
+                    position = pos_points, linewidth = .3,  alpha = 0.25) + 
     stat_summary(position = pos_points,
                  fun = "mean",
                  geom = "crossbar",inherit.aes = TRUE,
@@ -213,7 +214,7 @@ plot_labscatter <- function(d_samples, d_assays, variable, sample_type, labid_co
       panel.grid.major.x = element_line(colour = "grey70", linewidth = 0.2, linetype = "dotted"),
       strip.background =element_rect(fill="grey99")
     )  +
-    theme(legend.position = c(.94,.97), 
+    theme(legend.position.inside = c(.94,.97), 
           legend.key.size = unit(0.2, "cm"),
           legend.spacing.y = unit(.001, 'cm'),
           legend.text=element_text(size=8)) 
@@ -221,10 +222,10 @@ plot_labscatter <- function(d_samples, d_assays, variable, sample_type, labid_co
   
   if(save_plot) {
     if (as_pdf) 
-      ggsave(plot = plt2, filename = here("manuscript/output", paste0(filename_prefix, "LabScatterPlot_", sample_type, "_", variable, if_else(is.null(normalisation_sample), "", paste0("_norm_by_",sample_type)),".pdf")), device=cairo_pdf,
+      ggsave(plot = plt2, filename = here("manuscript/output", paste0(filename_prefix, "LabScatterPlot_", sample_type, "_", variable, "_", if_else(is.null(normalisation_sample), "", paste0("_norm_by_",sample_type)),".pdf")), device=cairo_pdf,
                        dpi = 600, width = 160, height =210, units = "mm")
     else
-      ggsave(plot = plt2, filename = here("manuscript/output", paste0(filename_prefix, "LabScatterPlot_", sample_type, "_", variable, if_else(is.null(normalisation_sample), "", paste0("_norm_by_",sample_type)),".png")), device = "png",
+      ggsave(plot = plt2, filename = here("manuscript/output", paste0(filename_prefix, "LabScatterPlot_", sample_type, "_", variable, "_", if_else(is.null(normalisation_sample), "", paste0("_norm_by_",sample_type)),".png")), device = "png",
                          dpi = 600, width = 160, height =210, units = "mm")
   }
   return(list(plt = plt2, stats = d_stat_filt))
@@ -234,7 +235,7 @@ plot_labscatter <- function(d_samples, d_assays, variable, sample_type, labid_co
 
 # Plotting all samples (with replicate StDev as error bars) of all labs. 
 plot_comparison_norm <- function(d_assays, variable, sample_type, normalisation_sample = NULL, 
-                            excluded_labs = "", save_plot = TRUE, filename_prefix,
+                            excluded_labs = "", save_plot = TRUE, filename_prefix = "SRM-normalization",
                             selected_ceramides = c("Cer 18:1;O2/16:0", "Cer 18:1;O2/18:0", "Cer 18:1;O2/24:0", "Cer 18:1;O2/24:1"),
                             pos = ggbeeswarm::position_beeswarm(dodge.width = 0.07, method = "center"), show_n = TRUE){
   
@@ -274,6 +275,10 @@ plot_comparison_norm <- function(d_assays, variable, sample_type, normalisation_
       CV_norm = sd(Concentration[norm_type==var_meanreplicates_norm])/mean(Concentration[norm_type==var_meanreplicates_norm])*100,
       p_value = t.test(y = Concentration[norm_type==var_meanreplicates], x = Concentration[norm_type==var_meanreplicates_norm], paired = T)$p.value
     )
+  
+
+  readr::write_excel_csv(d_plot, file = here(paste0("manuscript/output/", filename_prefix, "",  sample_type, "_sourcedata_points.csv")))
+  readr::write_excel_csv(d_plot_stats, file = here(paste0("manuscript/output/", filename_prefix, "", sample_type, "_sourcedata_statistics.csv")))
   
   
   d_sum <- d_plot |> 
@@ -341,7 +346,7 @@ plot_comparison_norm <- function(d_assays, variable, sample_type, normalisation_
       axis.title.y = element_text(size = 6, face = "bold", angle = 90, margin = margin(t = 0, r = 7, b = 0, l = 8)),
       #panel.grid.major.x = element_line(colour = "grey70", linewidth = 0.2, linetype = "dotted"),
       strip.background = element_rect(fill="grey99")) +
-     theme(legend.position = c(.96,.08),
+     theme(legend.position.inside = c(.96,.08),
           legend.key.size = unit(0.2, "cm"),
           legend.text =  element_text(size = 5, face = "plain", angle = 0),
           legend.spacing.y = unit(.001, "cm"))
