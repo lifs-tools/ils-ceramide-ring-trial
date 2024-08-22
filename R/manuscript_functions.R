@@ -162,6 +162,8 @@ plot_labscatter <- function(d_sample_mean, d_srm_mean, variable, sample_type, la
       LabNum,
       MethodNo,
       Protocol,
+      C_SinglePoint_mean,
+      C_SinglePoint_SD,
       C_Adj_mean,
       C_Adj_SD)
   
