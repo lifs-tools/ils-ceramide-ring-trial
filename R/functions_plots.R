@@ -378,7 +378,7 @@ calibrationLineVsSinglePointPlot <- function(analyteConcentrationsFromCalibLines
       axis.title = element_text(size = 8, face = "bold"), 
       strip.background =element_rect(fill="grey99")
     ) + theme(aspect.ratio = 1) +
-    theme(legend.position.inside="bottom",
+    theme(legend.position="bottom",
           legend.text = element_text(size = 6),
           legend.key.size = unit(0.1, "cm"),
           legend.spacing.y = unit(.001, 'cm')
