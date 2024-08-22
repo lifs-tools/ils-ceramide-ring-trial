@@ -184,15 +184,15 @@ mythemeXRot <- thetheme + theme(axis.text.x = element_text(
   angle = 90,
   hjust = 1,
   vjust = 0.5
-), legend.position="bottom")
+), legend.position.inside="bottom")
 
 mythemeXRot45 <- thetheme + theme(axis.text.x = element_text(
   angle = 45,
   hjust = 1,
   vjust = 1
-), legend.position="bottom")
+), legend.position.inside="bottom")
 
-mytheme <- thetheme + theme(legend.position="bottom")
+mytheme <- thetheme + theme(legend.position.inside="bottom")
 
 mycolorscale <- scale_colour_nejm()
 myfillscale <- scale_fill_nejm()

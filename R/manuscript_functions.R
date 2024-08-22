@@ -182,7 +182,7 @@ plot_labscatter <- function(d_samples, d_assays, variable, sample_type, labid_co
     geom_linerange(aes(x = LabNum+0.5, 
                        ymin = !!sym(paste0(variable, "_mean")) - !!sym(paste0(variable, "_SD")), 
                        ymax = !!sym(paste0(variable, "_mean")) + !!sym(paste0(variable, "_SD"))), 
-                    position = pos_points, size = .3,  alpha = 0.25) + 
+                    position = pos_points, linewidth = .3,  alpha = 0.25) + 
     stat_summary(position = pos_points,
                  fun = "mean",
                  geom = "crossbar",inherit.aes = TRUE,
@@ -213,7 +213,7 @@ plot_labscatter <- function(d_samples, d_assays, variable, sample_type, labid_co
       panel.grid.major.x = element_line(colour = "grey70", linewidth = 0.2, linetype = "dotted"),
       strip.background =element_rect(fill="grey99")
     )  +
-    theme(legend.position = c(.94,.97), 
+    theme(legend.position.inside = c(.94,.97), 
           legend.key.size = unit(0.2, "cm"),
           legend.spacing.y = unit(.001, 'cm'),
           legend.text=element_text(size=8)) 
@@ -341,7 +341,7 @@ plot_comparison_norm <- function(d_assays, variable, sample_type, normalisation_
       axis.title.y = element_text(size = 6, face = "bold", angle = 90, margin = margin(t = 0, r = 7, b = 0, l = 8)),
       #panel.grid.major.x = element_line(colour = "grey70", linewidth = 0.2, linetype = "dotted"),
       strip.background = element_rect(fill="grey99")) +
-     theme(legend.position = c(.96,.08),
+     theme(legend.position.inside = c(.96,.08),
           legend.key.size = unit(0.2, "cm"),
           legend.text =  element_text(size = 5, face = "plain", angle = 0),
           legend.spacing.y = unit(.001, "cm"))
