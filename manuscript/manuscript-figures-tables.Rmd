@@ -500,7 +500,9 @@ plot_single_vs_multipoint <- function(data, xy_lim) {
 
   d_assays_filt <- flag_outlier(d_assays, limit_iqr = limit_iqr)  |> filter(!Outlier_sp, !Outlier_mp)
   d_assays_filt$SampleType <- forcats::fct_relevel(d_assays_filt$SampleType, c("DB","hTAG","YAA","SRM"))
-
+  
+  readr::write_excel_csv(d_assays_filt, file = here(paste0("manuscript/output/Fig2_sourcedata.csv")))
+  
   p_fig2 <- plot_single_vs_multipoint(d_assays_filt, c(0.6, 0.125, 5.5, 1.6))
   ggsave(plot = p_fig2, filename = here("manuscript/output/Fig02_Comparison_SingleVsMultiCalib-AllDatasets.png"), device = "png",
   dpi = 600, width =160, height =60, units = "mm")
@@ -641,12 +643,25 @@ plot_all_refmaterials <- function(data, xy_lim) {
 pos_points <- ggbeeswarm::position_beeswarm(cex = 1, dodge.width = 0.2)
 d_assays_filt <- flag_outlier(d_assays, limit_iqr = limit_iqr) |> filter(!Outlier_mp)
 d_assays_filt$SampleType <- forcats::fct_relevel(d_assays_filt$SampleType, c("SRM","hTAG","DB","YAA")) 
+readr::write_excel_csv(d_assays_filt, file = here(paste0("manuscript/output/Fig3_sourcedata.csv")))
+
 p_Fig3 <- plot_all_refmaterials(d_assays_filt, xy_lim = c(0.45, 0.145, 5.6, 1.9))
 
 ggsave(plot = p_Fig3, filename = here("manuscript/output/Fig03_SRMs_Dotplots.png"), device = "png",
 dpi = 600, width = 160, height = 65, units = "mm")
 
 p_Fig3
+
+  d_stat <- d_assays_filt |> 
+      group_by(ceramideName, SampleType) |> 
+    summarise(
+      n_labs = n(),
+      MEAN = mean(C_Adj_mean, na.rm = TRUE),
+      SD = sd(C_Adj_mean, na.rm = TRUE),
+      CV = SD/MEAN *100)  |> 
+    ungroup() 
+readr::write_excel_csv(d_stat, file = here(paste0("manuscript/output/Fig3_sourcedata_statistics.csv")))
+
 ```
 
 # 09. Figure 4: Interlaboratory Study Comparisons
@@ -790,6 +805,9 @@ d_sum <- d_sum_1 |>
         .default = as.character(Compound)
   ))
 
+readr::write_excel_csv(d_plot_1, file = here(paste0("manuscript/output/Fig4_sourcedata_points.csv")))
+readr::write_excel_csv(d_sum_1, file = here(paste0("manuscript/output/Fig4_sourcedata_statistics.csv")))
+
 p_Fig4 <- ggplot(d_plot_1, aes(x = Study, y = Conc_mean)) +
   
   ggbeeswarm::geom_beeswarm(
@@ -859,9 +877,7 @@ d_plot_norm_istd_mp <- d_assays_filt_mp |>
   relocate("LC", "SOURCE_TEMP_CAT", .after = LabId)
 
 
-plot_diffistd <- function(data, y_title, n_label_offset = 20, legend_x_offset = 0.11, n_label_size = 1.3) {
-  
-
+plot_diffistd <- function(data, y_title, n_label_offset = 20, legend_x_offset = 0.11, n_label_size = 1.3, fig_text = "") {
   
   data$ISTD <- forcats::fct_recode(data$ISTD, "AuthISTD" = "C_Adj_mean", "C16_ISTD" = "C_Adj_C16_mean" , "C18_ISTD" = "C_Adj_C18_mean" , "C24_ISTD" = "C_Adj_C24_mean", "C241_ISTD" = "C_Adj_C241_mean",)
   data$ISTD <- forcats::fct_relevel(data$ISTD, c("AuthISTD", "C16_ISTD", "C18_ISTD", "C24_ISTD", "C241_ISTD"))
@@ -964,12 +980,16 @@ plot_diffistd <- function(data, y_title, n_label_offset = 20, legend_x_offset = 
     plt
   }
 
-p_fig5  <- plot_diffistd(d_plot_norm_istd_mp, "\U003BCmol/L (multi-point calibration)", n_label_offset = 20)
+
+
+p_fig5  <- plot_diffistd(d_plot_norm_istd_mp, "\U003BCmol/L (multi-point calibration)", n_label_offset = 20, fig_text = "Fig5")
 
 ggsave(plot = p_fig5, filename = here("manuscript/output/Fig05_DifferentISTDs.png"), device = "png",
 dpi = 600, width =80, height =65, units = "mm")
 
 p_fig5
+
+
 
 d_plot_stats <- d_plot_norm_istd_mp |> 
   ungroup() |> 
@@ -980,7 +1000,10 @@ d_plot_stats <- d_plot_norm_istd_mp |>
     Mean = mean(Concentration),
     SD = sd(Concentration),
     CV = sd(Concentration)/mean(Concentration) *100)
-write_csv(x = d_plot_stats, here("manuscript/output/Fig05_stats-mp.csv"))
+
+  readr::write_excel_csv(d_plot_norm_istd_mp, file = here(paste0("manuscript/output/", "Fig5", "sourcedata_points.csv")))
+  readr::write_excel_csv(d_plot_stats, file = here(paste0("manuscript/output/", "Fig5", "sourcedata_statistics.csv")))
+
 
 ```
 
@@ -994,10 +1017,10 @@ d_plot <- flag_outlier(d_assays, limit_iqr = limit_iqr)
 
 
 p_Fig6 <- plot_comparison_norm(d_assays = d_plot,variable = "C_Adj",sample_type = "DB",normalisation_sample = "SRM",
-                               save_plot = TRUE,filename_prefix = "Fig06_", pos = pos, show_n = TRUE) + 
+                               save_plot = TRUE, filename_prefix = "Fig06_", pos = pos, show_n = TRUE) + 
   ggplot2::labs(y = "NIST DB, \U003BCmol/L (multi-point calibration)")
 
-ggsave(plot = p_Fig6, filename = here("manuscript/output/Fig06_normNIST_DB.png"), device = "png",
+ggsave(plot = p_Fig6, filename = here("manuscript/output/Fig06_normNIST_DB.png"), device = "png", 
   dpi = 600, width =160, height =65, units = "mm")
 
 p_Fig6
