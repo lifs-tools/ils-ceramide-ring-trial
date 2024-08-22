@@ -78,7 +78,7 @@ std_uncert <-
   function(x)
     sqrt(pi / (2 * length(x))) * mad(x, constant = 1.4826, na.rm = TRUE)
 
-labScatterPlot <- function(sample_type, d_samples, d_assays, variable = "C_Adj", normalisation_sample = "SRM", plot_file_prefix, filename_prefix) {
+labScatterPlot <- function(sample_type, d_samples, d_assays, variable = "C_Adj", normalisation_sample = "SRM", name_prefix) {
   print(paste("Creating plots of", sample_type, "normalized on SRM 1950"))
   C16_max <- NA
   C18_max <- NA
@@ -96,7 +96,7 @@ labScatterPlot <- function(sample_type, d_samples, d_assays, variable = "C_Adj",
     C241_max <- d_samples |> filter(ceramideName=="Cer 18:1;O2/24:1") |> summarise(C241_max=max(na.omit(C_SinglePoint_mean))) |> unlist()
   }
   
-  base_name <- glue("{plot_file_prefix}_{variable}_{sample_type}_combined_beforeafterNorm_to_{normalisation_sample}")
+  base_name <- glue("{name_prefix}_{variable}_{sample_type}_combined_beforeafterNorm_to_{normalisation_sample}")
   p1 <- plot_labscatter(d_samples = d_samples, d_assays = d_assays, variable = variable, labid_col = "LabNum", sample_type = sample_type, normalisation_sample = NULL, excluded_labs = "", save_plot = FALSE, C16_max = C16_max, C18_max = C18_max, C24_max = C24_max, C241_max = C241_max, base_name)
   p2 <- plot_labscatter(d_samples = d_samples, d_assays = d_assays, variable = variable, labid_col = "LabNum", sample_type = sample_type, normalisation_sample = normalisation_sample, excluded_labs = "", save_plot = FALSE, C16_max = C16_max, C18_max = C18_max, C24_max = C24_max, C241_max = C241_max, base_name)
   
@@ -151,10 +151,33 @@ plot_labscatter <- function(d_samples, d_assays, variable, sample_type, labid_co
     stop("Variable not present or supported!")
   }
   
-  
   d_samples_subset <- d_samples |> filter(SampleType == sample_type) 
+  
+  d_samples_subset <- d_samples_subset |> 
+    select(
+      SampleType,	
+      ceramideName,
+      Sample,
+      LabId,
+      LabNum,
+      MethodNo,
+      Protocol,
+      C_Adj_mean,
+      C_Adj_SD)
+  
+  
+  d_stat_filt_csv <- d_stat_filt |> select(SampleType,
+                                           ceramideName, 
+                                           n, 
+                                           n_SOP,
+                                           MEAN = C_Adj_interlabMEAN, 
+                                           SD=C_Adj_interlabSD, 
+                                           CV_interlab = C_Adj_interlabCV, 
+                                           `Q1-1.5×IQR`  = C_Adj_limitQ1,	
+                                           `Q3+1.5×IQR`  = C_Adj_limitQ3)
+  
   readr::write_excel_csv(d_samples_subset, file = here(paste0("manuscript/output/", filename_prefix, "_sourcedata_points.csv")))
-  readr::write_excel_csv(d_stat_filt, file = here(paste0("manuscript/output/", filename_prefix, "_sourcedata_stats.csv")))
+  readr::write_excel_csv(d_stat_filt_csv, file = here(paste0("manuscript/output/", filename_prefix, "_sourcedata_stats.csv")))
   
   
   set.seed(1334)

@@ -677,6 +677,9 @@ Data Sources:
 - 4. Ghorasaini, M. et al. Cross-Laboratory Standardization of Preclinical Lipidomics Using Differential Mobility Spectrometry and Multiple Reaction Monitoring. Anal. Chem. 93, 16369–16378 (2021). Summary obtained from Supplementary Materials ac1c02826_si_002.xlsx, Sheets "Table S8" and "Table S9", individual data points obtained from the authors directly. 
 
 ```{r fig04-plot, fig.height=8, fig.width=12, out.width="100%"}
+
+# DATA PREP ----- ----------------------------------------------------------
+
 d_quehenberger_orig <- read_csv(here("manuscript/data/Quehenberger_Ceramides_Conc.csv"))
 d_bowden_orig <- read_csv(here("manuscript/data/Bowden_InterlabStudy_Ceramides_Conc.csv"))
 d_biocrates <- read_csv(here("manuscript/data/Biocrates_Ringtrial_Ceramides.csv"))
@@ -731,8 +734,10 @@ d_lipidyzer <- d_sum_giera |>
   mutate(Study = "Ghorasaini 2021 (sp)") |>
   mutate(Compound = str_replace(Compound, fixed("d18:1"), "18:1;O2")) 
 
-plot_studycomp <- function(data_ils_study){ 
-  d_plot_1 <- data_ils_study |> 
+# PLOT FUNCTION ----- ----------------------------------------------------------
+
+plot_studycomp <- function(data_ils_study, filename_prefix){ 
+  d_plot <- data_ils_study |> 
     filter(SampleType == "SRM") |> 
     select(
       Study,
@@ -765,7 +770,8 @@ plot_studycomp <- function(data_ils_study){
           .default = as.character(Compound)
     ))
   
-  d_sum_1 <- d_plot_1 |> 
+  
+  d_stats <- d_plot |> 
     group_by(Compound, Study) |> 
     summarise(
       n_labs = n(),
@@ -781,17 +787,17 @@ plot_studycomp <- function(data_ils_study){
       COD = Uncertainty/MEDM *100, 
       Conc_max = max(Conc_mean, na.rm = TRUE))  |> 
     ungroup() 
-  d_sum_1
+  d_stats
 
 
-write_csv(x = d_sum_1, file = here("manuscript/data/processed/ILS-Ceramides_Conc_Summary_20230518.csv"))
+readr::write_excel_csv(d_plot, file = here(paste0("manuscript/output/", filename_prefix, "_sourcedata_points.csv")))
+readr::write_excel_csv(d_stats, file = here(paste0("manuscript/output/", filename_prefix, "_sourcedata_statistics.csv")))
 
-
-d_sum <- d_sum_1 |> 
-  #bind_rows(d_lipidyzer) |> 
-  mutate(Study = factor(Study, levels = c("Quehenberger 2010", "Bowden 2017 (mp)", 
-                                          "Thompson 2019 (sp)", "Ghorasaini 2021 (sp)", 
-                                          "ILS Ceramides (mp)")))|> 
+# Plot annotations
+  d_sum <- d_stats |> 
+    mutate(Study = factor(Study, levels = c("Quehenberger 2010", "Bowden 2017 (mp)", 
+                                            "Thompson 2019 (sp)", "Ghorasaini 2021 (sp)", 
+                                            "ILS Ceramides (mp)")))|> 
   arrange(Study) |> 
   # Conc_max used for label positioning only
   mutate(Conc_max = if_else(is.na(Conc_max), MEDM + MAD, Conc_max)) |> 
@@ -805,10 +811,7 @@ d_sum <- d_sum_1 |>
         .default = as.character(Compound)
   ))
 
-readr::write_excel_csv(d_plot_1, file = here(paste0("manuscript/output/Fig04_sourcedata_points.csv")))
-readr::write_excel_csv(d_sum_1, file = here(paste0("manuscript/output/Fig04_sourcedata_statistics.csv")))
-
-p_Fig4 <- ggplot(d_plot_1, aes(x = Study, y = Conc_mean)) +
+p_Fig4 <- ggplot(d_plot, aes(x = Study, y = Conc_mean)) +
   
   ggbeeswarm::geom_beeswarm(
     shape = 21, size = 2, stroke  = 0.4, dodge.width = .9, cex = 1.3, color = "grey10", alpha = 0.3) +
@@ -846,7 +849,7 @@ p_Fig4 <- ggplot(d_plot_1, aes(x = Study, y = Conc_mean)) +
 p_Fig4
 }
 
-p_Fig4 <- plot_studycomp(d_ils_labs)
+p_Fig4 <- plot_studycomp(d_ils_labs, filename_prefix = "Fig04_")
 
 ggsave(plot = p_Fig4, filename = here("manuscript/output/Fig04_Comparison_Studies.png"), device = "png",
 dpi = 600, width =160, height =75, units = "mm")
@@ -877,13 +880,28 @@ d_plot_norm_istd_mp <- d_assays_filt_mp |>
   relocate("LC", "SOURCE_TEMP_CAT", .after = LabId)
 
 
-plot_diffistd <- function(data, y_title, n_label_offset = 20, legend_x_offset = 0.11, n_label_size = 1.3, fig_text = "") {
+plot_diffistd <- function(data, y_title, n_label_offset = 20, legend_x_offset = 0.11, n_label_size = 1.3, filename_prefix = "NormDiffISTD") {
   
   data$ISTD <- forcats::fct_recode(data$ISTD, "AuthISTD" = "C_Adj_mean", "C16_ISTD" = "C_Adj_C16_mean" , "C18_ISTD" = "C_Adj_C18_mean" , "C24_ISTD" = "C_Adj_C24_mean", "C241_ISTD" = "C_Adj_C241_mean",)
   data$ISTD <- forcats::fct_relevel(data$ISTD, c("AuthISTD", "C16_ISTD", "C18_ISTD", "C24_ISTD", "C241_ISTD"))
   data$Protocol <- forcats::fct_relevel(forcats::as_factor(data$Protocol), c("SOP", "OTHER"))
   data$LC <- forcats::fct_relevel(data$LC, c("RP", "FIA", "SFC"))
   data <- data |> arrange( ISTD)
+  
+  
+  d_plot_stats <- data |> 
+  ungroup() |> 
+  #filter(str_detect(ceramideName, "24\\:0"),  ISTD != "C18_ISTD") |> 
+  group_by(ceramideName, ISTD) |> 
+  dplyr::summarise(
+    N = n(),
+    Mean = mean(Concentration),
+    SD = sd(Concentration),
+    CV = sd(Concentration)/mean(Concentration) *100) |> ungroup()
+
+  readr::write_excel_csv(data, file = here(paste0("manuscript/output/", filename_prefix, "_sourcedata_points.csv")))
+  readr::write_excel_csv(d_plot_stats, file = here(paste0("manuscript/output/", filename_prefix,"_sourcedata_statistics.csv")))
+
   
   
   d_sum <- data |> 
@@ -982,7 +1000,7 @@ plot_diffistd <- function(data, y_title, n_label_offset = 20, legend_x_offset = 
 
 
 
-p_fig5  <- plot_diffistd(d_plot_norm_istd_mp, "\U003BCmol/L (multi-point calibration)", n_label_offset = 20, fig_text = "Fig5")
+p_fig5  <- plot_diffistd(d_plot_norm_istd_mp, "\U003BCmol/L (multi-point calibration)", n_label_offset = 20,  filename_prefix = "Fig5")
 
 ggsave(plot = p_fig5, filename = here("manuscript/output/Fig05_DifferentISTDs.png"), device = "png",
 dpi = 600, width =80, height =65, units = "mm")
@@ -991,18 +1009,6 @@ p_fig5
 
 
 
-d_plot_stats <- d_plot_norm_istd_mp |> 
-  ungroup() |> 
-  #filter(str_detect(ceramideName, "24\\:0"),  ISTD != "C18_ISTD") |> 
-  group_by(ceramideName, ISTD) |> 
-  dplyr::summarise(
-    N = n(),
-    Mean = mean(Concentration),
-    SD = sd(Concentration),
-    CV = sd(Concentration)/mean(Concentration) *100)
-
-  readr::write_excel_csv(d_plot_norm_istd_mp, file = here(paste0("manuscript/output/", "Fig05", "_sourcedata_points.csv")))
-  readr::write_excel_csv(d_plot_stats, file = here(paste0("manuscript/output/", "Fig05", "_sourcedata_statistics.csv")))
 
 
 ```
@@ -1072,10 +1078,12 @@ Molar concentrations derived from single point internal standard (ISTD) vs. cali
 d_assays_plot <- flag_outlier(d_assays, limit_iqr = limit_iqr)  #|> filter(!Outlier_sp, !Outlier_mp)
 d_assays_plot$SampleType <- forcats::fct_relevel(d_assays_plot$SampleType, c("DB","hTAG","YAA","SRM"))
 p_fig2A <- plot_single_vs_multipoint(d_assays_plot, c(0.8, 0.22, 7.2, 2.6))
+readr::write_excel_csv(d_assays_plot, file = here(paste0("manuscript/output/FigS03A_sourcedata.csv")))
 
 d_assays_filt <- flag_outlier(d_assays, limit_iqr = limit_iqr)  |> filter(!Outlier_sp, !Outlier_mp)
 d_assays_filt$SampleType <- forcats::fct_relevel(d_assays_filt$SampleType, c("DB","hTAG","YAA","SRM"))
 p_fig2B <- plot_single_vs_multipoint(d_assays_filt, c(0.8, 0.22, 7.2, 2.6))
+readr::write_excel_csv(d_assays_filt, file = here(paste0("manuscript/output/FigS03B_sourcedata.csv")))
 
 pS3 <- p_fig2A / p_fig2B + patchwork::plot_annotation(tag_levels = c("A", "B"))
 
@@ -1094,15 +1102,13 @@ pos_points <- ggbeeswarm::position_beeswarm(cex = 1, dodge.width = 0.2)
 
 d_assays_plot <- flag_outlier(d_assays, limit_iqr = limit_iqr) # |> filter(!Outlier_mp)
 d_assays_plot$SampleType <- forcats::fct_relevel(d_assays_plot$SampleType, c("SRM","hTAG","DB","YAA")) 
-
 p_Fig3A <- plot_all_refmaterials(d_assays_plot, xy_lim = c(0.7, 0.25, 9, 3))
-
+readr::write_excel_csv(d_assays_plot, file = here(paste0("manuscript/output/Fig04A_sourcedata.csv")))
 
 d_assays_filt <- flag_outlier(d_assays, limit_iqr = limit_iqr) |> filter(!Outlier_mp)
 d_assays_filt$SampleType <- forcats::fct_relevel(d_assays_filt$SampleType, c("SRM","hTAG","DB","YAA")) 
-
 p_Fig3B <- plot_all_refmaterials(d_assays_filt, xy_lim = c(0.7, 0.25, 9, 3))
-
+readr::write_excel_csv(d_assays_filt, file = here(paste0("manuscript/output/Fig04B_sourcedata.csv")))
 
 pS4 <- p_Fig3A / p_Fig3B + patchwork::plot_annotation(tag_levels = c("A", "B"))
 
@@ -1110,6 +1116,18 @@ ggsave(plot = pS4, filename = here("manuscript/output/FigS04_SRMs_Dotplots-All-F
 dpi = 600, width =160, height =130, units = "mm")
 
 pS4
+
+get_fig4_stats <- function(data){
+  data |> 
+    summarise(
+      .by = c(ceramideName, SampleType),
+      n_labs = n(),
+      MEAN = mean(C_Adj_mean, na.rm = TRUE),
+      SD = sd(C_Adj_mean, na.rm = TRUE)
+    )
+}
+readr::write_excel_csv(get_fig4_stats(d_assays_plot), file = here(paste0("manuscript/output/Fig04A_sourcedata_statistics.csv")))
+readr::write_excel_csv(get_fig4_stats(d_assays_filt), file = here(paste0("manuscript/output/Fig04B_sourcedata_statistics.csv")))
 ```
 
 # 16. Suppl Figure S5: Interlaboratory Study Comparisons
@@ -1119,7 +1137,7 @@ Comparison of inter-laboratory and/or cross-platform trials reporting ceramide c
 ```{r figS05-dataprep-plot, fig.height=8, fig.width=12, out.width="100%"}
 d_ils_labs_filt <- d_assays_filt_mp |> mutate(Study = "ILS Ceramides (mp)", .before = 1) 
 
-p_Fig4B <- plot_studycomp(d_ils_labs_filt)
+p_Fig4B <- plot_studycomp(d_ils_labs_filt, filename_prefix = "FigS05")
 
 pS5 <- p_Fig4 / p_Fig4B + patchwork::plot_annotation(tag_levels = c("A", "B"))
 
@@ -1173,13 +1191,18 @@ p_fig6C_allistd_mp  <- plot_diffistd(
   data = d_plot_allistd_mp, 
   y_title = "\U003BCmol/L (multi-point calibration)", 
   n_label_offset = 25, 
-  legend_x_offset = 0.963, n_label_size = 2) + ggtitle("Multi-point calibration (all data)") + xlab("")
+  legend_x_offset = 0.963, 
+  n_label_size = 2, 
+  filename_prefix = "Fig6C") + 
+  ggtitle("Multi-point calibration (all data)") + xlab("")
 
 p_fig6A_allistd_mp_filt  <- plot_diffistd(
   data = d_plot_allistd_mp_filt, 
   y_title = "\U003BCmol/L (multi-point calibration)", 
   n_label_offset = 20, 
-  legend_x_offset = 0.963, n_label_size = 2) + ggtitle("Multi-point calibration (outliers removed)")
+  legend_x_offset = 0.963, 
+  n_label_size = 2,
+  filename_prefix = "Fig6A") + ggtitle("Multi-point calibration (outliers removed)")
 
 
 # Export data used to generate plot
@@ -1291,8 +1314,10 @@ p_figS6D_allistd_sp_alldata  <- plot_diffistd(
   data = d_plot_allistd_sp, 
   y_title = "\U003BCmol/L (single-point calibration)", 
   n_label_offset = 15, 
-  legend_x_offset = 0.9633, n_label_size = 2) + 
-  ggtitle("Single-point calibration (all data)") + 
+  legend_x_offset = 0.9633, 
+  n_label_size = 2, 
+  filename_prefix = "Fig6D") + 
+  ggtitle("Single-point calibration (all data)",) + 
   xlab("") +
   scale_y_continuous(expand = expansion(mult = 0.07, add = 0))
 
@@ -1300,7 +1325,9 @@ p_figS6B_allistd_sp_filt <- plot_diffistd(
   data = d_plot_allistd_sp |> filter(!Outlier_sp|is.na(Outlier_sp)) |> filter(!LabId %in% c("04", "18b", "31", "30", "38", "10a")) ,
   y_title =  "\U003BCmol/L (single-point calibration)", 
   n_label_offset = 15, 
-  legend_x_offset = 0.9633, n_label_size = 2) + 
+  legend_x_offset = 0.9633, 
+  n_label_size = 2,
+  filename_prefix = "Fig6B") + 
   ggtitle("Single-point calibration (outliers removed)") + 
   xlab("") +
   scale_y_continuous(expand = expansion(mult = 0.07, add = 0))
@@ -1339,12 +1366,17 @@ Re-calibration of hTAG using SRM 1950 after multi-point calibration. All dataset
 
 ```{r figS07-plot, fig.height=8, fig.width=12, out.width="100%"}
 inputs <- list(
-  list(sample_type="hTAG", plot_file_prefix="FigS08"),
-  list(sample_type="DB", plot_file_prefix="FigS09"),
-  list(sample_type="YAA", plot_file_prefix="FigS10")
+  list(sample_type="hTAG", plot_file_prefix="FigS07"),
+  list(sample_type="DB", plot_file_prefix="FigS08"),
+  list(sample_type="YAA", plot_file_prefix="FigS09")
 )
 
-labScatterPlots <- inputs |> map(\(x) labScatterPlot(sample_type = x$sample_type, d_samples = d_samples, d_assays = d_assays, variable = "C_Adj", normalisation_sample = "SRM", plot_file_prefix = x$plot_file_prefix))
+labScatterPlots <- inputs |> map(\(x) labScatterPlot(sample_type = x$sample_type, 
+                                                     d_samples = d_samples, 
+                                                     d_assays = d_assays, 
+                                                     variable = "C_Adj", 
+                                                     normalisation_sample = "SRM", 
+                                                     name_prefix = x$plot_file_prefix))
 
 labScatterPlots[[1]]$p_comb
 ```
