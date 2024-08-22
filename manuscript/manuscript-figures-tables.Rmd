@@ -10,7 +10,12 @@ params:
 ---
 
 ```{r setup}
-library(tidyverse)
+
+if(params$run_in_targets) {
+  library(targets)
+  library(tarchetypes)
+}
+
 library(readr)
 library(here)
 library(ggbeeswarm)
@@ -18,11 +23,9 @@ library(patchwork)
 library(glue)
 library(ggh4x)
 library(fs)
+library(tidyverse)
+
 source(here("R/manuscript_functions.R"))
-if(params$run_in_targets) {
-  library(targets)
-  library(tarchetypes)
-}
 
 here::i_am("manuscript/manuscript-figures-tables.Rmd")
 
@@ -88,7 +91,7 @@ d_full <- d_orig |>
   group_by(LabId_group) |>
   mutate(LabNum = dplyr::cur_group_id()) |>
   ungroup() |>
-  distinct()
+  dplyr::distinct()
 
 # Correction of concentrations in dataset #26a/#26b (LabNum 22) as this lab spiked 3x higher internal standard amounts
 d_full <- d_full |>
@@ -486,7 +489,7 @@ plot_single_vs_multipoint <- function(data, xy_lim) {
       strip.background = element_rect(fill = "grey99")
     ) + theme(aspect.ratio = 1) +
     theme(
-      legend.position = c(.97, .20),
+      legend.position.inside = c(.97, .20),
       legend.key.size = unit(0.1, "cm"),
       legend.text = element_text(size = 6),
       legend.spacing.y = unit(.001, 'cm')
@@ -626,7 +629,7 @@ plot_all_refmaterials <- function(data, xy_lim) {
       )
     ) +
     theme(
-      legend.position = c(.97, .07),
+      legend.position.inside = c(.97, .07),
       legend.key.size = unit(0.2, "cm"),
       legend.spacing.y = unit(.001, 'cm')
     )
@@ -819,7 +822,7 @@ p_Fig4 <- ggplot(d_plot_1, aes(x = Study, y = Conc_mean)) +
     axis.title.y = element_text(size = 6, face = "bold", angle = 90, margin = margin(t = 0, r = 7, b = 0, l = 8)),
     #panel.grid.major.x = element_line(colour = "grey70", linewidth = 0.2, linetype = "dotted"),
     strip.background = element_rect(fill="grey99")) +
-    theme(legend.position = c(.63,.93), 
+    theme(legend.position.inside = c(.63,.93), 
           legend.key.size = unit(0.2, "cm"),
         legend.spacing.y = unit(.001, 'cm'))
 p_Fig4
@@ -860,7 +863,7 @@ plot_diffistd <- function(data, y_title, n_label_offset = 20, legend_x_offset = 
   
 
   
-  data$ISTD <- forcats::fct_recode(data$ISTD, "AuthISTD" = "C_Adj_mean", "C16_ISTD" = "C_Adj_C16_mean" , "C18_ISTD" = "C_Adj_C18_mean" , "C24_ISTD" = "C_Adj_C24_mean", "C241_ISTD" = "C_Adj_C241_mean"  )
+  data$ISTD <- forcats::fct_recode(data$ISTD, "AuthISTD" = "C_Adj_mean", "C16_ISTD" = "C_Adj_C16_mean" , "C18_ISTD" = "C_Adj_C18_mean" , "C24_ISTD" = "C_Adj_C24_mean", "C241_ISTD" = "C_Adj_C241_mean",)
   data$ISTD <- forcats::fct_relevel(data$ISTD, c("AuthISTD", "C16_ISTD", "C18_ISTD", "C24_ISTD", "C241_ISTD"))
   data$Protocol <- forcats::fct_relevel(forcats::as_factor(data$Protocol), c("SOP", "OTHER"))
   data$LC <- forcats::fct_relevel(data$LC, c("RP", "FIA", "SFC"))
@@ -907,8 +910,8 @@ plot_diffistd <- function(data, y_title, n_label_offset = 20, legend_x_offset = 
                        labels=c("RP", "FIA","SFC"), name = NULL) + 
     guides(shape = guide_legend(order = 2,
                                 override.aes = list(alpha = c(1,0.5,0.5), fill = c("grey80", "darkblue", "darkblue"), shape=c(21,23,24))),
-           color = guide_legend(order = 1, override.aes = list(alpha = c(1,1), shape=c(21,21), fill = c("#ffc2c2", "#d1dcff"), color = c("#e30202","darkblue"))),
-           fill = guide_legend(order = 1, override.aes = list(alpha = c(1,1), shape=c(21,21), fill = c("#ffc2c2", "#d1dcff"), color = c("#e30202","darkblue")))) +
+           color = guide_legend(order = 1, override.aes = list(color = c("#e30202","darkblue"))),
+           fill = guide_legend(order = 1, override.aes = list(fill = c("#ffc2c2", "#d1dcff") ))) +
     scale_y_continuous(limits = c(0, NA)) +
     
     facetted_pos_scales(
@@ -954,7 +957,7 @@ plot_diffistd <- function(data, y_title, n_label_offset = 20, legend_x_offset = 
       plot.title = element_text(size=6, face = "bold"),
       #panel.grid.major.x = element_line(colour = "grey70", linewidth = 0.2, linetype = "dotted"),
       strip.background = element_rect(fill="grey99")) +
-      theme(legend.position = c(legend_x_offset, 0.83), 
+      theme(legend.position.inside = c(legend_x_offset, 0.83), 
             legend.key.size = unit(0.1, "cm"),
           legend.spacing.y = unit(.001, 'cm'))
   
