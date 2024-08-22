@@ -401,7 +401,7 @@ p_fig1 <-
     normalisation_sample = NULL,
     excluded_labs = "",
     save_plot = TRUE,
-    filename_prefix = "Fig01_", 
+    filename_prefix = "Fig01", 
     as_pdf = TRUE
   )
 
@@ -501,7 +501,7 @@ plot_single_vs_multipoint <- function(data, xy_lim) {
   d_assays_filt <- flag_outlier(d_assays, limit_iqr = limit_iqr)  |> filter(!Outlier_sp, !Outlier_mp)
   d_assays_filt$SampleType <- forcats::fct_relevel(d_assays_filt$SampleType, c("DB","hTAG","YAA","SRM"))
   
-  readr::write_excel_csv(d_assays_filt, file = here(paste0("manuscript/output/Fig2_sourcedata.csv")))
+  readr::write_excel_csv(d_assays_filt, file = here(paste0("manuscript/output/Fig02_sourcedata.csv")))
   
   p_fig2 <- plot_single_vs_multipoint(d_assays_filt, c(0.6, 0.125, 5.5, 1.6))
   ggsave(plot = p_fig2, filename = here("manuscript/output/Fig02_Comparison_SingleVsMultiCalib-AllDatasets.png"), device = "png",
@@ -643,7 +643,7 @@ plot_all_refmaterials <- function(data, xy_lim) {
 pos_points <- ggbeeswarm::position_beeswarm(cex = 1, dodge.width = 0.2)
 d_assays_filt <- flag_outlier(d_assays, limit_iqr = limit_iqr) |> filter(!Outlier_mp)
 d_assays_filt$SampleType <- forcats::fct_relevel(d_assays_filt$SampleType, c("SRM","hTAG","DB","YAA")) 
-readr::write_excel_csv(d_assays_filt, file = here(paste0("manuscript/output/Fig3_sourcedata.csv")))
+readr::write_excel_csv(d_assays_filt, file = here(paste0("manuscript/output/Fig03_sourcedata.csv")))
 
 p_Fig3 <- plot_all_refmaterials(d_assays_filt, xy_lim = c(0.45, 0.145, 5.6, 1.9))
 
@@ -660,7 +660,7 @@ p_Fig3
       SD = sd(C_Adj_mean, na.rm = TRUE),
       CV = SD/MEAN *100)  |> 
     ungroup() 
-readr::write_excel_csv(d_stat, file = here(paste0("manuscript/output/Fig3_sourcedata_statistics.csv")))
+readr::write_excel_csv(d_stat, file = here(paste0("manuscript/output/Fig03_sourcedata_statistics.csv")))
 
 ```
 
@@ -805,8 +805,8 @@ d_sum <- d_sum_1 |>
         .default = as.character(Compound)
   ))
 
-readr::write_excel_csv(d_plot_1, file = here(paste0("manuscript/output/Fig4_sourcedata_points.csv")))
-readr::write_excel_csv(d_sum_1, file = here(paste0("manuscript/output/Fig4_sourcedata_statistics.csv")))
+readr::write_excel_csv(d_plot_1, file = here(paste0("manuscript/output/Fig04_sourcedata_points.csv")))
+readr::write_excel_csv(d_sum_1, file = here(paste0("manuscript/output/Fig04_sourcedata_statistics.csv")))
 
 p_Fig4 <- ggplot(d_plot_1, aes(x = Study, y = Conc_mean)) +
   
@@ -1001,8 +1001,8 @@ d_plot_stats <- d_plot_norm_istd_mp |>
     SD = sd(Concentration),
     CV = sd(Concentration)/mean(Concentration) *100)
 
-  readr::write_excel_csv(d_plot_norm_istd_mp, file = here(paste0("manuscript/output/", "Fig5", "sourcedata_points.csv")))
-  readr::write_excel_csv(d_plot_stats, file = here(paste0("manuscript/output/", "Fig5", "sourcedata_statistics.csv")))
+  readr::write_excel_csv(d_plot_norm_istd_mp, file = here(paste0("manuscript/output/", "Fig05", "_sourcedata_points.csv")))
+  readr::write_excel_csv(d_plot_stats, file = here(paste0("manuscript/output/", "Fig05", "_sourcedata_statistics.csv")))
 
 
 ```
@@ -1037,6 +1037,7 @@ if(params$run_in_targets) {
   knitr::include_graphics(here("output/CalibrationLinesAvgMedRangeLog10-with-NISTSRM-AvgRatio.png"))
 }
 fs::file_copy(path = here("output/CalibrationLinesAvgMedRangeLog10-with-NISTSRM-AvgRatio.png"), new_path = here("manuscript/output/FigS01_CalibrationLinesAvgMedRangeLog10-with-NISTSRM-AvgRatio.png"), overwrite = TRUE)
+fs::file_copy(path = here("output/CalibrationLinesAvgMedRangeLog10-with-NISTSRM-AvgRatio.csv"), new_path = here("manuscript/output/FigS01_CalibrationLinesAvgMedRangeLog10-with-NISTSRM-AvgRatio_sourcedata.csv"), overwrite = TRUE)
 ```
 
 # 13. Suppl Figure S2: Single Point Quantification of NIST SRM 1950
@@ -1057,7 +1058,7 @@ singlePointSRM1950Plot <- plot_labscatter(
   C18_max = NA,
   C24_max = NA,
   C241_max = NA,
-  "FigS02_"
+  filename_prefix = "FigS02"
 )
 
 singlePointSRM1950Plot

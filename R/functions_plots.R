@@ -163,14 +163,14 @@ meanSdCalibrationLinesPlots <- function(calibLineDataLmPred, theme=mytheme, avgL
       labelsd=paste("\u03BC +/-", format(ysd, digits=2, nsmall=2))
     )
 
-  #write_csv(calibLineDataLmPredPlot, here::here(file.path(outputDirectory,"temp.csv")))
-  
   calibLineDataLmPredPlot <- calibLineDataLmPredPlot |> 
     left_join(d_theoratios, by=c("ceramideId", "ceramideName", "Concentration"))
   
   if(!is.null(avgLipidToISRatios)) {
     calibLineDataLmPredPlot <- calibLineDataLmPredPlot |> left_join(avgLipidToISRatios, by=c("ceramideId", "ceramideName"))
   }
+  
+  readr::write_excel_csv(calibLineDataLmPredPlot, here::here(file.path(outputDirectory, paste0("CalibrationLinesAvgMedRangeLog10",suffix,".csv"))))
   
   avgMedCalibrationLinesLog10 <- ggplot(data=calibLineDataLmPredPlot, mapping=aes(x=Concentration, y=yavg)) +
     geom_ribbon(aes(x=Concentration, ymin=yavgmin, ymax=yavgmax), fill="blue", alpha=0.1, show.legend = FALSE) + 

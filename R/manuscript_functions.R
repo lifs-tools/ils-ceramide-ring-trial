@@ -78,7 +78,7 @@ std_uncert <-
   function(x)
     sqrt(pi / (2 * length(x))) * mad(x, constant = 1.4826, na.rm = TRUE)
 
-labScatterPlot <- function(sample_type, d_samples, d_assays, variable = "C_Adj", normalisation_sample = "SRM", plot_file_prefix) {
+labScatterPlot <- function(sample_type, d_samples, d_assays, variable = "C_Adj", normalisation_sample = "SRM", plot_file_prefix, filename_prefix) {
   print(paste("Creating plots of", sample_type, "normalized on SRM 1950"))
   C16_max <- NA
   C18_max <- NA
@@ -95,12 +95,14 @@ labScatterPlot <- function(sample_type, d_samples, d_assays, variable = "C_Adj",
     C24_max <- d_samples |> filter(ceramideName=="Cer 18:1;O2/24:0") |> summarise(C24_max=max(na.omit(C_SinglePoint_mean))) |> unlist()
     C241_max <- d_samples |> filter(ceramideName=="Cer 18:1;O2/24:1") |> summarise(C241_max=max(na.omit(C_SinglePoint_mean))) |> unlist()
   }
-  p1 <- plot_labscatter(d_samples = d_samples, d_assays = d_assays, variable = variable, labid_col = "LabNum", sample_type = sample_type, normalisation_sample = NULL, excluded_labs = "", save_plot = FALSE, C16_max = C16_max, C18_max = C18_max, C24_max = C24_max, C241_max = C241_max)
-  p2 <- plot_labscatter(d_samples = d_samples, d_assays = d_assays, variable = variable, labid_col = "LabNum", sample_type = sample_type, normalisation_sample = normalisation_sample, excluded_labs = "", save_plot = FALSE, C16_max = C16_max, C18_max = C18_max, C24_max = C24_max, C241_max = C241_max)
+  
+  base_name <- glue("{plot_file_prefix}_{variable}_{sample_type}_combined_beforeafterNorm_to_{normalisation_sample}")
+  p1 <- plot_labscatter(d_samples = d_samples, d_assays = d_assays, variable = variable, labid_col = "LabNum", sample_type = sample_type, normalisation_sample = NULL, excluded_labs = "", save_plot = FALSE, C16_max = C16_max, C18_max = C18_max, C24_max = C24_max, C241_max = C241_max, base_name)
+  p2 <- plot_labscatter(d_samples = d_samples, d_assays = d_assays, variable = variable, labid_col = "LabNum", sample_type = sample_type, normalisation_sample = normalisation_sample, excluded_labs = "", save_plot = FALSE, C16_max = C16_max, C18_max = C18_max, C24_max = C24_max, C241_max = C241_max, base_name)
   
   p_comb <- p1$plt + p2$plt
   
-  ggsave(plot = p_comb, filename = here("manuscript/output", glue("{plot_file_prefix}_{variable}_{sample_type}_combined_beforeafterNorm_to_{normalisation_sample}.png")), device = "png", dpi = 600, width = 290, height =210, units = "mm")
+  ggsave(plot = p_comb, filename = here("manuscript/output", glue("{base_name}.png")), device = "png", dpi = 600, width = 290, height =210, units = "mm")
   list(p_comb=p_comb, p1=p1, p2=p2)
 }
 
@@ -222,10 +224,10 @@ plot_labscatter <- function(d_samples, d_assays, variable, sample_type, labid_co
   
   if(save_plot) {
     if (as_pdf) 
-      ggsave(plot = plt2, filename = here("manuscript/output", paste0(filename_prefix, "LabScatterPlot_", sample_type, "_", variable, "_", if_else(is.null(normalisation_sample), "", paste0("_norm_by_",sample_type)),".pdf")), device=cairo_pdf,
+      ggsave(plot = plt2, filename = here("manuscript/output", paste0(filename_prefix, "_LabScatterPlot_", sample_type, "_", variable, "_", if_else(is.null(normalisation_sample), "", paste0("_norm_by_",sample_type)),".pdf")), device=cairo_pdf,
                        dpi = 600, width = 160, height =210, units = "mm")
     else
-      ggsave(plot = plt2, filename = here("manuscript/output", paste0(filename_prefix, "LabScatterPlot_", sample_type, "_", variable, "_", if_else(is.null(normalisation_sample), "", paste0("_norm_by_",sample_type)),".png")), device = "png",
+      ggsave(plot = plt2, filename = here("manuscript/output", paste0(filename_prefix, "_LabScatterPlot_", sample_type, "_", variable, "_", if_else(is.null(normalisation_sample), "", paste0("_norm_by_",sample_type)),".png")), device = "png",
                          dpi = 600, width = 160, height =210, units = "mm")
   }
   return(list(plt = plt2, stats = d_stat_filt))
