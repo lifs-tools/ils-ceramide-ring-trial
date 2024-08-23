@@ -52,6 +52,12 @@ if (params$run_in_targets) {
     readr::read_csv(file = here("output/nistCal1Cal2AveragedConcentrations.csv"))
 }
 
+# Get lab protocols details 
+
+d_protocols <- read_csv(here("data/definitions/LabProtocolDetails_Manuscript.csv"))
+
+
+
 # Prepare variable `d_full` containing the full annotated dataset -------------------
 
 d_full <- d_orig |>
@@ -88,6 +94,8 @@ d_full <- d_orig |>
     SampleType = if_else(SampleType == "T1D", "DB", SampleType),
     MassAnalyzerResolution = if_else(MassAnalyzerType == "QQQ", "LowRes", "HighRes")
   ) |>
+  left_join(d_protocols |> select(LabId, LC), by = "LabId") |> 
+  relocate(LC, MassAnalyzerResolution, .before = MassAnalyzerType) |> 
   group_by(LabId_group) |>
   mutate(LabNum = dplyr::cur_group_id()) |>
   ungroup() |>
@@ -102,6 +110,7 @@ d_full <- d_full |>
 
 
 d_full$Protocol <- forcats::fct_relevel(d_full$Protocol, c("SOP", "OTHER"))
+d_full$LC <- forcats::fct_relevel(d_full$LC, c("RP", "SFC", "FIA"))
 d_full$SampleType <- forcats::fct_relevel(d_full$SampleType, c("SRM", "hTAG", "DB", "YAA"))
 d_full$MassAnalyzerResolution <- forcats::fct_relevel(d_full$MassAnalyzerResolution, c("LowRes", "HighRes"))
 
@@ -118,6 +127,7 @@ d_sample_mean <- d_full |>
     LabNum,
     MethodNo,
     Protocol,
+    LC, 
     MassAnalyzerResolution,
     MassAnalyzerType
   ) |>
@@ -162,6 +172,7 @@ d_srm_mean <- d_sample_mean |>
     LabNum,
     MethodNo,
     Protocol,
+    LC, 
     MassAnalyzerResolution,
     MassAnalyzerType
   ) |>
@@ -205,13 +216,17 @@ d_stat_filt_mp <- get_study_stats(d_srm_mean_filt_mp, limit_iqr = limit_iqr)
 
 d_srm_mean |> select(LabId, LabId_group, LabNum) |> distinct() |>  write_csv(file = here("manuscript/output/LabId-LabNum_mapping.csv"))
 
-```
 
+
+
+
+
+```
 
 # 02. Table 2: Consensus concentrations and CVs of the 4 measured ceramides in the 4 NIST Reference Materials
 SOP and OTH refer to the standard and OTHER methods, respectively. n indicates the number of datasets that were included in the calculation of the variables given in this table after removal of outliers of the single-point (SP) or multi-point (MP) calibration, respectively, using Tukey’s 1.5×IQR method (see text). The total number of datasets before removal was 39 (26 SOP/13 OTHER). Intra-lab %CV corresponds to the median of individual intra-lab %CVs. 
 
-```{r manusript-table-2}
+```{r manuscript-table-2}
 
 
 # Table 2 (main text) ------
@@ -260,7 +275,7 @@ write_excel_csv(table2_final, here("manuscript/output/Table2_Consensus-Concentra
 # 03. Suppl Table S1: Concentrations and inter-lab %CVs in all reference materials in the full and outlier-filtered datasets
 Concentrations and inter-lab %CVs in all reference materials. ALL and Filt correspond to values calculated from the full or the outlier-filtered dataset, respectively. All concentrations were calculated using multi-point calibration. n corresponds to the number of datasets.
 
-```{r manusript-suppl-table-S1}
+```{r manuscript-Suppl_Table-S1}
 
 tableS1_stats_all_datasets <- get_study_stats(d_srm_mean) |>
   select(
@@ -288,13 +303,13 @@ tableS1_stats_outlierfilt_datasets <- d_stat_filt_mp |>
 
 tableS1_stats_all_datasets |> 
   left_join(tableS1_stats_outlierfilt_datasets) |> 
-  write_excel_csv(file = here("manuscript/output/Suppl-TableS1_Concentrations-CVs_ALL-vs-Outlierfilt-datasets.csv"))
+  write_excel_csv(file = here("manuscript/output/Suppl_TableS1_Concentrations-CVs_ALL-vs-Outlierfilt-datasets.csv"))
 ```
 
 # 04. Suppl Table S2: Concentrations and inter-lab %CV of ceramide species from the two protocol types
 The mean concentrations are given in µmol/L are based on multi-point calibration with outliers removed. The P values are from the comparison of individual values reported by SOP vs OTHER protocols (Welch’s two-sided t-test). n corresponds to the number of datasets after outlier removal.
 
-```{r manusript-suppl-table-S2}
+```{r manuscript-Suppl_Table-S2}
 
 tableS2_stats_part1 <- d_srm_mean_filt_mp |>
   group_by(ceramideName, SampleType) |>
@@ -338,28 +353,28 @@ tableS2_final <- tableS2_stats_part2 |>
 
 write_excel_csv(
   x = tableS2_final,
-  file = here("manuscript/output/Suppl-TableS2_Concentrations-CVs_SOP-vs_OTHER-MP.csv")
+  file = here("manuscript/output/Suppl_TableS2_Concentrations-CVs_SOP-vs_OTHER-MP.csv")
 )
 ```
 
 # 05. Suppl Dataset: Concentrations of all species in all samples from all labs (SP and MP) with Outlier status (TRUE/FALSE) ------
-```{r manusript-suppl-dataset}
+```{r manuscript-suppl-dataset}
 
 # create combined table with LC method, MS platform, sample type and lab id, with single and multi-point outlier flags
-d_lab_prot <- readxl::read_xlsx(here("data/definitions/LabProtocolDetails.xlsx"), sheet = "Sheet1")
+
 table_all_data_meanreplicates <- flag_outlier(d_srm_mean, limit_iqr = limit_iqr) |> 
   select(SampleType,
          LabNum,
          LabId,
          ceramideName,
          Protocol,
+         LC,
          MassAnalyzerResolution,
          MassAnalyzerType,
          C_SinglePoint_mean,  
          C_Adj_mean,
          Outlier_sp,
          Outlier_mp) |>
-  left_join(d_lab_prot |> select(LabId, LC), by = c("LabId" = "LabId")) |> 
   select(
     SampleType, 
     LabNum, 
@@ -866,18 +881,15 @@ Authentic vs class-specific internal standard normalization and its effects on b
 d_istd <- read_csv(here("data/definitions/labeledISConcentrations.csv")) |>   
   mutate(ceramideName = str_replace(ceramideName, fixed("d18:1"), "18:1;O2"),
          conc_istd = Concentration) 
-d_prot <- readxl::read_xlsx(here("data/definitions/LabProtocolDetails.xlsx"), sheet = "Sheet1")
 
 d_plot_norm_istd_mp <- d_srm_mean_filt_mp |> 
   filter(SampleType == "SRM") |>
-  select(SampleType, LabId, ceramideName, Protocol, C_Adj_mean, C_Adj_C16_mean, C_Adj_C24_mean) |> 
-  pivot_longer(-SampleType:-Protocol, names_to = c("ISTD"), values_to = "Concentration") |> 
+  select(SampleType, LabId, ceramideName, Protocol, LC,  C_Adj_mean, C_Adj_C16_mean, C_Adj_C24_mean) |> 
+  pivot_longer(-SampleType:-LC, names_to = c("ISTD"), values_to = "Concentration") |> 
   filter(!(ceramideName == "Cer 18:1;O2/16:0" & ISTD == "C_Adj_C16_mean")) |> 
   filter(!(ceramideName == "Cer 18:1;O2/24:0" & ISTD == "C_Adj_C24_mean")) |> 
   filter(LabId != "15") |> 
-  filter(ceramideName == "Cer 18:1;O2/16:0" | ceramideName == "Cer 18:1;O2/24:0" ) |> 
-  left_join(d_prot |> select(LabId, Protocol,LC, SOURCE_TEMP_CAT)) |> 
-  relocate("LC", "SOURCE_TEMP_CAT", .after = LabId)
+  filter(ceramideName == "Cer 18:1;O2/16:0" | ceramideName == "Cer 18:1;O2/24:0" ) 
 
 
 plot_diffistd <- function(data, y_title, n_label_offset = 20, legend_x_offset = 0.11, n_label_size = 1.3, filename_prefix = "NormDiffISTD") {
@@ -1077,20 +1089,20 @@ Molar concentrations derived from single point internal standard (ISTD) vs. cali
 ```{r FigS03-plot, fig.height=5, fig.width=12, out.width="100%"}
 d_srm_mean_plot <- flag_outlier(d_srm_mean, limit_iqr = limit_iqr)  #|> filter(!Outlier_sp, !Outlier_mp)
 d_srm_mean_plot$SampleType <- forcats::fct_relevel(d_srm_mean_plot$SampleType, c("DB","hTAG","YAA","SRM"))
-p_Fig2A <- plot_single_vs_multipoint(d_srm_mean_plot, c(0.8, 0.22, 7.2, 2.6))
+pS03A <- plot_single_vs_multipoint(d_srm_mean_plot, c(0.8, 0.22, 7.2, 2.6))
 readr::write_excel_csv(d_srm_mean_plot, file = here(paste0("manuscript/output/FigS03A_sourcedata.csv")))
 
 d_srm_mean_filt <- flag_outlier(d_srm_mean, limit_iqr = limit_iqr)  |> filter(!Outlier_sp, !Outlier_mp)
 d_srm_mean_filt$SampleType <- forcats::fct_relevel(d_srm_mean_filt$SampleType, c("DB","hTAG","YAA","SRM"))
-p_Fig2B <- plot_single_vs_multipoint(d_srm_mean_filt, c(0.8, 0.22, 7.2, 2.6))
+pS03B <- plot_single_vs_multipoint(d_srm_mean_filt, c(0.8, 0.22, 7.2, 2.6))
 readr::write_excel_csv(d_srm_mean_filt, file = here(paste0("manuscript/output/FigS03B_sourcedata.csv")))
 
-pS3 <- p_Fig2A / p_Fig2B + patchwork::plot_annotation(tag_levels = c("A", "B"))
+pS03 <- pS03A / pS03B + patchwork::plot_annotation(tag_levels = c("A", "B"))
 
-ggsave(plot = pS3, filename = here("manuscript/output/FigS03_Comparison_SingleVsMultiCalib-All-FilteredDatasets.png"), device = "png",
+ggsave(plot = pS03, filename = here("manuscript/output/FigS03_Comparison_SingleVsMultiCalib-All-FilteredDatasets.png"), device = "png",
 dpi = 600, width =160, height =120, units = "mm")
 
-pS3
+pS03
 ```
 
 # 15. Suppl Figure S4: SRM comparisons
@@ -1102,20 +1114,20 @@ pos_points <- ggbeeswarm::position_beeswarm(cex = 1, dodge.width = 0.2)
 
 d_srm_mean_plot <- flag_outlier(d_srm_mean, limit_iqr = limit_iqr) # |> filter(!Outlier_mp)
 d_srm_mean_plot$SampleType <- forcats::fct_relevel(d_srm_mean_plot$SampleType, c("SRM","hTAG","DB","YAA")) 
-p_Fig3A <- plot_all_refmaterials(d_srm_mean_plot, xy_lim = c(0.7, 0.25, 9, 3))
+pS04A <- plot_all_refmaterials(d_srm_mean_plot, xy_lim = c(0.7, 0.25, 9, 3))
 readr::write_excel_csv(d_srm_mean_plot, file = here(paste0("manuscript/output/Fig4A_sourcedata.csv")))
 
 d_srm_mean_filt <- flag_outlier(d_srm_mean, limit_iqr = limit_iqr) |> filter(!Outlier_mp)
 d_srm_mean_filt$SampleType <- forcats::fct_relevel(d_srm_mean_filt$SampleType, c("SRM","hTAG","DB","YAA")) 
-p_Fig3B <- plot_all_refmaterials(d_srm_mean_filt, xy_lim = c(0.7, 0.25, 9, 3))
+pS04B <- plot_all_refmaterials(d_srm_mean_filt, xy_lim = c(0.7, 0.25, 9, 3))
 readr::write_excel_csv(d_srm_mean_filt, file = here(paste0("manuscript/output/Fig4B_sourcedata.csv")))
 
-pS4 <- p_Fig3A / p_Fig3B + patchwork::plot_annotation(tag_levels = c("A", "B"))
+pS04 <- pS04A / pS04B + patchwork::plot_annotation(tag_levels = c("A", "B"))
 
-ggsave(plot = pS4, filename = here("manuscript/output/FigS04_SRMs_Dotplots-All-FilteredDataset.png"), device = "png",
+ggsave(plot = pS04, filename = here("manuscript/output/FigS04_SRMs_Dotplots-All-FilteredDataset.png"), device = "png",
 dpi = 600, width =160, height =130, units = "mm")
 
-pS4
+pS04
 
 get_Fig4_stats <- function(data){
   data |> 
@@ -1137,14 +1149,14 @@ Comparison of inter-laboratory and/or cross-platform trials reporting ceramide c
 ```{r FigS05-dataprep-plot, fig.height=8, fig.width=12, out.width="100%"}
 d_ils_labs_filt <- d_srm_mean_filt_mp |> mutate(Study = "ILS Ceramides (mp)", .before = 1) 
 
-p_Fig4B <- plot_studycomp(d_ils_labs_filt, filename_prefix = "FigS05")
+pS05B <- plot_studycomp(d_ils_labs_filt, filename_prefix = "FigS05")
 
-pS5 <- p_Fig4 / p_Fig4B + patchwork::plot_annotation(tag_levels = c("A", "B"))
+pS05 <- p_Fig4 / pS05B + patchwork::plot_annotation(tag_levels = c("A", "B"))
 
-ggsave(plot = pS5, filename = here("manuscript/output/FigS05_Comparison_Studies.png"), device = "png",
+ggsave(plot = pS05, filename = here("manuscript/output/FigS05_Comparison_Studies.png"), device = "png",
 dpi = 600, width =160, height = 150, units = "mm")
 
-pS5
+pS05
 ```
 
 # 17. Suppl Figure S6: Normalization with different ISTDs (full and outlier-filtered datasets)
@@ -1158,33 +1170,29 @@ Authentic vs class-specific internal standard normalization and its effects on b
 d_istd <- read_csv(here("data/definitions/labeledISConcentrations.csv")) |>   
   mutate(ceramideName = str_replace(ceramideName, fixed("d18:1"), "18:1;O2"),
          conc_istd = Concentration) 
-d_prot <- readxl::read_xlsx(here("data/definitions/LabProtocolDetails.xlsx"), sheet = "Sheet1")
 
 d_plot_allistd_mp <- d_srm_mean |> 
   filter(SampleType == "SRM") |>
-  select(SampleType, LabId, ceramideName, Protocol, C_Adj_mean, C_Adj_C16_mean, C_Adj_C18_mean, C_Adj_C24_mean, C_Adj_C241_mean) |> 
-  pivot_longer(-SampleType:-Protocol, names_to = c("ISTD"), values_to = "Concentration") |> 
+  select(SampleType, LabId, ceramideName, Protocol, LC, C_Adj_mean, C_Adj_C16_mean, C_Adj_C18_mean, C_Adj_C24_mean, C_Adj_C241_mean) |> 
+  pivot_longer(-SampleType:-LC, names_to = c("ISTD"), values_to = "Concentration") |> 
   filter(!(ceramideName == "Cer 18:1;O2/16:0" & ISTD == "C_Adj_C16_mean")) |> 
   filter(!(ceramideName == "Cer 18:1;O2/18:0" & ISTD == "C_Adj_C18_mean")) |> 
   filter(!(ceramideName == "Cer 18:1;O2/24:0" & ISTD == "C_Adj_C24_mean")) |> 
   filter(!(ceramideName == "Cer 18:1;O2/24:1" & ISTD == "C_Adj_C241_mean")) |> 
   filter(LabId != "15") |> 
-  filter(ceramideName == "Cer 18:1;O2/16:0" | ceramideName == "Cer 18:1;O2/18:0" | ceramideName == "Cer 18:1;O2/24:0" | ceramideName == "Cer 18:1;O2/24:1" ) |> 
-  left_join(d_prot |> select(LabId, Protocol,LC, SOURCE_TEMP_CAT)) |> 
-  relocate("LC", "SOURCE_TEMP_CAT", .after = LabId)
+  filter(ceramideName == "Cer 18:1;O2/16:0" | ceramideName == "Cer 18:1;O2/18:0" | ceramideName == "Cer 18:1;O2/24:0" | ceramideName == "Cer 18:1;O2/24:1" ) 
 
 d_plot_allistd_mp_filt <- d_srm_mean_filt_mp |> 
   filter(SampleType == "SRM") |>
-  select(SampleType, LabId, ceramideName, Protocol, C_Adj_mean, C_Adj_C16_mean, C_Adj_C18_mean, C_Adj_C24_mean, C_Adj_C241_mean) |> 
-  pivot_longer(-SampleType:-Protocol, names_to = c("ISTD"), values_to = "Concentration") |> 
+  select(SampleType, LabId, ceramideName, Protocol, LC,  C_Adj_mean, C_Adj_C16_mean, C_Adj_C18_mean, C_Adj_C24_mean, C_Adj_C241_mean) |> 
+  pivot_longer(-SampleType:-LC, names_to = c("ISTD"), values_to = "Concentration") |> 
   filter(!(ceramideName == "Cer 18:1;O2/16:0" & ISTD == "C_Adj_C16_mean")) |> 
   filter(!(ceramideName == "Cer 18:1;O2/18:0" & ISTD == "C_Adj_C18_mean")) |> 
   filter(!(ceramideName == "Cer 18:1;O2/24:0" & ISTD == "C_Adj_C24_mean")) |> 
   filter(!(ceramideName == "Cer 18:1;O2/24:1" & ISTD == "C_Adj_C241_mean")) |> 
   filter(LabId != "15") |> 
-  filter(ceramideName == "Cer 18:1;O2/16:0" | ceramideName == "Cer 18:1;O2/18:0" | ceramideName == "Cer 18:1;O2/24:0" | ceramideName == "Cer 18:1;O2/24:1" ) |> 
-  left_join(d_prot |> select(LabId, Protocol,LC, SOURCE_TEMP_CAT)) |> 
-  relocate("LC", "SOURCE_TEMP_CAT", .after = LabId)
+  filter(ceramideName == "Cer 18:1;O2/16:0" | ceramideName == "Cer 18:1;O2/18:0" | ceramideName == "Cer 18:1;O2/24:0" | ceramideName == "Cer 18:1;O2/24:1" ) 
+
 
 
 p_Fig6C_allistd_mp  <- plot_diffistd(
@@ -1232,13 +1240,13 @@ d_raw_sop <- read_csv(here("output/all-labs-standard-unfiltered.csv"))
 d_istd <- read_csv(here("data/definitions/labeledISConcentrations.csv")) |>   
   mutate(ceramideName = str_replace(ceramideName, fixed("d18:1"), "18:1;O2"),
          conc_istd = Concentration) 
-d_prot <- readxl::read_xlsx(here("data/definitions/LabProtocolDetails.xlsx"), sheet = "Sheet1")
 
 d_raw <- bind_rows(d_raw_OTHER, d_raw_sop) |> 
   filter(SampleType == "NIST SRM") |> 
-  select(SampleType, isotope, ceramideName, ceramideId, Protocol, Sample, replicate, LabId, MassAnalyzerType,  Intensity = area) |> 
+  left_join(d_protocols |> select(LabId, LC), by = "LabId") |> 
+  select(SampleType, isotope, ceramideName, ceramideId, Protocol, LC, Sample, replicate, LabId, MassAnalyzerType,  Intensity = area) |> 
   mutate(ceramideName = str_replace(ceramideName, fixed("d18:1"), "18:1;O2")) |> 
-  group_by(SampleType, ceramideName, Protocol, Sample, replicate, LabId, MassAnalyzerType) |> 
+  group_by(SampleType, ceramideName, Protocol, LC,  Sample, replicate, LabId, MassAnalyzerType) |> 
   separate(LabId, into = c("LabId_group", "MethodNo"), convert = FALSE, remove = FALSE, sep = "[abc]", fill = "right") |> 
   mutate(
     MethodNo = str_extract(LabId, "[abc]"),
@@ -1251,12 +1259,13 @@ d_raw <- bind_rows(d_raw_OTHER, d_raw_sop) |>
   ungroup() |> 
   distinct() 
 
+d_raw$LC <- forcats::fct_relevel(d_raw$LC, c("RP","SFC", "FIA")) 
 d_raw$Protocol <- forcats::fct_relevel(d_raw$Protocol, c("SOP","OTHER")) 
 d_raw$SampleType <- forcats::fct_relevel(d_raw$SampleType, c("SRM","hTAG","DB","YAA")) 
 d_raw$MassAnalyzerResolution <- forcats::fct_relevel(d_raw$MassAnalyzerResolution, c("LowRes","HighRes"))
 
 d_calc <- d_raw |> 
-  group_by(SampleType, LabId,LabNum, MethodNo, Sample, Protocol, replicate) |> 
+  group_by(SampleType, LabId,LabNum, MethodNo, Sample, Protocol, LC, replicate) |> 
   dplyr::reframe(
     ceramideName = ceramideName[1:4],
     AuthISTD = Intensity[isotope == "l"]/Intensity[isotope == "h"],
@@ -1264,7 +1273,7 @@ d_calc <- d_raw |>
     C18_ISTD = Intensity[isotope == "l"]/Intensity[isotope == "h" & ceramideName == "Cer 18:1;O2/18:0"],
     C24_ISTD = Intensity[isotope == "l"]/Intensity[isotope == "h" & ceramideName == "Cer 18:1;O2/24:0"],
     C241_ISTD = Intensity[isotope == "l"]/Intensity[isotope == "h" & ceramideName == "Cer 18:1;O2/24:1"]) |> 
-  group_by(SampleType, ceramideName, LabId,LabNum,MethodNo, Protocol, Sample) |>
+  group_by(SampleType, ceramideName, LabId,LabNum,MethodNo, Protocol, LC,  Sample) |>
   summarise(
     AuthISTD = mean(AuthISTD, na.rm = TRUE),
     C16_ISTD = mean(C16_ISTD, na.rm = TRUE),
@@ -1272,7 +1281,7 @@ d_calc <- d_raw |>
     C24_ISTD = mean(C24_ISTD, na.rm = TRUE),
     C241_ISTD = mean(C241_ISTD, na.rm = TRUE)
   ) |> 
-  group_by(SampleType, ceramideName, Protocol, LabId, MethodNo, LabNum) |>
+  group_by(SampleType, ceramideName, Protocol, LabId, MethodNo, LC, LabNum) |>
   summarise(
     AuthISTD = mean(AuthISTD, na.rm = TRUE),
     C16_ISTD = mean(C16_ISTD, na.rm = TRUE),
@@ -1288,10 +1297,10 @@ d_calc <- d_raw |>
     C24_ISTD = C24_ISTD * d_istd[d_istd$ceramideId == 3,] |> pull(conc_istd),
     C241_ISTD = C241_ISTD * d_istd[d_istd$ceramideId == 4,] |> pull(conc_istd))
  
-d_outlier <- flag_outlier(d_srm_mean, limit_iqr = limit_iqr) |> select(SampleType, LabId, ceramideName, Protocol, Outlier_sp, Outlier_mp)
+d_outlier <- flag_outlier(d_srm_mean, limit_iqr = limit_iqr) |> select(SampleType, LabId, ceramideName, Protocol, LC, Outlier_sp, Outlier_mp)
 
 d_calc_plot <- d_calc |> 
-  select(LabId, LabNum,ceramideName, Protocol, MethodNo, AuthISTD, C16_ISTD, C18_ISTD,C24_ISTD, C241_ISTD) |> 
+  select(LabId, LabNum,ceramideName, Protocol, LC, MethodNo, AuthISTD, C16_ISTD, C18_ISTD,C24_ISTD, C241_ISTD) |> 
   pivot_longer(names_to = "ISTD", values_to = "Concentration", cols = AuthISTD:C241_ISTD) |> 
   filter(!LabId %in% c("15")) |> 
   filter(!(ceramideName == "Cer 18:1;O2/16:0" & ISTD == "C16_ISTD")) |> 
@@ -1299,10 +1308,7 @@ d_calc_plot <- d_calc |>
   filter(!(ceramideName == "Cer 18:1;O2/24:0" & ISTD == "C24_ISTD")) |> 
   filter(!(ceramideName == "Cer 18:1;O2/24:1" & ISTD == "C241_ISTD")) |> 
   #filter(!(ISTD == "C24_ISTD")) |> 
-  left_join(d_outlier |> select(ceramideName, SampleType, LabId, Outlier_sp, Outlier_mp), by = c("ceramideName", "LabId", "SampleType")) |> 
-  #filter(!Outlier_sp|is.na(Outlier_sp)) |> 
-  left_join(d_prot |> select(LabId, Protocol,LC, SOURCE_TEMP_CAT)) |> 
-  relocate("LC", "SOURCE_TEMP_CAT", .after = LabId)
+  left_join(d_outlier |> select(ceramideName, SampleType, LabId, Outlier_sp, Outlier_mp), by = c("ceramideName", "LabId", "SampleType")) 
 
 # Generate plots
 
