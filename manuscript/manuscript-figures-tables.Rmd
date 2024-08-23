@@ -210,16 +210,15 @@ d_stat_all_mp <- get_study_stats(d_srm_mean, limit_iqr = limit_iqr)
 d_stat_filt_mp <- get_study_stats(d_srm_mean_filt_mp, limit_iqr = limit_iqr)
 
 
-# Save the used mappsing of LabId and LabNo. 
-#  LabId is the ID used for data submission and processing within the pipeline, the LabNo 
-#  corresponds to renumbered LabIds, which are used in the text and in figures 1 and S2 and in the
+# Save the used mapping of `LabId` and `LabNum.` 
+#  `LabId` is the ID used for dataset submission and processing within the pipeline,
+#  the letter (a and b) in the `LabId` indicate different datasets submitted by the 
+#  same lab. 
+#  `LabNum.` corresponds to renumbered lab id from `LabId`, which are used in the text, 
+#  and in figures 1 and suppl. figures S02, S07-S09. Different datasets from the 
+#  same lab are included under the same `LabNum`.
 
 d_srm_mean |> select(LabId, LabId_group, LabNum) |> distinct() |>  write_csv(file = here("manuscript/output/LabId-LabNum_mapping.csv"))
-
-
-
-
-
 
 ```
 
@@ -236,7 +235,6 @@ d_protocols |>
 SOP and OTH refer to the standard and OTHER methods, respectively. n indicates the number of datasets that were included in the calculation of the variables given in this table after removal of outliers of the single-point (SP) or multi-point (MP) calibration, respectively, using Tukey’s 1.5×IQR method (see text). The total number of datasets before removal was 39 (26 SOP/13 OTHER). Intra-lab %CV corresponds to the median of individual intra-lab %CVs. 
 
 ```{r manuscript-table-2}
-
 
 # Table 2 (main text) ------
 table2_sp <- d_stat_filt_sp |>
@@ -279,6 +277,20 @@ table2_final <- table2_sp |>
   )
 
 write_excel_csv(table2_final, here("manuscript/output/Table2_Consensus-Concentrations-CVs.csv"))
+
+
+# Export data for Source Data file ------
+d_srm_mean_filt_sp |> 
+  select(SampleType, ceramideName, LabId, LabNum, Protocol, Protocol, 
+         Conc_SP_mean = C_SinglePoint_mean, 
+         Conc_SP_intralabCV = C_SinglePoint_intralabCV) |> 
+  write_csv(here("manuscript/output/Table2_sourcedata_SP.csv"))
+
+d_srm_mean_filt_mp |> 
+  select(SampleType, ceramideName, LabId, LabNum, Protocol, Protocol, 
+         Conc_MP_mean = C_Adj_mean , 
+         Conc_MP_intralabCV = C_Adj_intralabCV) |> 
+  write_csv(here("manuscript/output/Table2_TableS01-S02_sourcedata_MP.csv"))
 ```
 
 # 04. Suppl Table S1: Concentrations and inter-lab %CVs in all reference materials in the full and outlier-filtered datasets
@@ -312,13 +324,26 @@ tableS1_stats_outlierfilt_datasets <- d_stat_filt_mp |>
 
 tableS1_stats_all_datasets |> 
   left_join(tableS1_stats_outlierfilt_datasets) |> 
-  write_excel_csv(file = here("manuscript/output/Suppl_TableS1_Concentrations-CVs_ALL-vs-Outlierfilt-datasets.csv"))
+  write_excel_csv(file = here("manuscript/output/Suppl_TableS01_Concentrations-CVs_ALL-vs-Outlierfilt-datasets.csv"))
+
+
+# Export data for Source Data file ------
+
+
+
+d_srm_mean |>   
+  select(SampleType, ceramideName, LabId, LabNum, Protocol, Protocol, 
+         Conc_MP_mean = C_Adj_mean) |> 
+  write_csv(here("manuscript/output/Suppl_TableS01_sourcedata_ALL.csv"))
+
+# Source for filtered data is identical to source data (multi-point calibrated) of Table 1 
+
 ```
 
 # 05. Suppl Table S2: Concentrations and inter-lab %CV of ceramide species from the two protocol types
 The mean concentrations are given in µmol/L are based on multi-point calibration with outliers removed. The P values are from the comparison of individual values reported by SOP vs OTHER protocols (Welch’s two-sided t-test). n corresponds to the number of datasets after outlier removal.
 
-```{r manuscript-Suppl_Table-S2}
+```{r manuscript-Suppl_Table-S02}
 
 tableS2_stats_part1 <- d_srm_mean_filt_mp |>
   group_by(ceramideName, SampleType) |>
@@ -362,8 +387,10 @@ tableS2_final <- tableS2_stats_part2 |>
 
 write_excel_csv(
   x = tableS2_final,
-  file = here("manuscript/output/Suppl_TableS2_Concentrations-CVs_SOP-vs_OTHER-MP.csv")
+  file = here("manuscript/output/Suppl_TableS02_Concentrations-CVs_SOP-vs_OTHER-MP.csv")
 )
+
+# Source data is identical to source data (multi-point calibrated) of Table 1 
 ```
 
 # 06. Suppl Dataset: Concentrations of all species in all samples from all labs (SP and MP) with Outlier status (TRUE/FALSE) ------
