@@ -227,12 +227,9 @@ d_srm_mean |> select(LabId, LabId_group, LabNum) |> distinct() |>  write_csv(fil
 SOP refers to the method recommended by the study authors, OTHER to methods chosen by the individual laboratories. The number in brackets indicates the number for each chromatographic/injection method (RP: Reversed Phase, FIA, Flow Injection Analysis, SFC: Supercritical Fluid Chromatography). Other variations present in OTHER may include type of extraction, nano/capLC, LC duration (7-50 min), column chemistries and MS source settings. Platforms: QQQ = triple quadrupole, QTRAP = ion trap, QTOF = quadrupole time-of-flight. 
 
 ```{r manuscript-table-1}
-
 d_protocols |> 
   select(LabId, LabNum, Protocol, LC, MassAnalyzerType) |> 
-  write_csv(here("output/Table1_sourcedata.csv"))
-
-
+  write_csv(here("manuscript/output/Table1_sourcedata.csv"))
 ```
 
 # 03. Table 2: Consensus concentrations and CVs of the 4 measured ceramides in the 4 NIST Reference Materials
