@@ -1419,7 +1419,10 @@ labScatterPlots[[3]]$p_comb
 
 # 22. Additional Tables (not part of the manuscript)
 
-## 22a - Summary calibration lines raw intensities of labelled vs non-labelled ceramide species
+## 22a - Calibration line raw intensities of labelled vs non-labelled ceramide species
+
+Replicate injections per SRM sample were averaged. See important data file from the pipeline 
+for all individual data.
 
 ```{r table-res-caliblines}
 if (params$run_in_targets) {
@@ -1433,14 +1436,14 @@ d_caliblines_areas_mean <- d_caliblines |>
   summarise(area_l = mean(area_l), 
             area_h = mean(area_h))
 
-write_csv(x = d_caliblines_areas_mean, file = here("manuscript/output/Unpublished_summary_calibration-lines_areas-light-heavy.csv"))
+write_csv(x = d_caliblines_areas_mean, file = here("manuscript/output/Unpublished_Summary_bySample_byCalibrationLine_Areas-Light-Heavy.csv"))
 
 d_caliblines_areas_mean
 ```
 
 ## 22b - Comparison between low- and high-resolution instruments in terms of concentration and inter-lab %CV
 
-Concentrations and inter-lab %CV of ceramide species measured by either low-resolution (QQQ) or high-resolution (QTOF/QE) MS instruments. The concentrations given in µmol/L were obtained using  multi-point calibration and filtered for outliers. The P values are from the comparison of individual values from the two instrument resolution categories (Welch’s two-sided t-test). N corresponds to the number of datasets after outlier removal.
+Concentrations (in μmol/L) and inter-lab %CV of ceramide species measured by either low-resolution (QQQ) or high-resolution (QTOF/QE) MS instruments. The concentrations given in µmol/L were obtained using  multi-point calibration and filtered for outliers. The P values are from the comparison of individual values from the two instrument resolution categories (Welch’s two-sided t-test). N corresponds to the number of datasets after outlier removal.
 
 ```{r other-tables-lowres-vs-highres-ms}
 
@@ -1480,7 +1483,7 @@ write_excel_csv(d_srm_mean_mstype_stats, here("manuscript/output/Unpublished_Com
 
 ## 22c - Comparison SOP vs OTHER protocol types of single-point calibration derived concenctrations
 
-Concentrations and inter-lab %CV of ceramide species from the two protocol types (SOP and OTHER). The concentrations given in µmol/L were obtained using the **single-point** calibration with outlier removed. The P values are from the comparison of individual values reported by SOP vs OTHER protocols (Welch’s two-sided t-test). N corresponds to the number of datasets after outlier removal. This table corresponds to Supplementary Table S2 that depicts the equivalent comparison for multi-point calibration derived concentrations.
+Concentrations (in μmol/L) and inter-lab %CV of ceramide species from the two protocol types (SOP and OTHER). The concentrations given in µmol/L were obtained using the **single-point** calibration with outlier removed. The P values are from the comparison of individual values reported by SOP vs OTHER protocols (Welch’s two-sided t-test). N corresponds to the number of datasets after outlier removal. This table corresponds to Supplementary Table S2 that depicts the equivalent comparison for multi-point calibration derived concentrations.
 
 ```{r other-tables-comp-sop-other-sp}
 
@@ -1530,3 +1533,48 @@ write_excel_csv(
 )
 ```
 
+## 22d - Concentrations derived based on individual calibration lines 
+
+Concentrations (in μmol/L) calculated based on the individual calibration curves 1 or 2, and from single-point (internal standard-based) calibration.
+Individual tables are created with all measurements, with mean and SD of replicate injections, and of samples per SRM type. 
+Note: For datasets (LabId) 20b and 26b only one calibration curve was reported.    
+
+```{r other-tables-srm_by-caliblines}
+d_rawdata_byCalibLine_raw <- readr::read_csv( here("output/nistCal1Cal2AveragedConcentrationsLong.csv"), na = c("NA"))
+d_ids <- readr::read_csv( here("manuscript/output/LabId-LabNum_mapping.csv"), na = c("NA"))
+
+
+d_rawdata_byCalibLine_raw <- d_rawdata_byCalibLine_raw |>
+  filter (Calibration == "C_CalibCurve_Avg") |> 
+  mutate(LabId = str_replace(LabId, "^[1-9]$", paste0("0", LabId))) |> 
+  left_join(d_ids, by = c("LabId")) |> 
+  relocate(LabNum, .before = LabId)
+
+# Average replicates per calibration line level
+d_rawdata_byCalibLine_bySample <- d_rawdata_byCalibLine_raw |> 
+  group_by(LabNum,	LabId,	SampleType,	Sample, ceramideName, Protocol, MassAnalyzerType) |> 
+  summarise(
+    Conc_singlepoint_rep_mean = mean(`C_SinglePoint_Calibration Line 1`, na.rm = TRUE),
+    Conc_singlepoint_rep_sd = sd(`C_SinglePoint_Calibration Line 1`, na.rm = TRUE),
+    Conc_Calib_1_rep_mean = mean(`C_Adj_Calibration Line 1`, na.rm = TRUE),
+    Conc_Calib_1_rep_sd = sd(`C_Adj_Calibration Line 1`, na.rm = TRUE),
+    Conc_Calib_2_rep_mean = mean(`C_Adj_Calibration Line 2`, na.rm = TRUE),
+    Conc_Calib_2_red_sd = sd(`C_Adj_Calibration Line 2`, na.rm = TRUE)) |> 
+  ungroup() 
+
+d_rawdata_byCalibLine_bySRM <- d_rawdata_byCalibLine_bySample |> 
+  group_by(LabNum,	LabId,	SampleType, ceramideName, Protocol, MassAnalyzerType) |> 
+  summarise(
+    Conc_singlepoint_mean = mean(Conc_singlepoint_rep_mean, na.rm = TRUE),
+    Conc_singlepoint_sd = sd(Conc_singlepoint_rep_mean, na.rm = TRUE),
+    Conc_Calib_1_mean = mean(Conc_Calib_1_rep_mean, na.rm = TRUE),
+    Conc_Calib_1_sd = sd(Conc_Calib_1_rep_mean, na.rm = TRUE),
+    Conc_Calib_2_mean = mean(Conc_Calib_2_rep_mean, na.rm = TRUE),
+    Conc_Calib_2_sd = sd(Conc_Calib_2_rep_mean, na.rm = TRUE)) |> 
+  ungroup()
+
+write_csv(d_rawdata_byCalibLine_raw, here("manuscript/output/Unpublished_Summary_Concentrations_by_CalibLine_allData.csv"))
+write_csv(d_rawdata_byCalibLine_bySample |> rename_with(~str_remove(., "_rep")), here("manuscript/output/Unpublished_Summary_Concentrations_by_CalibLine_bySample.csv"))
+write_csv(d_rawdata_byCalibLine_bySRM, here("manuscript/output/Unpublished_Summary_Concentrations_by_CalibLine_bySRM.csv"))
+
+```
