@@ -453,7 +453,7 @@ p_Fig1 <-
     excluded_labs = "",
     save_plot = TRUE,
     filename_prefix = "Fig1", 
-    as_pdf = TRUE
+    as_pdf = FALSE
   )
 
 p_Fig1
