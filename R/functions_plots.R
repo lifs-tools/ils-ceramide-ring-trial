@@ -231,7 +231,7 @@ calibrationLineSurveyPlot <- function(intraAssayTable, theme=mytheme, colorscale
     geom_point(position = position_jitterdodge()) + 
     facet_grid(SampleType ~ LabId) + 
     theme + colorscale
-  ggsave(file.path(outputDirectory, "CalibrationLinesSurvey.png"), calibrationLinesPlot, width=16)
+  ggsave(file.path(outputDirectory, "CalibrationLinesSurvey.png"), calibrationLinesPlot, width=18)
   calibrationLinesPlot
 }
 
@@ -245,7 +245,7 @@ qcSurveyPlot <- function(intraAssayQC, theme=mytheme, colorscale=mycolorscale, o
     geom_point(position = position_jitterdodge()) + 
     facet_grid(SampleType ~ LabId) + 
     theme + colorscale
-  ggsave(file.path(outputDirectory, "QCSamplesSurvey.png"), QCPlot, width=16, height=10)
+  ggsave(file.path(outputDirectory, "QCSamplesSurvey.png"), QCPlot, width=18, height=10)
   QCPlot
 }
 
@@ -259,7 +259,7 @@ nistSurveyPlot <- function(IntraAssayNIST, theme=mytheme, colorscale=mycolorscal
     geom_point(position = position_jitterdodge()) + 
     facet_grid(SampleType ~ LabId) + 
     theme + colorscale
-  ggsave(file.path(outputDirectory, "NISTSamplesSurvey.png"), NISTSurveyPlot, width=16)
+  ggsave(file.path(outputDirectory, "NISTSamplesSurvey.png"), NISTSurveyPlot, width=18)
   NISTSurveyPlot
 }
 

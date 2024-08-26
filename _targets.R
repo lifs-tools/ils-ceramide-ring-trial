@@ -21,7 +21,8 @@ tar_option_set(
     "glue",
     "ggh4x",
     "tarchetypes",
-    "fst"
+    "fst",
+    "tidylog"
   )
 )
 
@@ -120,7 +121,7 @@ list(
     qcSurveyPlotObj,
     qcSurveyPlot(
       intraAssayQC,
-      theme = mytheme,
+      theme = mythemeXRot,
       colorscale = mycolorscale,
       outlierShape = outlierShape,
       outputDirectory
@@ -197,109 +198,111 @@ list(
   tar_target(
     # calculate linear models
     calibLineDataLm,
-    calibLineData |>
-      dplyr::mutate(CalibrationLine = list(
-        lm(
-          RatioLipidToIS ~ Concentration,
-          weights = 1 / Concentration ^ 2,
-          data = data
-        ))) |>
-      dplyr::mutate(CalibrationLine_C16 = list(
+    { 
+      calibLineDataLm <- calibLineData |>
+        dplyr::mutate(CalibrationLine = list(
           lm(
-            RatioLipidToIS_C16 ~ Concentration,
+            RatioLipidToIS ~ Concentration,
+            weights = 1 / Concentration ^ 2,
+            data = data
+          ))) |>
+        dplyr::mutate(CalibrationLine_C16 = list(
+            lm(
+              RatioLipidToIS_C16 ~ Concentration,
+              weights = 1 / Concentration ^ 2,
+              data = data
+            )
+        )) |>
+        dplyr::mutate(CalibrationLine_C18 = list(
+          lm(
+            RatioLipidToIS_C18 ~ Concentration,
             weights = 1 / Concentration ^ 2,
             data = data
           )
-      )) |>
-      dplyr::mutate(CalibrationLine_C18 = list(
-        lm(
-          RatioLipidToIS_C18 ~ Concentration,
-          weights = 1 / Concentration ^ 2,
-          data = data
-        )
-      )) |>
-      dplyr::mutate(CalibrationLine_C24 = list(
-        lm(
-          RatioLipidToIS_C24 ~ Concentration,
-          weights = 1 / Concentration ^ 2,
-          data = data
-        )
-      )) |>
-      dplyr::mutate(CalibrationLine_C241 = list(
-        lm(
-          RatioLipidToIS_C241 ~ Concentration,
-          weights = 1 / Concentration ^ 2,
-          data = data
-        )))
+        )) |>
+        dplyr::mutate(CalibrationLine_C24 = list(
+          lm(
+            RatioLipidToIS_C24 ~ Concentration,
+            weights = 1 / Concentration ^ 2,
+            data = data
+          )
+        )) |>
+        dplyr::mutate(CalibrationLine_C241 = list(
+          lm(
+            RatioLipidToIS_C241 ~ Concentration,
+            weights = 1 / Concentration ^ 2,
+            data = data
+          )))
+    }
   ),
   tar_target(
     calibLineDataLmCoeffs,
-    calibLineDataLm |> summarise(broom::tidy(CalibrationLine))
+    calibLineDataLm |> reframe(broom::tidy(CalibrationLine))
   ),
   tar_target(
     calibLineDataLmSumm,
-    calibLineDataLm |> summarise(broom::glance(CalibrationLine))
+    calibLineDataLm |> reframe(broom::glance(CalibrationLine))
   ),
   tar_target(
     calibLineDataLmPred,
-    calibLineDataLm |> summarise(
+    calibLineDataLm |> reframe(
       broom::augment(CalibrationLine, se_fit = TRUE, interval = "confidence")
     )
   ),
   tar_target(
     calibLineDataLmCoeffs_C16,
-    calibLineDataLm |> summarise(broom::tidy(CalibrationLine_C16))
+    calibLineDataLm |> reframe(broom::tidy(CalibrationLine_C16))
   ),
   tar_target(
     calibLineDataLmSumm_C16,
-    calibLineDataLm |> summarise(broom::glance(CalibrationLine_C16))
+    calibLineDataLm |> reframe(broom::glance(CalibrationLine_C16))
   ),
   tar_target(
     calibLineDataLmPred_C16,
-    calibLineDataLm |> summarise(
+    calibLineDataLm |> reframe(
       broom::augment(CalibrationLine_C16, se_fit = TRUE, interval = "confidence")
     )
   ),
   tar_target(
     calibLineDataLmCoeffs_C18,
-    calibLineDataLm |> summarise(broom::tidy(CalibrationLine_C18))
+    calibLineDataLm |> reframe(broom::tidy(CalibrationLine_C18))
   ),
   tar_target(
     calibLineDataLmSumm_C18,
-    calibLineDataLm |> summarise(broom::glance(CalibrationLine_C18))
+    calibLineDataLm |> reframe(broom::glance(CalibrationLine_C18))
   ),
   tar_target(
     calibLineDataLmPred_C18,
-    calibLineDataLm |> summarise(
+    calibLineDataLm |> reframe(
       broom::augment(CalibrationLine_C18, se_fit = TRUE, interval = "confidence")
     )
   ),
   tar_target(
     calibLineDataLmCoeffs_C24,
-    calibLineDataLm |> summarise(broom::tidy(CalibrationLine_C24))
+    calibLineDataLm |> reframe(broom::tidy(CalibrationLine_C24))
   ),
   tar_target(
     calibLineDataLmSumm_C24,
-    calibLineDataLm |> summarise(broom::glance(CalibrationLine_C24))
+    calibLineDataLm |> reframe(broom::glance(CalibrationLine_C24))
   ),
   tar_target(
     calibLineDataLmPred_C24,
-    calibLineDataLm |> summarise(
+    calibLineDataLm |> reframe(
       broom::augment(CalibrationLine_C24, se_fit = TRUE, interval = "confidence")
     )
   ),
 
   tar_target(
     calibLineDataLmCoeffs_C241,
-    calibLineDataLm |> summarise(broom::tidy(CalibrationLine_C241))
+    calibLineDataLm |> reframe(broom::tidy(CalibrationLine_C241))
   ),
   tar_target(
     calibLineDataLmSumm_C241,
-    calibLineDataLm |> summarise(broom::glance(CalibrationLine_C241))
+    calibLineDataLm |> reframe(broom::glance(CalibrationLine_C241))
   ),
   tar_target(
     calibLineDataLmPred_C241,
-    calibLineDataLm |> summarise(
+    calibLineDataLm |> reframe(
       broom::augment(CalibrationLine_C241, se_fit = TRUE, interval = "confidence")
     )
   ),
@@ -346,7 +349,7 @@ list(
           SlopeX_SE = `std.error_Concentration`
         ) |>
         left_join(
-          calibLineDataLmSumm |> select(sigma),
+          calibLineDataLmSumm |> select(sigma, LabId, SampleType, ceramideId, ceramideName),
           by = c("LabId", "SampleType", "ceramideId", "ceramideName")
         ) 
     }
@@ -354,7 +357,6 @@ list(
   tar_target(
     combinedCalibLinesWithConcs,
     { 
-      browser()
       calibLineDataLm |> unnest(cols = c(data)) |>
         left_join(
           calibLineDataLmCoeffsWide,
@@ -375,7 +377,7 @@ list(
         SlopeX_C16_SE = `std.error_Concentration`
       ) |>
       left_join(
-        calibLineDataLmSumm_C16 |> select(sigma_C16 = sigma),
+        calibLineDataLmSumm_C16 |> select(sigma_C16 = sigma, LabId, SampleType, ceramideId, ceramideName),
         by = c("LabId", "SampleType", "ceramideId", "ceramideName")
       )
   ),
@@ -400,7 +402,7 @@ list(
         SlopeX_C18_SE = `std.error_Concentration`
       ) |>
       left_join(
-        calibLineDataLmSumm_C18 |> select(sigma_C18 = sigma),
+        calibLineDataLmSumm_C18 |> select(sigma_C18 = sigma, LabId, SampleType, ceramideId, ceramideName),
         by = c("LabId", "SampleType", "ceramideId", "ceramideName")
       )
   ),
@@ -425,7 +427,7 @@ list(
         SlopeX_C24_SE = `std.error_Concentration`
       ) |>
       left_join(
-        calibLineDataLmSumm_C24 |> select(sigma_C24 = sigma),
+        calibLineDataLmSumm_C24 |> select(sigma_C24 = sigma, LabId, SampleType, ceramideId, ceramideName),
         by = c("LabId", "SampleType", "ceramideId", "ceramideName")
       )
   ),
@@ -439,20 +441,22 @@ list(
   ),
   tar_target(
     calibLineDataLmCoeffsWide_C241,
-    calibLineDataLmCoeffs_C241 |>
-      select(-statistic, -p.value) |>
-      group_by(LabId, SampleType, ceramideId, ceramideName, estimate) |>
-      pivot_wider(names_from = term, values_from = c(estimate, std.error)) |>
-      rename(
-        Intercept_C241 = `estimate_(Intercept)`,
-        Intercept_SE_C241 = `std.error_(Intercept)`,
-        SlopeX_C241 = `estimate_Concentration`,
-        SlopeX_C241_SE = `std.error_Concentration`
-      ) |>
-      left_join(
-        calibLineDataLmSumm_C241 |> select(sigma_C241 = sigma),
-        by = c("LabId", "SampleType", "ceramideId", "ceramideName")
-      )
+    {
+      calibLineDataLmCoeffs_C241 |>
+        select(-statistic, -p.value) |>
+        group_by(LabId, SampleType, ceramideId, ceramideName, estimate) |>
+        pivot_wider(names_from = term, values_from = c(estimate, std.error)) |>
+        rename(
+          Intercept_C241 = `estimate_(Intercept)`,
+          Intercept_SE_C241 = `std.error_(Intercept)`,
+          SlopeX_C241 = `estimate_Concentration`,
+          SlopeX_C241_SE = `std.error_Concentration`
+        ) |>
+        left_join(
+          calibLineDataLmSumm_C241 |> select(sigma_C241 = sigma, LabId, SampleType, ceramideId, ceramideName),
+          by = c("LabId", "SampleType", "ceramideId", "ceramideName")
+        )
+    }
   ),
   tar_target(
     combinedCalibLinesWithConcs_C241,
