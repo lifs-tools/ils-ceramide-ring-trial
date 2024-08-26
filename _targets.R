@@ -1183,21 +1183,20 @@ list(
       ) |> left_join(massAnalyzerSummary, by = c("MassAnalyzerType"))
   ),
   tar_target(
-    nistAveragedConcentrationsLongFile,
-    write_csv(
-      nistAveragedConcentrationsLong,
-      file = file.path(
-        outputDirectory,
-        "nistCal1Cal2AveragedConcentrationsLong.csv"
-      )
-    )
-  ),
-  tar_target(
     nistAveragedConcentrationsFile,
-    write_csv(
-      nistAveragedConcentrations,
-      file = file.path(outputDirectory, "nistCal1Cal2AveragedConcentrations.csv")
-    )
+    {
+      write_csv(
+        nistAveragedConcentrationsLong,
+        file = file.path(
+          outputDirectory,
+          "nistCal1Cal2AveragedConcentrationsLong.csv"
+        )
+      )
+      write_csv(
+        nistAveragedConcentrations,
+        file = file.path(outputDirectory, "nistCal1Cal2AveragedConcentrations.csv")
+      )
+    }
   ),
   ################################################################################
   # NIST Sample and Ceramide Concentrations Plots

@@ -4,10 +4,7 @@ library(parallel)
 library(here)
 
 # please see evaluation_debug.R for details on how to reset / debug a targets pipeline
-# enable the following line to print details on warnings or on errors 
-targets::tar_meta(fields = warnings, complete_only = TRUE)
-#targets::tar_meta(fields = error, complete_only = TRUE)
-#use a faster implementation for storing of intermediate tibbles
+# use a faster implementation for storing of intermediate tibbles
 tar_option_set(
   memory = "transient", 
   garbage_collection = TRUE, 
