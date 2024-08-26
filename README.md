@@ -75,6 +75,8 @@ evaluation.R
 This will run the code steps contained in the `_targets.R` file contained within the same folder.
 Please see the respective files for further information.
 
+In case of errors, or when you are customizing and debugging the pipeline, please see the comments in the `evaluation_debug.R` file and run the individual steps.
+
 ## Project Structure
 
 ### Protocols and Templates Folder
@@ -115,7 +117,7 @@ The file `R/definitions.R` contains configurable options for data input, calibra
 
 ### Manuscript folder
 
-The `manuscript` folder contains additional data used by the `manuscript-figures-tables.Rmd` Rmarkdown notebook that was used as the last step in the targets pipeline to generate figures, tables and supplementary files for use in the final manuscript. The notebook uses the data created by the previous pipeline steps and combines them with detailed data from the other ring trials for comparison.
+The `manuscript` folder contains additional data used by the `manuscript-figures-tables.Rmd` Rmarkdown notebook that was used as the last step in the targets pipeline to generate figures, tables and supplementary files for use in the final manuscript. The notebook uses the data created by the previous pipeline steps and combines them with detailed data from the other ring trials for comparison. Output is placed below the `manuscript/output`. This folder also contains the source data points and statistics used for all plots contained in the manuscript and supplementary material.
 
 ### Supplementary Data
 
