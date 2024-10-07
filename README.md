@@ -2,7 +2,7 @@
 
 * [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10081970.svg)](https://doi.org/10.5281/zenodo.10081970) - Lab reports, evaluation pipeline, plots and tables
 * [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.12632988.svg)](https://zenodo.org/doi/10.5281/zenodo.12632988) - mzML Datasets
-* [![DOI](https://doi.org/10.1038/s41467-024-52087-x)](https://doi.org/10.1038/s41467-024-52087-x) - Manuscript
+* [![DOI](https://zenodo.org/badge/DOI/10.1038/s41467-024-52087-x.svg)](https://doi.org/10.1038/s41467-024-52087-x) - Published manuscript
 
 ## Prerequisites
 
