@@ -2,6 +2,7 @@
 
 * [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10081970.svg)](https://doi.org/10.5281/zenodo.10081970) - Lab reports, evaluation pipeline, plots and tables
 * [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.12632988.svg)](https://zenodo.org/doi/10.5281/zenodo.12632988) - mzML Datasets
+* [![DOI](https://doi.org/10.1038/s41467-024-52087-x)](https://doi.org/10.1038/s41467-024-52087-x) - Manuscript
 
 ## Prerequisites
 
@@ -146,7 +147,7 @@ Please note that the data analysis team had no access to lab identities due to t
 
 Main publication
 
-[1] Torta F, Hoffmann N, Burla B *et al.*, Concordant inter-laboratory derived concentrations of ceramides in human plasma reference materials via authentic standards. 2024
+[1] Torta, F., Hoffmann, N., Burla, B. *et al.* Concordant inter-laboratory derived concentrations of ceramides in human plasma reference materials via authentic standards. Nat Commun 15, 8562 (2024). [https://doi.org/10.1038/s41467-024-52087-x](https://doi.org/10.1038/s41467-024-52087-x)
 
 [1a] Evaluation code and data for the ceramide ring trial. https://doi.org/10.5281/zenodo10081970
 
