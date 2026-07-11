@@ -27,25 +27,25 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * Represents a single ceramide concentration measurement for a specific matrix.
+ * Represents a single lipid concentration measurement for a specific matrix.
  * Contains both all-labs data and filtered (outliers removed) data.
  *
  * @author nils.hoffmann
  */
 @Schema
-@Document(value = "ceramideMeasurements", keyType = KeyType.autoincrement, keyIncrement = 1, replicationFactor = 2)
+@Document(value = "lipidMeasurements", keyType = KeyType.autoincrement, keyIncrement = 1, replicationFactor = 2)
 @Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class CeramideMeasurement extends ArangoBaseEntity {
+public class LipidMeasurement extends ArangoBaseEntity {
 
     @PersistentIndexed
     @JsonProperty("matrix")
     private String matrix;
 
     @PersistentIndexed
-    @JsonProperty("ceramide")
-    private String ceramide;
+    @JsonProperty("lipid")
+    private String lipid;
 
     @JsonProperty("all")
     private ConcentrationStats all;
@@ -55,11 +55,11 @@ public class CeramideMeasurement extends ArangoBaseEntity {
 
     // Constructor
     @Builder
-    public CeramideMeasurement(String matrix, String ceramide, ConcentrationStats all, 
-                                ConcentrationStats filtered, String transactionUuid, Visibility visibility) {
+    public LipidMeasurement(String matrix, String lipid, ConcentrationStats all, 
+                            ConcentrationStats filtered, String transactionUuid, Visibility visibility) {
         super(transactionUuid, visibility);
         this.matrix = matrix;
-        this.ceramide = ceramide;
+        this.lipid = lipid;
         this.all = all;
         this.filtered = filtered;
     }

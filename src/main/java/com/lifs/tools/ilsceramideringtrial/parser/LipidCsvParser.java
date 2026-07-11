@@ -15,9 +15,9 @@
  */
 package com.lifs.tools.ilsceramideringtrial.parser;
 
-import com.lifs.tools.ilsceramideringtrial.model.CeramideConcentrationDataset;
-import com.lifs.tools.ilsceramideringtrial.model.CeramideMeasurement;
 import com.lifs.tools.ilsceramideringtrial.model.ConcentrationStats;
+import com.lifs.tools.ilsceramideringtrial.model.LipidConcentrationDataset;
+import com.lifs.tools.ilsceramideringtrial.model.LipidMeasurement;
 import com.lifs.tools.ilsceramideringtrial.model.PublicationMetadata;
 import com.lifs.tools.ilsceramideringtrial.model.Visibility;
 
@@ -31,16 +31,16 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Parser for ceramide concentration CSV files.
- * Converts CSV data into CeramideConcentrationDataset model objects.
+ * Parser for lipid concentration CSV files.
+ * Converts CSV data into LipidConcentrationDataset model objects.
  *
  * @author nils.hoffmann
  */
-public class CeramideCsvParser {
+public class LipidCsvParser {
 
     // CSV column indices based on the file structure
     private static final int COL_MATRIX = 0;
-    private static final int COL_CERAMIDE = 1;
+    private static final int COL_LIPID = 1;
     private static final int COL_N_ALL = 2;
     private static final int COL_MEAN_ALL = 3;
     private static final int COL_SD_ALL = 4;
@@ -55,18 +55,18 @@ public class CeramideCsvParser {
     private static final int COL_RCV_FILT = 13;
 
     /**
-     * Parses a CSV input stream into a CeramideConcentrationDataset.
+     * Parses a CSV input stream into a LipidConcentrationDataset.
      * 
      * @param inputStream The CSV input stream
      * @param publicationMetadata The publication metadata to associate with the dataset
-     * @return CeramideConcentrationDataset containing all parsed data
+     * @return LipidConcentrationDataset containing all parsed data
      * @throws IOException If an error occurs during reading
      * @throws CsvParseException If the CSV format is invalid
      */
-    public CeramideConcentrationDataset parse(InputStream inputStream, PublicationMetadata publicationMetadata) 
+    public LipidConcentrationDataset parse(InputStream inputStream, PublicationMetadata publicationMetadata) 
             throws IOException, CsvParseException {
         
-        List<CeramideMeasurement> measurements = new ArrayList<>();
+        List<LipidMeasurement> measurements = new ArrayList<>();
         
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
@@ -95,7 +95,7 @@ public class CeramideCsvParser {
                 
                 // Extract values
                 String matrix = extractValue(columns[COL_MATRIX]);
-                String ceramide = extractValue(columns[COL_CERAMIDE]);
+                String lipid = extractValue(columns[COL_LIPID]);
                 
                 // Parse all labs stats
                 ConcentrationStats allStats = parseStats(
@@ -118,9 +118,9 @@ public class CeramideCsvParser {
                 );
                 
                 // Create measurement with builder
-                CeramideMeasurement measurement = CeramideMeasurement.builder()
+                LipidMeasurement measurement = LipidMeasurement.builder()
                     .matrix(matrix)
-                    .ceramide(ceramide)
+                    .lipid(lipid)
                     .all(allStats)
                     .filtered(filteredStats)
                     .transactionUuid(UUID.randomUUID().toString())
@@ -132,7 +132,7 @@ public class CeramideCsvParser {
         }
         
         // Build the dataset with builder
-        return CeramideConcentrationDataset.builder()
+        return LipidConcentrationDataset.builder()
             .publicationMetadata(publicationMetadata)
             .data(measurements)
             .transactionUuid(UUID.randomUUID().toString())

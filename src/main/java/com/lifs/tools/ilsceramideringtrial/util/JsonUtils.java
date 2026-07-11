@@ -18,7 +18,7 @@ package com.lifs.tools.ilsceramideringtrial.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.lifs.tools.ilsceramideringtrial.model.CeramideConcentrationDataset;
+import com.lifs.tools.ilsceramideringtrial.model.LipidConcentrationDataset;
 
 import java.io.File;
 import java.io.IOException;
@@ -122,8 +122,8 @@ public class JsonUtils {
      */
     public static boolean validateAgainstSchema(String json) {
         try {
-            // Basic validation - try to parse as CeramideConcentrationDataset
-            objectMapper.readValue(json, CeramideConcentrationDataset.class);
+            // Basic validation - try to parse as LipidConcentrationDataset
+            objectMapper.readValue(json, LipidConcentrationDataset.class);
             return true;
         } catch (JsonProcessingException e) {
             return false;

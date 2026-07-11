@@ -28,29 +28,29 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * Complete dataset model for ceramide concentration measurements.
- * This is the root document that contains metadata and all measurement data.
+ * Complete dataset model for lipid concentration measurements.
+ * This is the root document that contains publication metadata and all measurement data.
  * Designed for ArangoDB Spring Data persistence.
  *
  * @author nils.hoffmann
  */
 @Schema
-@Document(value = "ceramideConcentrationDatasets", keyType = KeyType.autoincrement, keyIncrement = 1, replicationFactor = 2)
+@Document(value = "lipidConcentrationDatasets", keyType = KeyType.autoincrement, keyIncrement = 1, replicationFactor = 2)
 @Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class CeramideConcentrationDataset extends ArangoBaseEntity {
+public class LipidConcentrationDataset extends ArangoBaseEntity {
 
     @JsonProperty("publicationMetadata")
     private PublicationMetadata publicationMetadata;
 
     @JsonProperty("data")
-    private List<CeramideMeasurement> data;
+    private List<LipidMeasurement> data;
 
     // Constructor
     @Builder
-    public CeramideConcentrationDataset(PublicationMetadata publicationMetadata, List<CeramideMeasurement> data,
-                                          String transactionUuid, Visibility visibility) {
+    public LipidConcentrationDataset(PublicationMetadata publicationMetadata, List<LipidMeasurement> data,
+                                      String transactionUuid, Visibility visibility) {
         super(transactionUuid, visibility);
         this.publicationMetadata = publicationMetadata;
         this.data = data;
