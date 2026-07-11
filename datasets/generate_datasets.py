@@ -71,15 +71,15 @@ QUANTITY_UNIT = {
 CONTROLLED_VOCABULARIES = [
     {
         "name": "Ontology for Biomedical Investigations",
-        "uri": "https://obi-ontology.org/",
-        "version": "2024-07-11",
+        "uri": "http://purl.obolibrary.org/obo/obi",
+        "version": "2026-05-08",
         "cvLabel": "OBI"
     },
     {
-        "name": "Unit Ontology",
-        "uri": "https://www.ebi.ac.uk/ontology-units/",
-        "version": "2024-07-11",
-        "cvLabel": "UO"
+        "name": "National Cancer Institute Thesaurus",
+        "uri": "http://purl.obolibrary.org/obo/ncit.owl",
+        "version": "03-12-2019",
+        "cvLabel": "NCIT"
     }
 ]
 
