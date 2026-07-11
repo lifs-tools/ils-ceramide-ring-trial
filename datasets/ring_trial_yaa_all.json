@@ -1,0 +1,231 @@
+{
+  "title": "Ceramide Concentrations - NIST RM 8231 Young African-American (YAA) Matrix - All Labs",
+  "description": "Consensus concentration values across all labs for NIST RM 8231 Young African-American (YAA) matrix samples from the interlaboratory comparison study",
+  "nativeId": "ILS_Ceramide_RingTrial_YAA_All",
+  "studyDesign": {
+    "accession": "OBI:0003658",
+    "name": "study design type",
+    "value": "ring trial design",
+    "cvLabel": "OBI"
+  },
+  "publicationMetadata": {
+    "title": "Concordant inter-laboratory derived concentrations of ceramides in human plasma reference materials via authentic standards",
+    "authors": [
+      "Federico Torta",
+      "Nils Hoffmann",
+      "Bo Burla",
+      "Irina Alecu",
+      "Makoto Arita",
+      "Takeshi Bamba",
+      "Steffany A. L. Bennett",
+      "Justine Bertrand-Michel",
+      "Britta Brügger",
+      "Mónica P. Cala",
+      "Dolores Camacho-Muñoz",
+      "Antonio Checa",
+      "Michael Chen",
+      "Michaela Chocholoušková",
+      "Michelle Cinel",
+      "Emeline Chu-Van",
+      "Benoit Colsch",
+      "Cristina Coman",
+      "Lisa Connell",
+      "Bebiana C. Sousa",
+      "Alex M. Dickens",
+      "Maria Fedorova",
+      "Finnur Freyr Eiríksson",
+      "Hector Gallart-Ayala",
+      "Mohan Ghorasaini",
+      "Martin Giera",
+      "Xue Li Guan",
+      "Mark Haid",
+      "Thomas Hankemeier",
+      "Amy Harms",
+      "Marcus Höring",
+      "Michal Holčapek",
+      "Thorsten Hornemann",
+      "Chunxiu Hu",
+      "Andreas J. Hülsmeier",
+      "Kevin Huynh",
+      "Christina M. Jones",
+      "Julijana Ivanisevic",
+      "Yoshihiro Izumi",
+      "Harald C. Köfeler",
+      "Sin Man Lam",
+      "Mike Lange",
+      "Jong Cheol Lee",
+      "Gerhard Liebisch",
+      "Katrice Lippa",
+      "Andrea F. Lopez-Clavijo",
+      "Malena Manzi",
+      "Manuela R. Martinefski",
+      "Raviswamy G. H. Math",
+      "Satyajit Mayor",
+      "Peter J. Meikle",
+      "María Eugenia Monge",
+      "Myeong Hee Moon",
+      "Sneha Muralidharan",
+      "Anna Nicolaou",
+      "Thao Nguyen-Tran",
+      "Valerie B. O'Donnell",
+      "Matej Orešič",
+      "Arvind Ramanathan",
+      "Fabien Riols",
+      "Daisuke Saigusa",
+      "Tracey B. Schock",
+      "Heidi Schwartz-Zimmermann",
+      "Guanghou Shui",
+      "Madhulika Singh",
+      "Masatomo Takahashi",
+      "Margrét Thorsteinsdóttir",
+      "Noriyuki Tomiyasu",
+      "Anthony Tournadre",
+      "Hiroshi Tsugawa",
+      "Victoria J. Tyrrell",
+      "Grace van der Gugten",
+      "Michael O. Wakelam",
+      "Craig E. Wheelock",
+      "Denise Wolrab",
+      "Guowang Xu",
+      "Tianrun Xu",
+      "John A. Bowden",
+      "Kim Ekroos",
+      "Robert Ahrends",
+      "Markus R. Wenk"
+    ],
+    "year": 2024,
+    "doi": "10.1038/s41467-024-52087-x",
+    "description": "Nature Communications publication of the interlaboratory ceramide ring trial study"
+  },
+  "lipidSummarizedQuantities": [
+    {
+      "lipids": [
+        "Cer 18:1;O2/16:0"
+      ],
+      "quantityUnit": {
+        "accession": "UO:0000276",
+        "name": "micromole per liter",
+        "cvLabel": "UO"
+      },
+      "groupingAttributes": {
+        "sampleMatrix": {
+          "accession": "OBI:0000747",
+          "name": "material sample",
+          "value": "NIST RM 8231 Young African-American (YAA)",
+          "cvLabel": "OBI"
+        },
+        "dataType": {
+          "accession": "OBI:0001755",
+          "name": "selection criterion",
+          "value": "All",
+          "cvLabel": "OBI"
+        }
+      },
+      "stats": {
+        "n": 39,
+        "mean": 0.1538837322244053,
+        "sd": 0.045100864736953065,
+        "median": 0.1541154225912136,
+        "cv": 29.308403224314482,
+        "rcv": 15.074569236357426
+      }
+    },
+    {
+      "lipids": [
+        "Cer 18:1;O2/18:0"
+      ],
+      "quantityUnit": {
+        "accession": "UO:0000276",
+        "name": "micromole per liter",
+        "cvLabel": "UO"
+      },
+      "groupingAttributes": {
+        "sampleMatrix": {
+          "accession": "OBI:0000747",
+          "name": "material sample",
+          "value": "NIST RM 8231 Young African-American (YAA)",
+          "cvLabel": "OBI"
+        },
+        "dataType": {
+          "accession": "OBI:0001755",
+          "name": "selection criterion",
+          "value": "All",
+          "cvLabel": "OBI"
+        }
+      },
+      "stats": {
+        "n": 39,
+        "mean": 0.05142743431956883,
+        "sd": 0.01829069291340036,
+        "median": 0.04939370962003574,
+        "cv": 35.56602260136572,
+        "rcv": 17.886976153341216
+      }
+    },
+    {
+      "lipids": [
+        "Cer 18:1;O2/24:0"
+      ],
+      "quantityUnit": {
+        "accession": "UO:0000276",
+        "name": "micromole per liter",
+        "cvLabel": "UO"
+      },
+      "groupingAttributes": {
+        "sampleMatrix": {
+          "accession": "OBI:0000747",
+          "name": "material sample",
+          "value": "NIST RM 8231 Young African-American (YAA)",
+          "cvLabel": "OBI"
+        },
+        "dataType": {
+          "accession": "OBI:0001755",
+          "name": "selection criterion",
+          "value": "All",
+          "cvLabel": "OBI"
+        }
+      },
+      "stats": {
+        "n": 39,
+        "mean": 1.7502617168247834,
+        "sd": 0.579995657596022,
+        "median": 1.647528545699675,
+        "cv": 33.13765318755953,
+        "rcv": 12.196189029588425
+      }
+    },
+    {
+      "lipids": [
+        "Cer 18:1;O2/24:1"
+      ],
+      "quantityUnit": {
+        "accession": "UO:0000276",
+        "name": "micromole per liter",
+        "cvLabel": "UO"
+      },
+      "groupingAttributes": {
+        "sampleMatrix": {
+          "accession": "OBI:0000747",
+          "name": "material sample",
+          "value": "NIST RM 8231 Young African-American (YAA)",
+          "cvLabel": "OBI"
+        },
+        "dataType": {
+          "accession": "OBI:0001755",
+          "name": "selection criterion",
+          "value": "All",
+          "cvLabel": "OBI"
+        }
+      },
+      "stats": {
+        "n": 39,
+        "mean": 0.584228767504085,
+        "sd": 0.2005656691734196,
+        "median": 0.5519592536513415,
+        "cv": 34.32998858140227,
+        "rcv": 16.37577531047985
+      }
+    }
+  ],
+  "visibility": "PUBLIC"
+}

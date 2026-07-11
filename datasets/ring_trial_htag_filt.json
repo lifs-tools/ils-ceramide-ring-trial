@@ -1,0 +1,231 @@
+{
+  "title": "Ceramide Concentrations - hTAG Matrix - Filt Labs",
+  "description": "Consensus concentration values with outliers removed for hTAG matrix samples from the interlaboratory comparison study. Outliers were removed based on Tukey's 1.5 × IQR fences, represented and determined separately for each of the four ceramides and reference materials.",
+  "nativeId": "ILS_Ceramide_RingTrial_hTAG_Filt",
+  "studyDesign": {
+    "accession": "OBI:0003658",
+    "name": "study design type",
+    "value": "ring trial design",
+    "cvLabel": "OBI"
+  },
+  "publicationMetadata": {
+    "title": "Concordant inter-laboratory derived concentrations of ceramides in human plasma reference materials via authentic standards",
+    "authors": [
+      "Federico Torta",
+      "Nils Hoffmann",
+      "Bo Burla",
+      "Irina Alecu",
+      "Makoto Arita",
+      "Takeshi Bamba",
+      "Steffany A. L. Bennett",
+      "Justine Bertrand-Michel",
+      "Britta Brügger",
+      "Mónica P. Cala",
+      "Dolores Camacho-Muñoz",
+      "Antonio Checa",
+      "Michael Chen",
+      "Michaela Chocholoušková",
+      "Michelle Cinel",
+      "Emeline Chu-Van",
+      "Benoit Colsch",
+      "Cristina Coman",
+      "Lisa Connell",
+      "Bebiana C. Sousa",
+      "Alex M. Dickens",
+      "Maria Fedorova",
+      "Finnur Freyr Eiríksson",
+      "Hector Gallart-Ayala",
+      "Mohan Ghorasaini",
+      "Martin Giera",
+      "Xue Li Guan",
+      "Mark Haid",
+      "Thomas Hankemeier",
+      "Amy Harms",
+      "Marcus Höring",
+      "Michal Holčapek",
+      "Thorsten Hornemann",
+      "Chunxiu Hu",
+      "Andreas J. Hülsmeier",
+      "Kevin Huynh",
+      "Christina M. Jones",
+      "Julijana Ivanisevic",
+      "Yoshihiro Izumi",
+      "Harald C. Köfeler",
+      "Sin Man Lam",
+      "Mike Lange",
+      "Jong Cheol Lee",
+      "Gerhard Liebisch",
+      "Katrice Lippa",
+      "Andrea F. Lopez-Clavijo",
+      "Malena Manzi",
+      "Manuela R. Martinefski",
+      "Raviswamy G. H. Math",
+      "Satyajit Mayor",
+      "Peter J. Meikle",
+      "María Eugenia Monge",
+      "Myeong Hee Moon",
+      "Sneha Muralidharan",
+      "Anna Nicolaou",
+      "Thao Nguyen-Tran",
+      "Valerie B. O'Donnell",
+      "Matej Orešič",
+      "Arvind Ramanathan",
+      "Fabien Riols",
+      "Daisuke Saigusa",
+      "Tracey B. Schock",
+      "Heidi Schwartz-Zimmermann",
+      "Guanghou Shui",
+      "Madhulika Singh",
+      "Masatomo Takahashi",
+      "Margrét Thorsteinsdóttir",
+      "Noriyuki Tomiyasu",
+      "Anthony Tournadre",
+      "Hiroshi Tsugawa",
+      "Victoria J. Tyrrell",
+      "Grace van der Gugten",
+      "Michael O. Wakelam",
+      "Craig E. Wheelock",
+      "Denise Wolrab",
+      "Guowang Xu",
+      "Tianrun Xu",
+      "John A. Bowden",
+      "Kim Ekroos",
+      "Robert Ahrends",
+      "Markus R. Wenk"
+    ],
+    "year": 2024,
+    "doi": "10.1038/s41467-024-52087-x",
+    "description": "Nature Communications publication of the interlaboratory ceramide ring trial study"
+  },
+  "lipidSummarizedQuantities": [
+    {
+      "lipids": [
+        "Cer 18:1;O2/16:0"
+      ],
+      "quantityUnit": {
+        "accession": "UO:0000276",
+        "name": "micromole per liter",
+        "cvLabel": "UO"
+      },
+      "groupingAttributes": {
+        "sampleMatrix": {
+          "accession": "OBI:0000747",
+          "name": "material sample",
+          "value": "hTAG",
+          "cvLabel": "OBI"
+        },
+        "dataType": {
+          "accession": "OBI:0001755",
+          "name": "selection criterion",
+          "value": "Without Outliers",
+          "cvLabel": "OBI"
+        }
+      },
+      "stats": {
+        "n": 35,
+        "mean": 0.28881437352233186,
+        "sd": 0.03689946017024528,
+        "median": 0.2902270384390738,
+        "cv": 12.776185520209962,
+        "rcv": 11.582412900018793
+      }
+    },
+    {
+      "lipids": [
+        "Cer 18:1;O2/18:0"
+      ],
+      "quantityUnit": {
+        "accession": "UO:0000276",
+        "name": "micromole per liter",
+        "cvLabel": "UO"
+      },
+      "groupingAttributes": {
+        "sampleMatrix": {
+          "accession": "OBI:0000747",
+          "name": "material sample",
+          "value": "hTAG",
+          "cvLabel": "OBI"
+        },
+        "dataType": {
+          "accession": "OBI:0001755",
+          "name": "selection criterion",
+          "value": "Without Outliers",
+          "cvLabel": "OBI"
+        }
+      },
+      "stats": {
+        "n": 31,
+        "mean": 0.0995468697644595,
+        "sd": 0.01098940870058314,
+        "median": 0.09935406863544768,
+        "cv": 11.039431703463375,
+        "rcv": 9.868315987729929
+      }
+    },
+    {
+      "lipids": [
+        "Cer 18:1;O2/24:0"
+      ],
+      "quantityUnit": {
+        "accession": "UO:0000276",
+        "name": "micromole per liter",
+        "cvLabel": "UO"
+      },
+      "groupingAttributes": {
+        "sampleMatrix": {
+          "accession": "OBI:0000747",
+          "name": "material sample",
+          "value": "hTAG",
+          "cvLabel": "OBI"
+        },
+        "dataType": {
+          "accession": "OBI:0001755",
+          "name": "selection criterion",
+          "value": "Without Outliers",
+          "cvLabel": "OBI"
+        }
+      },
+      "stats": {
+        "n": 36,
+        "mean": 3.764137972858822,
+        "sd": 0.4587058791191448,
+        "median": 3.779018426161908,
+        "cv": 12.186213216057078,
+        "rcv": 10.690822760777952
+      }
+    },
+    {
+      "lipids": [
+        "Cer 18:1;O2/24:1"
+      ],
+      "quantityUnit": {
+        "accession": "UO:0000276",
+        "name": "micromole per liter",
+        "cvLabel": "UO"
+      },
+      "groupingAttributes": {
+        "sampleMatrix": {
+          "accession": "OBI:0000747",
+          "name": "material sample",
+          "value": "hTAG",
+          "cvLabel": "OBI"
+        },
+        "dataType": {
+          "accession": "OBI:0001755",
+          "name": "selection criterion",
+          "value": "Without Outliers",
+          "cvLabel": "OBI"
+        }
+      },
+      "stats": {
+        "n": 33,
+        "mean": 1.278357175986386,
+        "sd": 0.1533712949257275,
+        "median": 1.2605642251371711,
+        "cv": 11.997530721989772,
+        "rcv": 10.46518640383992
+      }
+    }
+  ],
+  "visibility": "PUBLIC"
+}
