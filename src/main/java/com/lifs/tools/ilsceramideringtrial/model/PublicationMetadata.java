@@ -15,56 +15,41 @@
  */
 package com.lifs.tools.ilsceramideringtrial.model;
 
-import com.arangodb.springframework.annotation.PersistentIndexed;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 /**
- * Metadata for the ceramide concentration dataset.
- * Represents publication and dataset information.
+ * Publication metadata containing information about the associated publication.
+ * Includes title, authors, year, DOI, and description.
  *
  * @author nils.hoffmann
  */
 @Schema
 @Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class Metadata extends ArangoBaseEntity {
+@AllArgsConstructor
+@Builder
+public class PublicationMetadata {
 
-    @PersistentIndexed
     @JsonProperty("title")
     private String title;
 
     @JsonProperty("authors")
     private List<String> authors;
 
-    @PersistentIndexed
     @JsonProperty("year")
     private int year;
 
-    @PersistentIndexed
     @JsonProperty("doi")
     private String doi;
 
     @JsonProperty("description")
     private String description;
-
-    // Constructor
-    @Builder
-    public Metadata(String title, List<String> authors, int year, String doi, String description,
-                    String transactionUuid, Visibility visibility) {
-        super(transactionUuid, visibility);
-        this.title = title;
-        this.authors = authors;
-        this.year = year;
-        this.doi = doi;
-        this.description = description;
-    }
 }

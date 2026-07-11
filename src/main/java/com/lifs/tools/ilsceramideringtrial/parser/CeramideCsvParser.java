@@ -18,7 +18,7 @@ package com.lifs.tools.ilsceramideringtrial.parser;
 import com.lifs.tools.ilsceramideringtrial.model.CeramideConcentrationDataset;
 import com.lifs.tools.ilsceramideringtrial.model.CeramideMeasurement;
 import com.lifs.tools.ilsceramideringtrial.model.ConcentrationStats;
-import com.lifs.tools.ilsceramideringtrial.model.Metadata;
+import com.lifs.tools.ilsceramideringtrial.model.PublicationMetadata;
 import com.lifs.tools.ilsceramideringtrial.model.Visibility;
 
 import java.io.BufferedReader;
@@ -58,12 +58,12 @@ public class CeramideCsvParser {
      * Parses a CSV input stream into a CeramideConcentrationDataset.
      * 
      * @param inputStream The CSV input stream
-     * @param metadata The metadata to associate with the dataset
+     * @param publicationMetadata The publication metadata to associate with the dataset
      * @return CeramideConcentrationDataset containing all parsed data
      * @throws IOException If an error occurs during reading
      * @throws CsvParseException If the CSV format is invalid
      */
-    public CeramideConcentrationDataset parse(InputStream inputStream, Metadata metadata) 
+    public CeramideConcentrationDataset parse(InputStream inputStream, PublicationMetadata publicationMetadata) 
             throws IOException, CsvParseException {
         
         List<CeramideMeasurement> measurements = new ArrayList<>();
@@ -133,7 +133,7 @@ public class CeramideCsvParser {
         
         // Build the dataset with builder
         return CeramideConcentrationDataset.builder()
-            .metadata(metadata)
+            .publicationMetadata(publicationMetadata)
             .data(measurements)
             .transactionUuid(UUID.randomUUID().toString())
             .visibility(Visibility.PUBLIC)

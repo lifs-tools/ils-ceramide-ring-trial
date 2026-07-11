@@ -41,18 +41,18 @@ import java.util.List;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 public class CeramideConcentrationDataset extends ArangoBaseEntity {
 
-    @JsonProperty("metadata")
-    private Metadata metadata;
+    @JsonProperty("publicationMetadata")
+    private PublicationMetadata publicationMetadata;
 
     @JsonProperty("data")
     private List<CeramideMeasurement> data;
 
     // Constructor
     @Builder
-    public CeramideConcentrationDataset(Metadata metadata, List<CeramideMeasurement> data,
+    public CeramideConcentrationDataset(PublicationMetadata publicationMetadata, List<CeramideMeasurement> data,
                                           String transactionUuid, Visibility visibility) {
         super(transactionUuid, visibility);
-        this.metadata = metadata;
+        this.publicationMetadata = publicationMetadata;
         this.data = data;
     }
 }
