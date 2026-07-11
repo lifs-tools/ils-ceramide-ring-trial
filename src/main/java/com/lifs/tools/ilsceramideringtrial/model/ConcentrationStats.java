@@ -1,43 +1,57 @@
+/*
+ * Copyright 2026 The ILS Ceramide Ring Trial Developers.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.lifs.tools.ilsceramideringtrial.model;
 
-import com.arangodb.springframework.annotation.Field;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
 /**
  * Statistical values for ceramide concentrations.
  * Contains n (count), mean, standard deviation, median, CV, and RCV.
+ *
+ * @author nils.hoffmann
  */
+@Schema
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
+@Builder
 public class ConcentrationStats {
 
-    @Field("n")
+    @JsonProperty("n")
     private int n;
 
-    @Field("mean")
+    @JsonProperty("mean")
     private double mean;
 
-    @Field("sd")
+    @JsonProperty("sd")
     private double sd;
 
-    @Field("median")
+    @JsonProperty("median")
     private double median;
 
-    @Field("cv")
+    @JsonProperty("cv")
     private double cv;
 
-    @Field("rcv")
+    @JsonProperty("rcv")
     private double rcv;
-
-    public ConcentrationStats(int n, double mean, double sd, double median, double cv, double rcv) {
-        this.n = n;
-        this.mean = mean;
-        this.sd = sd;
-        this.median = median;
-        this.cv = cv;
-        this.rcv = rcv;
-    }
 }
+

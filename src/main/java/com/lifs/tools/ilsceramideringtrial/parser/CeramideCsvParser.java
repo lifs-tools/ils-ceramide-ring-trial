@@ -1,9 +1,25 @@
+/*
+ * Copyright 2026 The ILS Ceramide Ring Trial Developers.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.lifs.tools.ilsceramideringtrial.parser;
 
 import com.lifs.tools.ilsceramideringtrial.model.CeramideConcentrationDataset;
 import com.lifs.tools.ilsceramideringtrial.model.CeramideMeasurement;
 import com.lifs.tools.ilsceramideringtrial.model.ConcentrationStats;
 import com.lifs.tools.ilsceramideringtrial.model.Metadata;
+import com.lifs.tools.ilsceramideringtrial.model.Visibility;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,10 +28,13 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Parser for ceramide concentration CSV files.
  * Converts CSV data into CeramideConcentrationDataset model objects.
+ *
+ * @author nils.hoffmann
  */
 public class CeramideCsvParser {
 
@@ -98,16 +117,27 @@ public class CeramideCsvParser {
                     columns[COL_RCV_FILT]
                 );
                 
-                // Create measurement
-                CeramideMeasurement measurement = new CeramideMeasurement(
-                    matrix, ceramide, allStats, filteredStats
-                );
+                // Create measurement with builder
+                CeramideMeasurement measurement = CeramideMeasurement.builder()
+                    .matrix(matrix)
+                    .ceramide(ceramide)
+                    .all(allStats)
+                    .filtered(filteredStats)
+                    .transactionUuid(UUID.randomUUID().toString())
+                    .visibility(Visibility.PUBLIC)
+                    .build();
                 
                 measurements.add(measurement);
             }
         }
         
-        return new CeramideConcentrationDataset(metadata, measurements);
+        // Build the dataset with builder
+        return CeramideConcentrationDataset.builder()
+            .metadata(metadata)
+            .data(measurements)
+            .transactionUuid(UUID.randomUUID().toString())
+            .visibility(Visibility.PUBLIC)
+            .build();
     }
 
     /**

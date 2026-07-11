@@ -22,6 +22,8 @@
         <arangodb-spring-data.version>3.4.0</arangodb-spring-data.version>
         <jackson.version>2.15.3</jackson.version>
         <lombok.version>1.18.30</lombok.version>
+        <swagger.version>2.2.15</swagger.version>
+        <validation.version>2.0.1.Final</validation.version>
     </properties>
 
     <dependencies>
@@ -71,6 +73,20 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- Swagger OpenAPI annotations -->
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
+
+        <!-- Bean Validation -->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>${validation.version}</version>
         </dependency>
 
         <!-- JSON Schema Validation -->

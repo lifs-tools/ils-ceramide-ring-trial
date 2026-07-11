@@ -13,11 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Model classes for ceramide concentration datasets.
- * 
- * This package contains the data model classes designed for ArangoDB Spring Data.
- * The classes represent the structure defined in the JSON schema for ceramide
- * concentration measurements with consensus values across labs.
- */
 package com.lifs.tools.ilsceramideringtrial.model;
+
+/**
+ * Visibility modifiers for {@link ArangoBaseEntity}. An object with visibility
+ * PRIVATE can only be seen by its owner, curators and administrators. With
+ * visibility RESTRICTED, the object will be visible, if accessed via a
+ * specific link. With visibility PUBLIC, the object will be publicly
+ * browseable and searchable.
+ *
+ * @author nils.hoffmann
+ */
+public enum Visibility {
+    PRIVATE, RESTRICTED, PUBLIC;
+}
