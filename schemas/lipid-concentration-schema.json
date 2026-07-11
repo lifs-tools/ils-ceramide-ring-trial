@@ -40,12 +40,12 @@
     },
     "data": {
       "type": "array",
-      "description": "Array of lipid concentration measurements by matrix",
+      "description": "Array of lipid concentration measurements by sample matrix",
       "items": {
         "type": "object",
-        "required": ["matrix", "lipid", "all", "filtered"],
+        "required": ["sample_matrix", "lipid", "all", "filtered"],
         "properties": {
-          "matrix": {
+          "sample_matrix": {
             "type": "string",
             "description": "Sample material (e.g., SRM, hTAG, DB, YAA)",
             "enum": ["SRM", "hTAG", "DB", "YAA"]

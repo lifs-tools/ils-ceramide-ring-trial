@@ -27,7 +27,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * Represents a single lipid concentration measurement for a specific matrix.
+ * Represents a single lipid concentration measurement for a specific sample matrix.
  * Contains both all-labs data and filtered (outliers removed) data.
  *
  * @author nils.hoffmann
@@ -40,8 +40,8 @@ import lombok.NoArgsConstructor;
 public class LipidMeasurement extends ArangoBaseEntity {
 
     @PersistentIndexed
-    @JsonProperty("matrix")
-    private String matrix;
+    @JsonProperty("sample_matrix")
+    private String sampleMatrix;
 
     @PersistentIndexed
     @JsonProperty("lipid")
@@ -55,10 +55,10 @@ public class LipidMeasurement extends ArangoBaseEntity {
 
     // Constructor
     @Builder
-    public LipidMeasurement(String matrix, String lipid, ConcentrationStats all, 
+    public LipidMeasurement(String sampleMatrix, String lipid, ConcentrationStats all, 
                             ConcentrationStats filtered, String transactionUuid, Visibility visibility) {
         super(transactionUuid, visibility);
-        this.matrix = matrix;
+        this.sampleMatrix = sampleMatrix;
         this.lipid = lipid;
         this.all = all;
         this.filtered = filtered;

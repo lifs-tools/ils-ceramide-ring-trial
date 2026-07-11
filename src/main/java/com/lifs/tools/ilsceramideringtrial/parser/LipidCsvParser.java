@@ -39,7 +39,7 @@ import java.util.UUID;
 public class LipidCsvParser {
 
     // CSV column indices based on the file structure
-    private static final int COL_MATRIX = 0;
+    private static final int COL_SAMPLE_MATRIX = 0;
     private static final int COL_LIPID = 1;
     private static final int COL_N_ALL = 2;
     private static final int COL_MEAN_ALL = 3;
@@ -94,7 +94,7 @@ public class LipidCsvParser {
                 }
                 
                 // Extract values
-                String matrix = extractValue(columns[COL_MATRIX]);
+                String sampleMatrix = extractValue(columns[COL_SAMPLE_MATRIX]);
                 String lipid = extractValue(columns[COL_LIPID]);
                 
                 // Parse all labs stats
@@ -119,7 +119,7 @@ public class LipidCsvParser {
                 
                 // Create measurement with builder
                 LipidMeasurement measurement = LipidMeasurement.builder()
-                    .matrix(matrix)
+                    .sampleMatrix(sampleMatrix)
                     .lipid(lipid)
                     .all(allStats)
                     .filtered(filteredStats)
