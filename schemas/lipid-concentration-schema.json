@@ -1,11 +1,11 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "CeramideConcentrationDataset",
-  "description": "Schema for representing ceramide concentration measurements with consensus values across labs and filtered outliers",
+  "title": "LipidConcentrationDataset",
+  "description": "Schema for representing lipid concentration measurements with consensus values across labs and filtered outliers",
   "type": "object",
-  "required": ["metadata", "data"],
+  "required": ["publicationMetadata", "data"],
   "properties": {
-    "metadata": {
+    "publicationMetadata": {
       "type": "object",
       "description": "Publication and dataset metadata",
       "required": ["title", "authors", "year", "doi", "description"],
@@ -40,20 +40,20 @@
     },
     "data": {
       "type": "array",
-      "description": "Array of ceramide concentration measurements by matrix",
+      "description": "Array of lipid concentration measurements by matrix",
       "items": {
         "type": "object",
-        "required": ["matrix", "ceramide", "all", "filtered"],
+        "required": ["matrix", "lipid", "all", "filtered"],
         "properties": {
           "matrix": {
             "type": "string",
             "description": "Sample material (e.g., SRM, hTAG, DB, YAA)",
             "enum": ["SRM", "hTAG", "DB", "YAA"]
           },
-          "ceramide": {
+          "lipid": {
             "type": "string",
-            "description": "Lipid name in format 'Cer X:Y;OZ/A:B'",
-            "pattern": "^Cer \\d+:\\d+;O\\d+/\\d+:\\d+$"
+            "description": "Lipid name in format 'Cer X:Y;OZ/A:B' or other lipid nomenclature",
+            "pattern": "^.+$"
           },
           "all": {
             "type": "object",
