@@ -78,7 +78,7 @@ CONTROLLED_VOCABULARIES = [
     {
         "name": "National Cancer Institute Thesaurus",
         "uri": "http://purl.obolibrary.org/obo/ncit.owl",
-        "version": "03-12-2019",
+        "version": "26.02d",
         "cvLabel": "NCIT"
     }
 ]
