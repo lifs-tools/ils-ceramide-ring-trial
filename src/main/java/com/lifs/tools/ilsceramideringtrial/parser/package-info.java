@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 /**
- * CSV parsing functionality for ceramide concentration datasets.
+ * CSV parsing functionality for lipid concentration datasets.
  * 
- * This package contains the parser that converts CSV files into
+ * This package contains parsers that convert CSV files into
  * the model objects defined in com.lifs.tools.ilsceramideringtrial.model.
+ * 
+ * <p>Available parsers:</p>
+ * <ul>
+ *   <li>LipidCsvParser - Parses consolidated lipid concentration data</li>
+ *   <li>Fig3CsvParser - Parses Fig3 source data with individual lab measurements for ring trials</li>
+ * </ul>
  */
 package com.lifs.tools.ilsceramideringtrial.parser;
