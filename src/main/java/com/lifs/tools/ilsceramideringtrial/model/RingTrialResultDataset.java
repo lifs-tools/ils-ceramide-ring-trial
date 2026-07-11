@@ -35,11 +35,11 @@ import java.util.List;
  * @author nils.hoffmann
  */
 @Schema
-@Document(value = "ringTrialResults", keyType = KeyType.autoincrement, keyIncrement = 1, replicationFactor = 2)
+@Document(value = "ringTrialResultDatasets", keyType = KeyType.autoincrement, keyIncrement = 1, replicationFactor = 2)
 @Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
-public class RingTrialResult extends ArangoBaseEntity {
+public class RingTrialResultDataset extends ArangoBaseEntity {
 
     @JsonProperty("publicationMetadata")
     private PublicationMetadata publicationMetadata;
@@ -49,9 +49,9 @@ public class RingTrialResult extends ArangoBaseEntity {
 
     // Constructor
     @Builder
-    public RingTrialResult(PublicationMetadata publicationMetadata, 
-                          List<RingTrialMeasurement> data,
-                          String transactionUuid, Visibility visibility) {
+    public RingTrialResultDataset(PublicationMetadata publicationMetadata, 
+                                  List<RingTrialMeasurement> data,
+                                  String transactionUuid, Visibility visibility) {
         super(transactionUuid, visibility);
         this.publicationMetadata = publicationMetadata;
         this.data = data;

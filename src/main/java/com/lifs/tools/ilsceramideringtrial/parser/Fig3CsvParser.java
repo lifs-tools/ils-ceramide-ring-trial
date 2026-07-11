@@ -19,7 +19,7 @@ import com.lifs.tools.ilsceramideringtrial.model.ConcentrationMeasurement;
 import com.lifs.tools.ilsceramideringtrial.model.ConcentrationStats;
 import com.lifs.tools.ilsceramideringtrial.model.PublicationMetadata;
 import com.lifs.tools.ilsceramideringtrial.model.RingTrialMeasurement;
-import com.lifs.tools.ilsceramideringtrial.model.RingTrialResult;
+import com.lifs.tools.ilsceramideringtrial.model.RingTrialResultDataset;
 import com.lifs.tools.ilsceramideringtrial.model.Visibility;
 
 import java.io.BufferedReader;
@@ -35,7 +35,7 @@ import java.util.UUID;
 
 /**
  * Parser for Fig3 source data CSV files.
- * Converts CSV data into RingTrialResult model objects with individual
+ * Converts CSV data into RingTrialResultDataset model objects with individual
  * lab measurements grouped by sample matrix and lipid.
  *
  * @author nils.hoffmann
@@ -56,15 +56,15 @@ public class Fig3CsvParser {
     private static final int COL_C_ADJ_MEAN = 14;
 
     /**
-     * Parses a CSV input stream into a RingTrialResult.
+     * Parses a CSV input stream into a RingTrialResultDataset.
      * 
      * @param inputStream The CSV input stream
      * @param publicationMetadata The publication metadata to associate with the dataset
-     * @return RingTrialResult containing all parsed data
+     * @return RingTrialResultDataset containing all parsed data
      * @throws IOException If an error occurs during reading
      * @throws CsvParseException If the CSV format is invalid
      */
-    public RingTrialResult parse(InputStream inputStream, PublicationMetadata publicationMetadata) 
+    public RingTrialResultDataset parse(InputStream inputStream, PublicationMetadata publicationMetadata) 
             throws IOException, CsvParseException {
         
         // Map to group measurements by (sampleMatrix, lipid) -> RingTrialMeasurement
@@ -149,7 +149,7 @@ public class Fig3CsvParser {
         }
         
         // Build the final result
-        return RingTrialResult.builder()
+        return RingTrialResultDataset.builder()
             .publicationMetadata(publicationMetadata)
             .data(measurements)
             .transactionUuid(UUID.randomUUID().toString())
