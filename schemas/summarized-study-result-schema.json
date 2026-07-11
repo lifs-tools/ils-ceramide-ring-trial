@@ -43,6 +43,10 @@
           "version": {
             "description": "Version of the controlled vocabulary.",
             "type": "string"
+          },
+          "cvLabel": {
+            "type": "string",
+            "description": "The controlled vocabulary label (e.g., 'OBI', 'UO')."
           }
         }
       }

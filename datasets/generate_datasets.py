@@ -72,12 +72,14 @@ CONTROLLED_VOCABULARIES = [
     {
         "name": "Ontology for Biomedical Investigations",
         "uri": "https://obi-ontology.org/",
-        "version": "2024-07-11"
+        "version": "2024-07-11",
+        "cvLabel": "OBI"
     },
     {
         "name": "Unit Ontology",
         "uri": "https://www.ebi.ac.uk/ontology-units/",
-        "version": "2024-07-11"
+        "version": "2024-07-11",
+        "cvLabel": "UO"
     }
 ]
 
