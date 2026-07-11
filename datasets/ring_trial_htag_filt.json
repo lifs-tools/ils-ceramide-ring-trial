@@ -1,7 +1,7 @@
 {
   "nativeId": "ILS_Ceramide_RingTrial_hTAG_Filt",
-  "title": "Ceramide Concentrations - hTAG Matrix - Filt Labs",
-  "description": "Consensus concentration values with outliers removed for hTAG matrix samples from the interlaboratory comparison study. Outliers were removed based on Tukey's 1.5 × IQR fences, represented and determined separately for each of the four ceramides and reference materials.",
+  "title": "Ceramide Concentrations - NIST RM 8231 High-TAG (hTAG) Matrix - Filt Labs",
+  "description": "Consensus concentration values with outliers removed for NIST RM 8231 High-TAG (hTAG) matrix samples from the interlaboratory comparison study. Outliers were removed based on Tukey's 1.5 × IQR fences, represented and determined separately for each of the four ceramides and reference materials.",
   "controlledVocabularies": [
     {
       "name": "Ontology for Biomedical Investigations",
@@ -125,7 +125,7 @@
         "sampleMatrix": {
           "accession": "OBI:0000747",
           "name": "material sample",
-          "value": "hTAG",
+          "value": "NIST RM 8231 High-TAG (hTAG)",
           "cvLabel": "OBI"
         },
         "dataType": {
@@ -157,7 +157,7 @@
         "sampleMatrix": {
           "accession": "OBI:0000747",
           "name": "material sample",
-          "value": "hTAG",
+          "value": "NIST RM 8231 High-TAG (hTAG)",
           "cvLabel": "OBI"
         },
         "dataType": {
@@ -189,7 +189,7 @@
         "sampleMatrix": {
           "accession": "OBI:0000747",
           "name": "material sample",
-          "value": "hTAG",
+          "value": "NIST RM 8231 High-TAG (hTAG)",
           "cvLabel": "OBI"
         },
         "dataType": {
@@ -221,7 +221,7 @@
         "sampleMatrix": {
           "accession": "OBI:0000747",
           "name": "material sample",
-          "value": "hTAG",
+          "value": "NIST RM 8231 High-TAG (hTAG)",
           "cvLabel": "OBI"
         },
         "dataType": {

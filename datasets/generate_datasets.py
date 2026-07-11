@@ -89,7 +89,7 @@ MATERIAL_NAMES = {
     "YAA": "NIST RM 8231 Young African-American (YAA)",
     "T2D": "NIST RM 8231 Type-2 Diabetic (T2D)",
     "SRM": "NIST SRM 1950 (SRM)",
-    "hTAG": "hTAG"
+    "hTAG": "NIST RM 8231 High-TAG (hTAG)"
 }
 
 
