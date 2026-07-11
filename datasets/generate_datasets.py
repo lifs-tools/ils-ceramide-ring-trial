@@ -67,6 +67,20 @@ QUANTITY_UNIT = {
     "cvLabel": "UO"
 }
 
+# Controlled vocabularies used in the datasets
+CONTROLLED_VOCABULARIES = [
+    {
+        "name": "Ontology for Biomedical Investigations",
+        "uri": "https://obi-ontology.org/",
+        "version": "2024-07-11"
+    },
+    {
+        "name": "Unit Ontology",
+        "uri": "https://www.ebi.ac.uk/ontology-units/",
+        "version": "2024-07-11"
+    }
+]
+
 # Material abbreviations mapping
 MATERIAL_NAMES = {
     "DB": "NIST RM 8231 Diabetic (DB)",
@@ -198,6 +212,7 @@ def create_dataset(matrix, data_type, rows):
         "title": f"Ceramide Concentrations - {full_matrix_name} Matrix - {data_type} Labs",
         "description": desc,
         "nativeId": f"ILS_Ceramide_RingTrial_{matrix}_{data_type}",
+        "controlledVocabularies": CONTROLLED_VOCABULARIES,
         "studyDesign": STUDY_DESIGN,
         "publicationMetadata": PUBLICATION_METADATA,
         "lipidSummarizedQuantities": lipid_quantities,

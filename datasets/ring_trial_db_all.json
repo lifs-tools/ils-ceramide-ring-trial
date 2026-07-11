@@ -1,7 +1,19 @@
 {
+  "nativeId": "ILS_Ceramide_RingTrial_DB_All",
   "title": "Ceramide Concentrations - NIST RM 8231 Diabetic (DB) Matrix - All Labs",
   "description": "Consensus concentration values across all labs for NIST RM 8231 Diabetic (DB) matrix samples from the interlaboratory comparison study",
-  "nativeId": "ILS_Ceramide_RingTrial_DB_All",
+  "controlledVocabularies": [
+    {
+      "name": "Ontology for Biomedical Investigations",
+      "uri": "https://obi-ontology.org/",
+      "version": "2024-07-11"
+    },
+    {
+      "name": "Unit Ontology",
+      "uri": "https://www.ebi.ac.uk/ontology-units/",
+      "version": "2024-07-11"
+    }
+  ],
   "studyDesign": {
     "accession": "OBI:0003658",
     "name": "study design type",

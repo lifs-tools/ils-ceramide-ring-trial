@@ -22,6 +22,31 @@
       "description": "Description of the study and its objectives.",
       "minLength": 1
     },
+    "controlledVocabularies": {
+      "type": "array",
+      "description": "List of controlled vocabularies used in this study result.",
+      "items": {
+        "type": "object",
+        "description": "Element describing a controlled vocabulary used to refer to the source of the used CV terms in qualityMetric objects (and others).",
+        "additionalProperties": false,
+        "required": ["name", "uri"],
+        "properties": {
+          "name": {
+            "description": "Full name of the controlled vocabulary.",
+            "type": "string"
+          },
+          "uri": {
+            "description": "Publicly accessible URI of the controlled vocabulary.",
+            "type": "string",
+            "format": "uri"
+          },
+          "version": {
+            "description": "Version of the controlled vocabulary.",
+            "type": "string"
+          }
+        }
+      }
+    },
     "studyDesign": {
       "type": "object",
       "description": "The study design type, using OBI ontology controlled vocabulary parameter. References terms like OBI:0003658 (ring trial design), OBI:0002624 (case control study design), etc.",
