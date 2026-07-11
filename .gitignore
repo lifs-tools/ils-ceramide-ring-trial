@@ -9,3 +9,29 @@ _targets
 figures
 .DS_store
 *.xlsx
+
+# Java/Maven
+/target/
+*.class
+*.jar
+*.war
+*.ear
+pom.xml.versionsBackup
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+bin/
+
+# Logs
+*.log
+*.trace
