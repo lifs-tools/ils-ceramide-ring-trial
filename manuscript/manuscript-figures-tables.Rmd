@@ -1607,7 +1607,7 @@ write_csv(d_rawdata_byCalibLine_bySRM, here("manuscript/output/Unpublished_Summa
 
 ## 22e Suppl Figure S10: Method comparison - Single- vs multi-point calibration
 
-Comprehensive method comparison between single-point (SP) and multi-point (MP, calibration-curve) quantification, using all four ceramides in all four reference materials across the participating laboratories. Passing-Bablok regression is fitted per ceramide, pooling the four reference materials so that the between-material concentration differences provide the range needed to estimate a slope; the slope reflects proportional systematic error (proportional bias when the 95% CI excludes 1) and the intercept reflects constant systematic error (constant bias when the 95% CI excludes 0). Deming regression (assuming equal analytical error in both methods) is reported alongside as a sensitivity check. Ordinary least-squares regression is intentionally not used, as it assumes the x-axis (SP) is error-free. Panel A shows the MP-vs-SP scatter with the Passing-Bablok line (black) and line of identity (grey dashed). Panel B shows Bland-Altman percent differences ((MP - SP)/mean * 100) with per-ceramide bias (red solid) and limits of agreement (red dotted, mean ± 1.96 SD). Panel C shows the percent difference against mean concentration (log scale) with the lowest calibration level indicated, to assess whether the discrepancies are concentration-/LOQ-dependent. All panels are shown for the full ("All data") and the outlier-filtered dataset. Points are coloured by reference material: NIST SRM 1950 (SRM, blue), hypertriglyceridemic (hTAG, red), diabetic (DB, orange) and African American (YAA, light blue) of NIST RM 8231.
+Comprehensive method comparison between single-point (SP) and multi-point (MP, calibration-curve) quantification, using all four ceramides in all four reference materials across the participating laboratories. Passing-Bablok regression is fitted per ceramide, pooling the four reference materials so that the between-material concentration differences provide the range needed to estimate a slope; the slope reflects proportional systematic error (proportional bias when the 95% CI excludes 1) and the intercept reflects constant systematic error (constant bias when the 95% CI excludes 0). Deming regression (assuming equal analytical error in both methods) is reported alongside as a sensitivity check. Both regression estimates are provided in the statistics file (FigS10_regression_PassingBablok_Deming_statistics.csv); ordinary least-squares regression is intentionally not used, as it assumes the SP axis is error-free. Panel A shows Bland-Altman percent differences ((MP - SP)/mean * 100) with per-ceramide bias (red solid) and limits of agreement (red dotted, mean ± 1.96 SD). Panel B shows the percent difference against mean concentration (log scale) with the lowest calibration level indicated, to assess whether the discrepancies are concentration-/LOQ-dependent. Both panels are shown for the full ("All data") and the outlier-filtered dataset. Points are coloured by reference material: NIST SRM 1950 (SRM, blue), hypertriglyceridemic (hTAG, red), diabetic (DB, orange) and African American (YAA, light blue) of NIST RM 8231.
 
 ```{r FigS10-plot, fig.height=10, fig.width=12, out.width="100%", message=FALSE, warning=FALSE}
 
@@ -1693,47 +1693,7 @@ bland_altman_results <- d_method_comp |>
 readr::write_excel_csv(bland_altman_results,
   here("manuscript/output/FigS10_bland-altman_statistics.csv"))
 
-# Panel A: Passing-Bablok regression scatter ------------------------------------
-pb_line <- regression_results |>
-  filter(method == "PaBa") |>
-  left_join(
-    d_method_comp |> group_by(ceramideName, Dataset) |>
-      summarise(xmax = max(C_SinglePoint_mean), .groups = "drop"),
-    by = c("ceramideName", "Dataset")
-  ) |>
-  rowwise() |>
-  mutate(x = list(seq(0, xmax, length.out = 50)),
-         y = list(intercept + slope * seq(0, xmax, length.out = 50))) |>
-  ungroup() |>
-  select(ceramideName, Dataset, x, y) |>
-  tidyr::unnest(c(x, y))
-
-pb_lab <- regression_results |>
-  filter(method == "PaBa") |>
-  mutate(lab = sprintf("PB slope %.2f [%.2f, %.2f]\nint %.3f [%.3f, %.3f]",
-                       slope, slope_lci, slope_uci,
-                       intercept, intercept_lci, intercept_uci))
-
-p_S10A <- ggplot(d_method_comp, aes(C_SinglePoint_mean, C_Adj_mean)) +
-  geom_abline(slope = 1, intercept = 0, color = "#6c9694",
-              linewidth = .3, linetype = "longdash") +
-  geom_point(aes(color = SampleType, fill = SampleType),
-             shape = 21, stroke = .33, size = 1.1, alpha = .6) +
-  geom_line(data = pb_line, aes(x, y), color = "black", linewidth = .5) +
-  geom_text(data = pb_lab, aes(x = -Inf, y = Inf, label = lab),
-            hjust = -0.04, vjust = 1.1, size = 1.9, lineheight = .9) +
-  facet_grid(Dataset ~ ceramideName, scales = "free") +
-  scale_color_manual(values = pal_col, breaks = c("SRM", "hTAG", "DB", "YAA")) +
-  scale_fill_manual(values = pal_fill, breaks = c("SRM", "hTAG", "DB", "YAA")) +
-  labs(x = "\U003BCmol/L (single-point calibration)",
-       y = "\U003BCmol/L (multi-point calibration)", color = NULL, fill = NULL) +
-  theme_classic(base_size = 9) +
-  theme(axis.text = element_text(size = 7),
-        axis.title = element_text(size = 8, face = "bold"),
-        strip.background = element_rect(fill = "grey99"),
-        legend.key.size = unit(0.3, "cm"), legend.text = element_text(size = 7))
-
-# Panel B: Bland-Altman percent differences (per-facet bias and LoA) -------------
+# Panel A: Bland-Altman percent differences (per-facet bias and LoA) -------------
 p_S10B <- ggplot(d_method_comp, aes(mean_conc, percent_diff)) +
   geom_hline(yintercept = 0, color = "grey50", linetype = "dashed", linewidth = .4) +
   geom_point(aes(color = SampleType, fill = SampleType),
@@ -1755,7 +1715,7 @@ p_S10B <- ggplot(d_method_comp, aes(mean_conc, percent_diff)) +
         strip.background = element_rect(fill = "grey99"),
         legend.key.size = unit(0.3, "cm"), legend.text = element_text(size = 7))
 
-# Panel C: concentration dependence with lowest calibration level ----------------
+# Panel B: concentration dependence with lowest calibration level ----------------
 lowest_cal <- tibble(
   ceramideName = factor(cer_levels, levels = cer_levels),
   xlc = c(0.008, 0.008, 0.08, 0.08)
@@ -1783,18 +1743,16 @@ p_S10C <- d_method_comp |>
         legend.key.size = unit(0.3, "cm"), legend.text = element_text(size = 7))
 
 # Save individual panels and combined figure ------------------------------------
-ggsave(plot = p_S10A, filename = here("manuscript/output/FigS10A_Regression_PassingBablok.png"),
+ggsave(plot = p_S10B, filename = here("manuscript/output/FigS10A_BlandAltman_PercentDifferences.png"),
        device = "png", dpi = 600, width = 200, height = 115, units = "mm")
-ggsave(plot = p_S10B, filename = here("manuscript/output/FigS10B_BlandAltman_PercentDifferences.png"),
-       device = "png", dpi = 600, width = 200, height = 115, units = "mm")
-ggsave(plot = p_S10C, filename = here("manuscript/output/FigS10C_ConcentrationDependence.png"),
+ggsave(plot = p_S10C, filename = here("manuscript/output/FigS10B_ConcentrationDependence.png"),
        device = "png", dpi = 600, width = 200, height = 70, units = "mm")
 
-p_FigS10 <- p_S10A / p_S10B / p_S10C +
-  patchwork::plot_layout(heights = c(1, 1, 0.6)) +
+p_FigS10 <- p_S10B / p_S10C +
+  patchwork::plot_layout(heights = c(1, 0.6)) +
   patchwork::plot_annotation(tag_levels = "A")
 ggsave(plot = p_FigS10, filename = here("manuscript/output/FigS10_MethodComparison_Combined.png"),
-       device = "png", dpi = 600, width = 200, height = 300, units = "mm")
+       device = "png", dpi = 600, width = 200, height = 200, units = "mm")
 
 p_FigS10
 
