@@ -1443,7 +1443,6 @@ Re-calibration of DB using SRM 1950 after multi-point calibration. All datasets 
 labScatterPlots[[3]]$p_comb
 ```
 
-
 # 22. Additional Tables (not part of the manuscript)
 
 ## 22a - Calibration line raw intensities of labelled vs non-labelled ceramide species
@@ -1604,4 +1603,280 @@ write_csv(d_rawdata_byCalibLine_raw, here("manuscript/output/Unpublished_Summary
 write_csv(d_rawdata_byCalibLine_bySample |> rename_with(~str_remove(., "_rep")), here("manuscript/output/Unpublished_Summary_Concentrations_by_CalibLine_bySample.csv"))
 write_csv(d_rawdata_byCalibLine_bySRM, here("manuscript/output/Unpublished_Summary_Concentrations_by_CalibLine_bySRM.csv"))
 
+```
+
+## 22e Suppl Figure S10: Method comparison - Single- vs multi-point calibration
+
+Comprehensive method comparison between single-point (SP) and multi-point (MP, calibration-curve) quantification, using all four ceramides in all four reference materials across the participating laboratories. Passing-Bablok regression is fitted per ceramide, pooling the four reference materials so that the between-material concentration differences provide the range needed to estimate a slope; the slope reflects proportional systematic error (proportional bias when the 95% CI excludes 1) and the intercept reflects constant systematic error (constant bias when the 95% CI excludes 0). Deming regression (assuming equal analytical error in both methods) is reported alongside as a sensitivity check. Ordinary least-squares regression is intentionally not used, as it assumes the x-axis (SP) is error-free. Panel A shows the MP-vs-SP scatter with the Passing-Bablok line (black) and line of identity (grey dashed). Panel B shows Bland-Altman percent differences ((MP - SP)/mean * 100) with per-ceramide bias (red solid) and limits of agreement (red dotted, mean ± 1.96 SD). Panel C shows the percent difference against mean concentration (log scale) with the lowest calibration level indicated, to assess whether the discrepancies are concentration-/LOQ-dependent. All panels are shown for the full ("All data") and the outlier-filtered dataset. Points are coloured by reference material: NIST SRM 1950 (SRM, blue), hypertriglyceridemic (hTAG, red), diabetic (DB, orange) and African American (YAA, light blue) of NIST RM 8231.
+
+```{r FigS10-plot, fig.height=10, fig.width=12, out.width="100%", message=FALSE, warning=FALSE}
+
+library(mcr)
+
+# Palettes consistent with Figure 2
+pal_col  <- c(SRM = "#0571b0", hTAG = "#ca0020", YAA = "#92c5de", DB = "#f4a582")
+pal_fill <- c(SRM = "#2c7bb6", hTAG = "#d7191c", YAA = "#abd9e9", DB = "#fdae61")
+cer_levels <- c("Cer 18:1;O2/16:0", "Cer 18:1;O2/18:0",
+                "Cer 18:1;O2/24:0", "Cer 18:1;O2/24:1")
+
+# Prepare method-comparison data for the full and the outlier-filtered dataset -----
+flagged <- flag_outlier(d_srm_mean, limit_iqr = limit_iqr)
+
+make_mc <- function(df, label) {
+  df |>
+    select(SampleType, ceramideName, LabId, LabNum, Protocol, LC,
+           C_SinglePoint_mean, C_Adj_mean) |>
+    filter(!is.na(C_SinglePoint_mean), !is.na(C_Adj_mean)) |>
+    mutate(
+      diff = C_Adj_mean - C_SinglePoint_mean,
+      mean_conc = (C_Adj_mean + C_SinglePoint_mean) / 2,
+      percent_diff = diff / mean_conc * 100,
+      Dataset = label
+    )
+}
+
+d_method_comp <- bind_rows(
+  make_mc(flagged, "All data"),
+  make_mc(flagged |> filter(!Outlier_sp, !Outlier_mp), "Outlier-filtered")
+) |>
+  mutate(
+    ceramideName = factor(ceramideName, levels = cer_levels),
+    Dataset = factor(Dataset, levels = c("All data", "Outlier-filtered"))
+  )
+
+readr::write_excel_csv(d_method_comp,
+  here("manuscript/output/FigS10_method-comparison_sourcedata.csv"))
+
+# Passing-Bablok and Deming regression per ceramide (materials pooled) ------------
+fit_reg <- function(df, method) {
+  ci <- if (method == "PaBa") "analytical" else "jackknife"
+  tryCatch({
+    fit <- mcr::mcreg(x = df$C_SinglePoint_mean, y = df$C_Adj_mean,
+                      method.reg = method, method.ci = ci, na.rm = TRUE)
+    co <- mcr::getCoefficients(fit)
+    tibble(
+      method = method, n = nrow(df),
+      intercept = co["Intercept", "EST"],
+      intercept_lci = co["Intercept", "LCI"], intercept_uci = co["Intercept", "UCI"],
+      slope = co["Slope", "EST"],
+      slope_lci = co["Slope", "LCI"], slope_uci = co["Slope", "UCI"]
+    )
+  }, error = function(e) NULL)
+}
+
+regression_results <- d_method_comp |>
+  group_by(ceramideName, Dataset) |>
+  group_modify(~ bind_rows(fit_reg(.x, "PaBa"), fit_reg(.x, "Deming"))) |>
+  ungroup() |>
+  mutate(
+    proportional_bias = !(slope_lci <= 1 & slope_uci >= 1),
+    constant_bias     = !(intercept_lci <= 0 & intercept_uci >= 0)
+  )
+
+readr::write_excel_csv(regression_results,
+  here("manuscript/output/FigS10_regression_PassingBablok_Deming_statistics.csv"))
+
+# Bland-Altman statistics per ceramide (materials pooled) ------------------------
+bland_altman_results <- d_method_comp |>
+  group_by(ceramideName, Dataset) |>
+  summarise(
+    n = n(),
+    bias = mean(percent_diff, na.rm = TRUE),
+    sd = sd(percent_diff, na.rm = TRUE),
+    loa_lower = bias - 1.96 * sd,
+    loa_upper = bias + 1.96 * sd,
+    bias_ci_lower = bias - qt(0.975, n - 1) * sd / sqrt(n),
+    bias_ci_upper = bias + qt(0.975, n - 1) * sd / sqrt(n),
+    .groups = "drop"
+  )
+
+readr::write_excel_csv(bland_altman_results,
+  here("manuscript/output/FigS10_bland-altman_statistics.csv"))
+
+# Panel A: Passing-Bablok regression scatter ------------------------------------
+pb_line <- regression_results |>
+  filter(method == "PaBa") |>
+  left_join(
+    d_method_comp |> group_by(ceramideName, Dataset) |>
+      summarise(xmax = max(C_SinglePoint_mean), .groups = "drop"),
+    by = c("ceramideName", "Dataset")
+  ) |>
+  rowwise() |>
+  mutate(x = list(seq(0, xmax, length.out = 50)),
+         y = list(intercept + slope * seq(0, xmax, length.out = 50))) |>
+  ungroup() |>
+  select(ceramideName, Dataset, x, y) |>
+  tidyr::unnest(c(x, y))
+
+pb_lab <- regression_results |>
+  filter(method == "PaBa") |>
+  mutate(lab = sprintf("PB slope %.2f [%.2f, %.2f]\nint %.3f [%.3f, %.3f]",
+                       slope, slope_lci, slope_uci,
+                       intercept, intercept_lci, intercept_uci))
+
+p_S10A <- ggplot(d_method_comp, aes(C_SinglePoint_mean, C_Adj_mean)) +
+  geom_abline(slope = 1, intercept = 0, color = "#6c9694",
+              linewidth = .3, linetype = "longdash") +
+  geom_point(aes(color = SampleType, fill = SampleType),
+             shape = 21, stroke = .33, size = 1.1, alpha = .6) +
+  geom_line(data = pb_line, aes(x, y), color = "black", linewidth = .5) +
+  geom_text(data = pb_lab, aes(x = -Inf, y = Inf, label = lab),
+            hjust = -0.04, vjust = 1.1, size = 1.9, lineheight = .9) +
+  facet_grid(Dataset ~ ceramideName, scales = "free") +
+  scale_color_manual(values = pal_col, breaks = c("SRM", "hTAG", "DB", "YAA")) +
+  scale_fill_manual(values = pal_fill, breaks = c("SRM", "hTAG", "DB", "YAA")) +
+  labs(x = "\U003BCmol/L (single-point calibration)",
+       y = "\U003BCmol/L (multi-point calibration)", color = NULL, fill = NULL) +
+  theme_classic(base_size = 9) +
+  theme(axis.text = element_text(size = 7),
+        axis.title = element_text(size = 8, face = "bold"),
+        strip.background = element_rect(fill = "grey99"),
+        legend.key.size = unit(0.3, "cm"), legend.text = element_text(size = 7))
+
+# Panel B: Bland-Altman percent differences (per-facet bias and LoA) -------------
+p_S10B <- ggplot(d_method_comp, aes(mean_conc, percent_diff)) +
+  geom_hline(yintercept = 0, color = "grey50", linetype = "dashed", linewidth = .4) +
+  geom_point(aes(color = SampleType, fill = SampleType),
+             shape = 21, stroke = .33, size = 1.1, alpha = .6) +
+  geom_hline(data = bland_altman_results, aes(yintercept = bias),
+             color = "red", linewidth = .6) +
+  geom_hline(data = bland_altman_results, aes(yintercept = loa_lower),
+             color = "red", linetype = "dotted", linewidth = .45) +
+  geom_hline(data = bland_altman_results, aes(yintercept = loa_upper),
+             color = "red", linetype = "dotted", linewidth = .45) +
+  facet_grid(Dataset ~ ceramideName, scales = "free_x") +
+  scale_color_manual(values = pal_col, breaks = c("SRM", "hTAG", "DB", "YAA")) +
+  scale_fill_manual(values = pal_fill, breaks = c("SRM", "hTAG", "DB", "YAA")) +
+  labs(x = "Mean concentration (\U003BCmol/L)",
+       y = "Percent difference (MP - SP) / mean * 100", color = NULL, fill = NULL) +
+  theme_classic(base_size = 9) +
+  theme(axis.text = element_text(size = 7),
+        axis.title = element_text(size = 8, face = "bold"),
+        strip.background = element_rect(fill = "grey99"),
+        legend.key.size = unit(0.3, "cm"), legend.text = element_text(size = 7))
+
+# Panel C: concentration dependence with lowest calibration level ----------------
+lowest_cal <- tibble(
+  ceramideName = factor(cer_levels, levels = cer_levels),
+  xlc = c(0.008, 0.008, 0.08, 0.08)
+)
+p_S10C <- d_method_comp |>
+  filter(Dataset == "All data") |>
+  ggplot(aes(mean_conc, percent_diff)) +
+  geom_hline(yintercept = 0, color = "grey50", linetype = "dashed", linewidth = .4) +
+  geom_vline(data = lowest_cal, aes(xintercept = xlc),
+             color = "purple", linetype = "dotdash", linewidth = .4) +
+  geom_point(aes(color = SampleType, fill = SampleType),
+             shape = 21, stroke = .33, size = 1.1, alpha = .6) +
+  geom_smooth(method = "lm", formula = y ~ x, se = TRUE,
+              color = "black", linewidth = .5) +
+  facet_wrap(~ ceramideName, scales = "free_x", ncol = 4) +
+  scale_x_log10() +
+  scale_color_manual(values = pal_col, breaks = c("SRM", "hTAG", "DB", "YAA")) +
+  scale_fill_manual(values = pal_fill, breaks = c("SRM", "hTAG", "DB", "YAA")) +
+  labs(x = "Mean concentration (\U003BCmol/L, log10); dot-dash line = lowest calibration level",
+       y = "Percent difference (MP - SP) / mean * 100", color = NULL, fill = NULL) +
+  theme_classic(base_size = 9) +
+  theme(axis.text = element_text(size = 7),
+        axis.title = element_text(size = 8, face = "bold"),
+        strip.background = element_rect(fill = "grey99"),
+        legend.key.size = unit(0.3, "cm"), legend.text = element_text(size = 7))
+
+# Save individual panels and combined figure ------------------------------------
+ggsave(plot = p_S10A, filename = here("manuscript/output/FigS10A_Regression_PassingBablok.png"),
+       device = "png", dpi = 600, width = 200, height = 115, units = "mm")
+ggsave(plot = p_S10B, filename = here("manuscript/output/FigS10B_BlandAltman_PercentDifferences.png"),
+       device = "png", dpi = 600, width = 200, height = 115, units = "mm")
+ggsave(plot = p_S10C, filename = here("manuscript/output/FigS10C_ConcentrationDependence.png"),
+       device = "png", dpi = 600, width = 200, height = 70, units = "mm")
+
+p_FigS10 <- p_S10A / p_S10B / p_S10C +
+  patchwork::plot_layout(heights = c(1, 1, 0.6)) +
+  patchwork::plot_annotation(tag_levels = "A")
+ggsave(plot = p_FigS10, filename = here("manuscript/output/FigS10_MethodComparison_Combined.png"),
+       device = "png", dpi = 600, width = 200, height = 300, units = "mm")
+
+p_FigS10
+
+# Key findings for the manuscript text ------------------------------------------
+cat("\n=== PASSING-BABLOK / DEMING REGRESSION ===\n")
+print(as.data.frame(regression_results |>
+  mutate(across(where(is.numeric), ~round(., 3)))), row.names = FALSE)
+
+cat("\n=== BLAND-ALTMAN (percent difference) ===\n")
+print(as.data.frame(bland_altman_results |>
+  mutate(across(where(is.numeric), ~round(., 2)))), row.names = FALSE)
+```
+
+## 22f Suppl Figure S11: Trueness contextualization against external SRM 1950 references
+
+Neither Passing-Bablok nor Bland-Altman can establish which calibration approach is more accurate, because both compare the two methods only to each other. The study data are derived from Torta et al. (Nat. Commun. 2024) and the outlier-filtered inter-lab consensus is not independent of the SP/MP measurements, so it cannot serve as a trueness anchor. Instead, the SP and MP inter-laboratory consensus values for NIST SRM 1950 are contextualized against independent external quantifications of the same material: Quehenberger et al. 2010, the Bowden et al. 2017 inter-laboratory study, and the multi-platform (including orthogonal NMR) characterization by Mandal et al. (Anal. Chem. 2025, 97, 667-675). These external references disagree with one another by more than the SP-vs-MP difference for 16:0, 24:0 and 24:1, indicating that absolute ceramide quantification is strongly method-dependent; the SP-vs-MP discrepancy for those species therefore lies within the between-method variability of the field. The exception is Cer 18:1;O2/18:0, where both SP and MP fall below every external reference, with MP closer to the external consensus. Red points are this study (ILS) with ±1 SEM; grey points are external references (Wishart with ±1 SD; Bowden individual laboratories). Only NIST SRM 1950 is shown, as external reference concentrations are not available for the NIST RM 8231 materials.
+
+```{r FigS11-plot, fig.height=4, fig.width=12, out.width="100%", message=FALSE, warning=FALSE}
+
+harmonise_cer <- function(x) str_replace(x, fixed("d18:1"), "18:1;O2")
+
+d_ref_que <- read_csv(here("manuscript/data/Quehenberger_Ceramides_Conc.csv"),
+                      show_col_types = FALSE) |>
+  transmute(Source = "Quehenberger 2010", ceramideName = harmonise_cer(Species),
+            Conc, Conc_sd = NA_real_)
+d_ref_bow <- read_csv(here("manuscript/data/Bowden_InterlabStudy_Ceramides_Conc.csv"),
+                      show_col_types = FALSE) |>
+  transmute(Source = "Bowden 2017", ceramideName = harmonise_cer(Species),
+            Conc, Conc_sd = NA_real_)
+d_ref_wis <- read_csv(here("manuscript/data/Wishart2025_SRM1950_Ceramides_Conc.csv"),
+                      show_col_types = FALSE) |>
+  transmute(Source = "Wishart 2025", ceramideName = harmonise_cer(Species),
+            Conc, Conc_sd)
+
+# Our SRM 1950 consensus: SP filtered on Outlier_sp, MP on Outlier_mp (as in Table 2)
+srm_sp <- flagged |>
+  filter(SampleType == "SRM", !Outlier_sp, !is.na(C_SinglePoint_mean)) |>
+  group_by(ceramideName) |>
+  summarise(Source = "ILS SP", Conc = mean(C_SinglePoint_mean),
+            Conc_sd = sd(C_SinglePoint_mean) / sqrt(n()), .groups = "drop")
+srm_mp <- flagged |>
+  filter(SampleType == "SRM", !Outlier_mp, !is.na(C_Adj_mean)) |>
+  group_by(ceramideName) |>
+  summarise(Source = "ILS MP", Conc = mean(C_Adj_mean),
+            Conc_sd = sd(C_Adj_mean) / sqrt(n()), .groups = "drop")
+
+d_trueness <- bind_rows(d_ref_que, d_ref_bow, d_ref_wis, srm_sp, srm_mp) |>
+  filter(ceramideName %in% cer_levels) |>
+  mutate(
+    ceramideName = factor(ceramideName, levels = cer_levels),
+    Source = factor(Source, levels = c("Quehenberger 2010", "Bowden 2017",
+                                        "Wishart 2025", "ILS SP", "ILS MP")),
+    Origin = if_else(Source %in% c("ILS SP", "ILS MP"),
+                     "This study (ILS)", "External reference")
+  )
+
+readr::write_excel_csv(d_trueness,
+  here("manuscript/output/FigS11_trueness_SRM1950_sourcedata.csv"))
+
+p_FigS11 <- ggplot(d_trueness, aes(Source, Conc, color = Origin)) +
+  geom_point(position = position_jitter(width = .12, height = 0, seed = 1),
+             size = 1.3, alpha = .85) +
+  geom_errorbar(aes(ymin = Conc - Conc_sd, ymax = Conc + Conc_sd),
+                width = .2, na.rm = TRUE) +
+  facet_wrap(~ ceramideName, scales = "free_y", ncol = 4) +
+  scale_color_manual(values = c("This study (ILS)" = "#ca0020",
+                                "External reference" = "grey40"), name = NULL) +
+  labs(x = NULL, y = "Concentration in NIST SRM 1950 (\U003BCmol/L)") +
+  theme_classic(base_size = 9) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 6),
+        axis.title = element_text(size = 8, face = "bold"),
+        strip.background = element_rect(fill = "grey99"),
+        legend.position = "top", legend.text = element_text(size = 7))
+
+ggsave(plot = p_FigS11, filename = here("manuscript/output/FigS11_Trueness_SRM1950.png"),
+       device = "png", dpi = 600, width = 200, height = 80, units = "mm")
+
+p_FigS11
+
+cat("\n=== SRM 1950 concentrations (uM): SP/MP vs external references ===\n")
+print(as.data.frame(d_trueness |>
+  group_by(ceramideName, Source) |>
+  summarise(Conc = round(mean(Conc), 3), .groups = "drop") |>
+  pivot_wider(names_from = Source, values_from = Conc)), row.names = FALSE)
 ```

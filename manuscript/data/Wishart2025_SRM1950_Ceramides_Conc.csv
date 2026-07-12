@@ -1,0 +1,5 @@
+Study,Species,Conc,Conc_sd,Reliability,Reference
+Wishart 2025,Cer d18:1/16:0,0.215,0.095,3,"Mandal et al., Anal. Chem. 2025, 97, 667-675 (doi:10.1021/acs.analchem.4c05018), SRM 1950, multi-platform incl. NMR"
+Wishart 2025,Cer d18:1/18:0,0.118,0.031,4,"Mandal et al., Anal. Chem. 2025, 97, 667-675 (doi:10.1021/acs.analchem.4c05018), SRM 1950, multi-platform incl. NMR"
+Wishart 2025,Cer d18:1/24:0,1.599,0.107,5,"Mandal et al., Anal. Chem. 2025, 97, 667-675 (doi:10.1021/acs.analchem.4c05018), SRM 1950, multi-platform incl. NMR"
+Wishart 2025,Cer d18:1/24:1,0.733,0.022,5,"Mandal et al., Anal. Chem. 2025, 97, 667-675 (doi:10.1021/acs.analchem.4c05018), SRM 1950, multi-platform incl. NMR"
