@@ -1768,6 +1768,75 @@ print(as.data.frame(bland_altman_results |>
   mutate(across(where(is.numeric), ~round(., 2)))), row.names = FALSE)
 ```
 
+Response-factor diagnostic — theoretical versus measured calibration response. To explain the origin of the SP-vs-MP discrepancy, the measured calibration response of each ceramide is compared with the theoretical response expected under an equimolar labelled/unlabelled response (response factor RF = 1). The measured calibration slope (mean calibrant area ratio regressed on concentration with 1/x² weighting) is divided by the theoretical slope (1/ISTD concentration). The measured response departs markedly from equimolar for the two discrepant species — Cer 18:1;O2/16:0 responds ~31% above and Cer 18:1;O2/18:0 ~36% below the equimolar expectation — whereas Cer 18:1;O2/24:0 and Cer 18:1;O2/24:1 are close to equimolar (−1% and −10%). This per-ceramide response-factor departure, consistent with over- or under-statement of the vendor calibrant concentrations for 16:0 and 18:0, is the mechanistic driver of the SP-vs-MP difference (the same factors are recovered from the ratio of mean single-point to mean multi-point concentrations — 1.43, 0.66, 1.06 and 0.98 — the small residual reflecting the non-zero calibration intercept). Because single-point calibration already assumes the theoretical (equimolar) response, multiplying the multi-point concentration by this response factor reproduces the single-point concentration exactly; that is, the correction collapses multi-point onto single-point calibration. The response factor is therefore reported here as a diagnostic of the calibration response and is not applied as a post-hoc concentration correction. A trueness-based correction is not attempted, because the equimolar assumption cannot be independently confirmed for all species — for Cer 18:1;O2/18:0 the single-point value lies further from the external reference consensus than the multi-point value (Suppl. Fig. S11).
+
+```{r FigS10-response-factor, fig.height=3, fig.width=7, out.width="100%", message=FALSE, warning=FALSE}
+
+# Response-factor diagnostic: theoretical (equimolar) vs measured calibration response.
+if (!exists("cer_levels")) cer_levels <- c("Cer 18:1;O2/16:0", "Cer 18:1;O2/18:0",
+                                           "Cer 18:1;O2/24:0", "Cer 18:1;O2/24:1")
+
+d_calib <- readr::read_csv(
+  here("output/CalibrationLinesAvgMedRangeLog10-with-NISTSRM-AvgRatio.csv"),
+  show_col_types = FALSE) |>
+  filter(ceramideName %in% cer_levels)
+
+# Measured calibration slope (1/x^2-weighted, as in the pipeline) vs theoretical slope
+response_factor <- d_calib |>
+  group_by(ceramideName, ISTD_CONC) |>
+  summarise(measured_slope = coef(lm(yavg ~ Concentration, weights = 1 / Concentration^2))[2],
+            .groups = "drop") |>
+  mutate(theoretical_slope = 1 / ISTD_CONC,
+         response_factor = measured_slope / theoretical_slope,
+         pct_dev_equimolar = 100 * (response_factor - 1),
+         ceramideName = factor(ceramideName, levels = cer_levels)) |>
+  arrange(ceramideName)
+
+# Response factor as it manifests in the reported concentrations (mean SP / mean MP);
+# multiplying MP by this factor reproduces SP (theoretical-response correction = SP).
+rf_conc <- flag_outlier(d_srm_mean, limit_iqr = limit_iqr) |>
+  filter(!Outlier_sp, !Outlier_mp, !is.na(C_SinglePoint_mean), !is.na(C_Adj_mean)) |>
+  filter(ceramideName %in% cer_levels) |>
+  group_by(ceramideName) |>
+  summarise(SP = mean(C_SinglePoint_mean), MP = mean(C_Adj_mean), .groups = "drop") |>
+  mutate(RF_conc_SPoverMP = SP / MP,
+         MP_corrected_to_theoretical = MP * RF_conc_SPoverMP,
+         ceramideName = factor(ceramideName, levels = cer_levels)) |>
+  arrange(ceramideName)
+
+response_factor_table <- response_factor |>
+  select(ceramideName, theoretical_slope, measured_slope, response_factor, pct_dev_equimolar) |>
+  left_join(rf_conc |> select(ceramideName, RF_conc_SPoverMP), by = "ceramideName")
+
+readr::write_excel_csv(response_factor_table,
+  here("manuscript/output/FigS10_response-factor_diagnostic.csv"))
+
+p_FigS10rf <- response_factor |>
+  ggplot(aes(ceramideName, response_factor)) +
+  geom_hline(yintercept = 1, linetype = "dashed", color = "grey50", linewidth = .5) +
+  geom_segment(aes(xend = ceramideName, y = 1, yend = response_factor),
+               color = "grey60", linewidth = .4) +
+  geom_point(size = 2.4, color = "#0571b0") +
+  geom_text(aes(label = sprintf("%+.0f%%", pct_dev_equimolar)), vjust = -1, size = 2.6) +
+  scale_y_continuous(limits = c(0, NA), expand = expansion(mult = c(0, 0.15))) +
+  labs(x = NULL, y = "Response factor\n(measured / theoretical)",
+       caption = "Dashed line = equimolar (theoretical) response, RF = 1") +
+  theme_classic(base_size = 9) +
+  theme(axis.text.x = element_text(size = 7),
+        axis.title = element_text(size = 8, face = "bold"),
+        plot.caption = element_text(size = 7, hjust = 0))
+
+ggsave(plot = p_FigS10rf, filename = here("manuscript/output/FigS10_ResponseFactor_diagnostic.png"),
+       device = "png", dpi = 600, width = 120, height = 70, units = "mm")
+
+p_FigS10rf
+
+cat("\n=== THEORETICAL vs MEASURED CALIBRATION RESPONSE (per ceramide) ===\n")
+print(as.data.frame(response_factor_table |> mutate(across(where(is.numeric), ~round(., 3)))), row.names = FALSE)
+cat("\n=== Theoretical-response correction reproduces single-point (SP) ===\n")
+print(as.data.frame(rf_conc |> mutate(across(where(is.numeric), ~round(., 3)))), row.names = FALSE)
+```
+
 ## 22f Suppl Figure S11: Trueness contextualization against external SRM 1950 references
 
 Neither Passing-Bablok nor Bland-Altman can establish which calibration approach is more accurate, because both compare the two methods only to each other. The study data are derived from Torta et al. (Nat. Commun. 2024) and the outlier-filtered inter-lab consensus is not independent of the SP/MP measurements, so it cannot serve as a trueness anchor. Instead, the SP and MP inter-laboratory consensus values for NIST SRM 1950 are contextualized against independent external quantifications of the same material: Quehenberger et al. 2010, the Bowden et al. 2017 inter-laboratory study, and the multi-platform (including orthogonal NMR) characterization by Mandal et al. (Anal. Chem. 2025, 97, 667-675). These external references disagree with one another by more than the SP-vs-MP difference for 16:0, 24:0 and 24:1, indicating that absolute ceramide quantification is strongly method-dependent; the SP-vs-MP discrepancy for those species therefore lies within the between-method variability of the field. The exception is Cer 18:1;O2/18:0, where both SP and MP fall below every external reference, with MP closer to the external consensus. Red points are this study (ILS) with ±1 SEM; grey points are external references (Wishart with ±1 SD; Bowden individual laboratories). Only NIST SRM 1950 is shown, as external reference concentrations are not available for the NIST RM 8231 materials.
