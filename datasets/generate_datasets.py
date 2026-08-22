@@ -12,7 +12,8 @@ measurements) alongside the published across-laboratory consensus values.
 Usage, from anywhere:
 
     uv run datasets/generate_datasets.py
-    uv run datasets/generate_datasets.py --out-dir ../lipidcompass-external-data/SummarizedStudyResults
+    uv run datasets/generate_datasets.py \
+        --out-dir ../lipidcompass-external-data/SummarizedStudyResults
 
 Design: docs/design/ils-ceramide-ring-trial-import/design.md in lifs-tools/lipidcompass.
 """

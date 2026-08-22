@@ -85,9 +85,18 @@ def test_every_cv_label_is_declared(documents):
 
 def test_every_accession_is_well_formed(documents):
     for code, document in documents.items():
+        assert ACCESSION_RE.match(document["studyDesign"]["accession"]), \
+            (code, document["studyDesign"])
         for quantity in document["lipidSummarizedQuantities"]:
+            assert ACCESSION_RE.match(quantity["quantityUnit"]["accession"]), \
+                (code, quantity["quantityUnit"])
             for parameter in quantity["groupingAttributes"].values():
                 assert ACCESSION_RE.match(parameter["accession"]), (code, parameter)
+            for parameter in quantity.get("cvParameters", []):
+                assert ACCESSION_RE.match(parameter["accession"]), (code, parameter)
+            for measurement in quantity.get("individualMeasurements", []):
+                for parameter in measurement.get("attributes", {}).values():
+                    assert ACCESSION_RE.match(parameter["accession"]), (code, parameter)
 
 
 def test_quantity_unit_is_micromole_per_litre_throughout(documents):
