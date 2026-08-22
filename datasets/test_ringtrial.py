@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 
+import ringtrial_entries as entries
 import ringtrial_sources as sources
 import ringtrial_terms as terms
 
@@ -15,9 +16,6 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 XLSX = REPO_ROOT / "Suppl table concentration values.xlsx"
 DEFINITIONS = REPO_ROOT / "data" / "definitions"
 OUTPUT = REPO_ROOT / "manuscript" / "output"
-
-CERAMIDES = ["Cer 18:1;O2/16:0", "Cer 18:1;O2/18:0",
-             "Cer 18:1;O2/24:0", "Cer 18:1;O2/24:1"]
 
 
 def test_cv_derives_label_from_accession_prefix():
@@ -144,3 +142,105 @@ def test_consensus_matches_the_published_table():
     filtered = consensus[("SRM", "Cer 18:1;O2/16:0", "Filt")]
     assert filtered["n"] == 35
     assert filtered["mean"] == pytest.approx(0.2438313501584896)
+
+
+def _fixture():
+    return (sources.read_lab_metadata(DEFINITIONS),
+            sources.read_lab_stats(XLSX),
+            sources.read_replicates(XLSX),
+            sources.read_outliers(OUTPUT))
+
+
+def test_instrument_term_uses_the_exact_model_accession():
+    metadata = sources.read_lab_metadata(DEFINITIONS)
+    term = entries.instrument_term("02b", metadata["02b"])
+    assert term["accession"] == "MS:1002582"
+    assert term["name"] == "QTRAP 6500+"
+    assert term["value"] == "Sciex QTRAP 6500+"
+
+
+def test_instrument_term_falls_back_to_vendor_for_overridden_labs():
+    metadata = sources.read_lab_metadata(DEFINITIONS)
+    shimadzu = entries.instrument_term("30", metadata["30"])
+    assert shimadzu["accession"] == "MS:1000124"
+    assert shimadzu["name"] == "Shimadzu instrument model"
+    assert shimadzu["value"] == "Shimadzu LCMS-8060"
+
+    disputed = entries.instrument_term("38", metadata["38"])
+    assert disputed["accession"] == "MS:1000126"
+    assert disputed["value"] == "Waters Xevo TQ-S"
+
+
+def test_instrument_term_override_is_per_lab_not_per_model():
+    # LabId 38 is overridden, but 24 and 31 share its model and are not.
+    metadata = sources.read_lab_metadata(DEFINITIONS)
+    assert entries.instrument_term("24", metadata["24"])["accession"] == "MS:1001792"
+    assert entries.instrument_term("31", metadata["31"])["accession"] == "MS:1001792"
+
+
+def test_build_lab_entry_shape():
+    metadata, stats, replicates, outliers = _fixture()
+    entry = entries.build_lab_entry(
+        "02b", "SRM", "Cer 18:1;O2/16:0", "multi-point",
+        metadata["02b"],
+        stats[("02b", "SRM", "Cer 18:1;O2/16:0")],
+        replicates[("02b", "SRM", "Cer 18:1;O2/16:0")],
+        outliers[("02b", "SRM", "Cer 18:1;O2/16:0", "multi-point")],
+    )
+    assert entry["lipids"] == ["Cer 18:1;O2/16:0"]
+    assert entry["quantityUnit"]["accession"] == "UO:0010003"
+
+    grouping = entry["groupingAttributes"]
+    assert grouping["aggregationLevel"]["value"] == "lab"
+    assert grouping["sampleMatrix"]["value"] == "NIST SRM 1950"
+    assert grouping["labNum"]["value"] == "1"
+    assert grouping["labId"]["value"] == "02b"
+    assert grouping["massAnalyzerType"]["accession"] == "MS:1000081"
+    assert grouping["massAnalyzerResolution"]["value"] == "LowRes"
+    assert grouping["protocol"]["accession"] == "NCIT:C48443"
+    assert grouping["chromatography"]["accession"] == "CHMO:0002302"
+    assert grouping["calibrationMethod"]["value"] == "multi-point"
+    assert grouping["outlier"]["value"] == "false"
+
+    assert entry["stats"]["n"] == 6
+    assert entry["stats"]["mean"] == pytest.approx(0.266664952958908)
+    assert len(entry["individualMeasurements"]) == 6
+    first = entry["individualMeasurements"][0]
+    assert first["quantity"] == pytest.approx(0.270695512055809)
+    assert first["attributes"]["sampleReplicate"]["value"] == "SRM 1"
+
+
+def test_build_lab_entry_omits_absent_method_parameters():
+    metadata, stats, replicates, outliers = _fixture()
+    key = ("09", "SRM", "Cer 18:1;O2/16:0")
+    entry = entries.build_lab_entry(
+        "09", "SRM", "Cer 18:1;O2/16:0", "multi-point",
+        metadata["09"], stats[key], replicates[key],
+        outliers[key + ("multi-point",)],
+    )
+    # LabId 09 records GradientTime NA and runs FIA rather than RP.
+    names = {parameter["name"] for parameter in entry["cvParameters"]}
+    assert "gradient elution" not in names
+    assert entry["groupingAttributes"]["chromatography"]["accession"] == "MS:1000058"
+
+
+def test_build_consensus_entry_shape():
+    consensus = sources.read_consensus(OUTPUT)
+    entry = entries.build_consensus_entry(
+        "SRM", "Cer 18:1;O2/16:0", "All",
+        consensus[("SRM", "Cer 18:1;O2/16:0", "All")])
+    grouping = entry["groupingAttributes"]
+    assert grouping["aggregationLevel"]["value"] == "consensus"
+    assert grouping["datasetFilter"]["value"] == "All"
+    assert grouping["calibrationMethod"]["value"] == "multi-point"
+    assert "individualMeasurements" not in entry
+    assert entry["stats"]["n"] == 39
+    assert entry["stats"]["rcv"] == pytest.approx(11.914665756598856)
+
+
+def test_build_consensus_entry_labels_the_filtered_variant():
+    consensus = sources.read_consensus(OUTPUT)
+    entry = entries.build_consensus_entry(
+        "SRM", "Cer 18:1;O2/16:0", "Filt",
+        consensus[("SRM", "Cer 18:1;O2/16:0", "Filt")])
+    assert entry["groupingAttributes"]["datasetFilter"]["value"] == "Without Outliers"
