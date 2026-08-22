@@ -21,6 +21,9 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 
+# Python
+__pycache__/
+
 # IDE
 .idea/
 .vscode/
