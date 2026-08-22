@@ -1,253 +1,144 @@
-#!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.11"
+# dependencies = ["openpyxl", "jsonschema"]
+# ///
+"""Generate LipidCompass SummarizedStudyResult documents from the ILS ceramide
+ring trial.
+
+Emits one JSON document per NIST reference material, each carrying per-laboratory
+concentrations (single-point and multi-point calibration, with extraction-replicate
+measurements) alongside the published across-laboratory consensus values.
+
+Usage, from anywhere:
+
+    uv run datasets/generate_datasets.py
+    uv run datasets/generate_datasets.py --out-dir ../lipidcompass-external-data/SummarizedStudyResults
+
+Design: docs/design/ils-ceramide-ring-trial-import/design.md in lifs-tools/lipidcompass.
 """
-Script to generate 8 separate JSON datasets from the CSV file using the Summarized Study Result Schema.
-Each dataset contains data for one matrix (SRM, hTAG, DB, YAA) and one data type (All, Filt).
 
-Usage:
-    python3 generate_datasets.py
-
-Requirements:
-    - CSV file at: manuscript/output/Suppl_TableS01_Concentrations-CVs_ALL-vs-Outlierfilt-datasets.csv
-    - Schema: summarized-study-result-schema.json
-
-Output:
-    - 8 JSON files in the datasets/ directory
-"""
-
-import csv
+import argparse
 import json
+import sys
 from pathlib import Path
 
-# CSV file path
-CSV_FILE = Path("manuscript/output/Suppl_TableS01_Concentrations-CVs_ALL-vs-Outlierfilt-datasets.csv")
-OUTPUT_DIR = Path("datasets")
-OUTPUT_DIR.mkdir(exist_ok=True)
+import jsonschema
 
-# Publication metadata from CrossRef
-PUBLICATION_METADATA = {
-    "title": "Concordant inter-laboratory derived concentrations of ceramides in human plasma reference materials via authentic standards",
-    "authors": [
-        "Federico Torta", "Nils Hoffmann", "Bo Burla", "Irina Alecu", "Makoto Arita",
-        "Takeshi Bamba", "Steffany A. L. Bennett", "Justine Bertrand-Michel", "Britta Br\u00fcgger",
-        "M\u00f3nica P. Cala", "Dolores Camacho-Mu\u00f1oz", "Antonio Checa", "Michael Chen",
-        "Michaela Chocholou\u0161kov\u00e1", "Michelle Cinel", "Emeline Chu-Van", "Benoit Colsch",
-        "Cristina Coman", "Lisa Connell", "Bebiana C. Sousa", "Alex M. Dickens",
-        "Maria Fedorova", "Finnur Freyr Eir\u00edksson", "Hector Gallart-Ayala", "Mohan Ghorasaini",
-        "Martin Giera", "Xue Li Guan", "Mark Haid", "Thomas Hankemeier", "Amy Harms",
-        "Marcus H\u00f6ring", "Michal Hol\u010dapek", "Thorsten Hornemann", "Chunxiu Hu",
-        "Andreas J. H\u00fclsmeier", "Kevin Huynh", "Christina M. Jones", "Julijana Ivanisevic",
-        "Yoshihiro Izumi", "Harald C. K\u00f6feler", "Sin Man Lam", "Mike Lange",
-        "Jong Cheol Lee", "Gerhard Liebisch", "Katrice Lippa", "Andrea F. Lopez-Clavijo",
-        "Malena Manzi", "Manuela R. Martinefski", "Raviswamy G. H. Math", "Satyajit Mayor",
-        "Peter J. Meikle", "Mar\u00eda Eugenia Monge", "Myeong Hee Moon", "Sneha Muralidharan",
-        "Anna Nicolaou", "Thao Nguyen-Tran", "Valerie B. O'Donnell", "Matej Ore\u0161i\u010d",
-        "Arvind Ramanathan", "Fabien Riols", "Daisuke Saigusa", "Tracey B. Schock",
-        "Heidi Schwartz-Zimmermann", "Guanghou Shui", "Madhulika Singh",
-        "Masatomo Takahashi", "Margr\u00e9t Thorsteinsd\u00f3ttir", "Noriyuki Tomiyasu",
-        "Anthony Tournadre", "Hiroshi Tsugawa", "Victoria J. Tyrrell",
-        "Grace van der Gugten", "Michael O. Wakelam", "Craig E. Wheelock",
-        "Denise Wolrab", "Guowang Xu", "Tianrun Xu", "John A. Bowden",
-        "Kim Ekroos", "Robert Ahrends", "Markus R. Wenk"
-    ],
-    "year": 2024,
-    "doi": "10.1038/s41467-024-52087-x",
-    "description": "Nature Communications publication of the interlaboratory ceramide ring trial study"
-}
+import ringtrial_entries as entries
+import ringtrial_sources as sources
+import ringtrial_terms as terms
 
-STUDY_DESIGN = {
-    "accession": "OBI:0003658",
-    "name": "study design type",
-    "value": "ring trial design",
-    "cvLabel": "OBI"
-}
+HERE = Path(__file__).resolve().parent
+DEFAULT_REPO_ROOT = HERE.parent
+SCHEMA_PATH = HERE / "summarized-study-result-schema.json"
 
-QUANTITY_UNIT = {
-    "accession": "UO:0000276",
-    "name": "micromole per liter",
-    "cvLabel": "UO"
-}
+CERAMIDES = ["Cer 18:1;O2/16:0", "Cer 18:1;O2/18:0",
+             "Cer 18:1;O2/24:0", "Cer 18:1;O2/24:1"]
+METHODS = ["single-point", "multi-point"]
+VARIANTS = ["All", "Filt"]
 
-# Controlled vocabularies used in the datasets
-CONTROLLED_VOCABULARIES = [
-    {
-        "name": "Ontology for Biomedical Investigations",
-        "uri": "http://purl.obolibrary.org/obo/obi",
-        "version": "2026-05-08",
-        "cvLabel": "OBI"
-    },
-    {
-        "name": "National Cancer Institute Thesaurus",
-        "uri": "http://purl.obolibrary.org/obo/ncit.owl",
-        "version": "26.02d",
-        "cvLabel": "NCIT"
+DESCRIPTION = (
+    "Per-laboratory and consensus ceramide concentrations in {display} from the "
+    "interlaboratory ceramide ring trial. Reports {labs} laboratory methods "
+    "(LabNum 1-34) measuring four ceramides, with single-point and multi-point "
+    "calibration, alongside the published consensus values with and without "
+    "outliers. Outliers were determined per ceramide and reference material "
+    "using Tukey's 1.5 x IQR fences."
+)
+
+
+def build_document(material_code, metadata, stats, replicates, outliers, consensus):
+    """Assemble one SummarizedStudyResult document for a reference material."""
+    material = terms.MATERIALS[material_code]
+    quantities = []
+
+    for lab_id in sorted(metadata):
+        for ceramide in CERAMIDES:
+            key = (lab_id, material_code, ceramide)
+            if key not in stats:
+                raise ValueError(f"missing lab stats for {key}")
+            for method in METHODS:
+                quantities.append(entries.build_lab_entry(
+                    lab_id, material_code, ceramide, method,
+                    metadata[lab_id], stats[key], replicates[key],
+                    outliers[key + (method,)],
+                ))
+
+    for ceramide in CERAMIDES:
+        for variant in VARIANTS:
+            quantities.append(entries.build_consensus_entry(
+                material_code, ceramide, variant,
+                consensus[(material_code, ceramide, variant)],
+            ))
+
+    return {
+        "nativeId": material["nativeId"],
+        "title": material["title"],
+        "description": DESCRIPTION.format(display=material["display"],
+                                          labs=len(metadata)),
+        "controlledVocabularies": terms.CONTROLLED_VOCABULARIES,
+        "studyDesign": terms.STUDY_DESIGN,
+        "publicationMetadata": terms.PUBLICATION_METADATA,
+        "lipidSummarizedQuantities": quantities,
+        "visibility": "PUBLIC",
     }
-]
-
-# Material abbreviations mapping
-MATERIAL_NAMES = {
-    "DB": "NIST RM 8231 Diabetic (DB)",
-    "YAA": "NIST RM 8231 Young African-American (YAA)",
-    "T2D": "NIST RM 8231 Type-2 Diabetic (T2D)",
-    "SRM": "NIST SRM 1950 (SRM)",
-    "hTAG": "NIST RM 8231 High-TAG (hTAG)"
-}
 
 
-def read_csv_data():
-    """Read CSV file and return list of data rows."""
-    rows = []
-    
-    with open(CSV_FILE, 'r', encoding='utf-8-sig') as f:
-        reader = csv.reader(f)
-        
-        # Skip header rows
-        header_complete = False
-        header_parts = []
-        
-        for row in reader:
-            if not row or all(cell.strip() == '' for cell in row):
-                continue
-            
-            # Check if this is still a header row
-            if not header_complete:
-                # Collect all header parts
-                header_parts.extend([cell.strip().strip('"') for cell in row if cell.strip()])
-                # Check if we have all expected columns (we expect at least Matrix, Ceramide, etc.)
-                if any('Matrix' in cell for cell in row):
-                    continue
-                # If we hit a row that doesn't contain header keywords, it's a data row
-                if not any(kw in ''.join(row) for kw in ['Matrix', 'Ceramide', 'n (', '\u00b5mol/L', '%CV', '%RCV']):
-                    # This is actually a data row, so add the header we collected
-                    header_complete = True
-                    # Put the row back to be processed as data
-                    # We need to process the header parts we collected
-                    pass
-            
-            if header_complete:
-                # Clean and combine the row
-                cleaned_row = []
-                for cell in row:
-                    cell = cell.strip().strip('"')
-                    if cell:
-                        cleaned_row.append(cell)
-                if cleaned_row:
-                    rows.append(cleaned_row)
-    
-    return rows
+def build_all(repo_root=DEFAULT_REPO_ROOT):
+    """Build all four documents, keyed by material code."""
+    repo_root = Path(repo_root)
+    definitions = repo_root / "data" / "definitions"
+    output = repo_root / "manuscript" / "output"
+    xlsx = repo_root / "Suppl table concentration values.xlsx"
+
+    metadata = sources.read_lab_metadata(definitions)
+    stats = sources.read_lab_stats(xlsx)
+    replicates = sources.read_replicates(xlsx)
+    outliers = sources.read_outliers(output)
+    consensus = sources.read_consensus(output)
+
+    return {code: build_document(code, metadata, stats, replicates,
+                                 outliers, consensus)
+            for code in terms.MATERIALS}
 
 
-def create_dataset(matrix, data_type, rows):
-    """Create a dataset JSON structure using the Summarized Study Result Schema."""
-    
-    lipid_quantities = []
-    
-    # Get full matrix name
-    full_matrix_name = MATERIAL_NAMES.get(matrix, matrix)
-    
-    for row in rows:
-        if len(row) < 14:
-            continue
-        
-        row_matrix = row[0]
-        if row_matrix != matrix:
-            continue
-        
-        lipid = row[1]
-        
-        # Determine which columns to use based on data_type
-        if data_type == "All":
-            n = int(float(row[2]))
-            mean = float(row[3])
-            sd = float(row[4])
-            median = float(row[5])
-            cv = float(row[6])
-            rcv = float(row[7])
-            col_offset = 2
-        else:  # Filt
-            n = int(float(row[8]))
-            mean = float(row[9])
-            sd = float(row[10])
-            median = float(row[11])
-            cv = float(row[12])
-            rcv = float(row[13])
-            col_offset = 8
-        
-        # Determine dataType value
-        data_type_value = "Without Outliers" if data_type == "Filt" else "All"
-        
-        quantity = {
-            "lipids": [lipid],
-            "quantityUnit": QUANTITY_UNIT,
-            "groupingAttributes": {
-                "sampleMatrix": {
-                    "accession": "OBI:0000747",
-                    "name": "material sample",
-                    "value": full_matrix_name,
-                    "cvLabel": "OBI"
-                },
-                "dataType": {
-                    "accession": "OBI:0001755",
-                    "name": "selection criterion",
-                    "value": data_type_value,
-                    "cvLabel": "OBI"
-                }
-            },
-            "stats": {
-                "n": n,
-                "mean": mean,
-                "sd": sd,
-                "median": median,
-                "cv": cv,
-                "rcv": rcv
-            }
-        }
-        
-        lipid_quantities.append(quantity)
-    
-    # Build description
-    if data_type == "All":
-        desc = f"Consensus concentration values across all labs for {full_matrix_name} matrix samples from the interlaboratory comparison study"
-    else:
-        desc = f"Consensus concentration values with outliers removed for {full_matrix_name} matrix samples from the interlaboratory comparison study. Outliers were removed based on Tukey's 1.5 \u00d7 IQR fences, represented and determined separately for each of the four ceramides and reference materials."
-    
-    dataset = {
-        "title": f"Ceramide Concentrations - {full_matrix_name} Matrix - {data_type} Labs",
-        "description": desc,
-        "nativeId": f"ILS_Ceramide_RingTrial_{matrix}_{data_type}",
-        "controlledVocabularies": CONTROLLED_VOCABULARIES,
-        "studyDesign": STUDY_DESIGN,
-        "publicationMetadata": PUBLICATION_METADATA,
-        "lipidSummarizedQuantities": lipid_quantities,
-        "visibility": "PUBLIC"
-    }
-    
-    return dataset
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--repo-root", type=Path, default=DEFAULT_REPO_ROOT,
+                        help="ring trial repository root (default: parent of this script)")
+    parser.add_argument("--out-dir", type=Path, default=HERE,
+                        help="where to write the documents (default: alongside this script)")
+    args = parser.parse_args(argv)
 
+    schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+    documents = build_all(args.repo_root)
 
-def main():
-    # Read CSV
-    rows = read_csv_data()
-    print(f"Read {len(rows)} data rows")
-    
-    # Get unique matrices
-    matrices = sorted(set(row[0] for row in rows if row))
-    print(f"Matrices: {matrices}")
-    
-    # Generate 8 datasets (4 matrices \u00d7 2 types)
-    for matrix in matrices:
-        for data_type in ["All", "Filt"]:
-            dataset = create_dataset(matrix, data_type, rows)
-            
-            # Generate filename
-            matrix_key = matrix.lower().replace(" ", "_")
-            filename = OUTPUT_DIR / f"ring_trial_{matrix_key}_{data_type.lower()}.json"
-            
-            with open(filename, 'w') as f:
-                json.dump(dataset, f, indent=2)
-            
-            print(f"Created: {filename}")
-            print(f"  - {len(dataset['lipidSummarizedQuantities'])} lipid entries")
+    # Validate everything before writing anything, so a failure leaves no
+    # half-written set of documents behind.
+    for code, document in documents.items():
+        try:
+            jsonschema.validate(document, schema)
+        except jsonschema.ValidationError as error:
+            print(f"{code}: schema validation failed at "
+                  f"{'/'.join(str(p) for p in error.absolute_path)}: {error.message}",
+                  file=sys.stderr)
+            return 1
+
+    args.out_dir.mkdir(parents=True, exist_ok=True)
+    for code, document in documents.items():
+        path = args.out_dir / terms.MATERIALS[code]["filename"]
+        path.write_text(json.dumps(document, indent=2, ensure_ascii=False) + "\n",
+                        encoding="utf-8")
+        quantities = document["lipidSummarizedQuantities"]
+        levels = [q["groupingAttributes"]["aggregationLevel"]["value"]
+                  for q in quantities]
+        measurements = sum(len(q.get("individualMeasurements", []))
+                           for q in quantities)
+        print(f"{path.name}: {len(quantities)} entries "
+              f"({levels.count('lab')} lab, {levels.count('consensus')} consensus), "
+              f"{measurements} measurements, {path.stat().st_size // 1024} KiB")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
