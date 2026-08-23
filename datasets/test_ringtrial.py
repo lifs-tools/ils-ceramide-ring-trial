@@ -126,11 +126,50 @@ def test_every_lab_stat_group_has_replicates():
     assert set(stats) == set(reps)
 
 
-def test_outliers_cover_both_calibration_methods():
-    flags = sources.read_outliers(OUTPUT)
-    assert len(flags) == 624 * 2
-    assert sum(1 for k, v in flags.items() if k[3] == "multi-point" and v) == 85
-    assert sum(1 for k, v in flags.items() if k[3] == "single-point" and v) == 81
+def test_published_concentrations_cover_both_calibration_methods():
+    published = sources.read_published_concentrations(OUTPUT)
+    assert len(published) == 624 * 2
+    outliers = {k: v["outlier"] for k, v in published.items()}
+    assert sum(1 for k, v in outliers.items() if k[3] == "multi-point" and v) == 85
+    assert sum(1 for k, v in outliers.items() if k[3] == "single-point" and v) == 81
+    row = published[("02b", "SRM", "Cer 18:1;O2/16:0", "multi-point")]
+    assert row["concentration"] == pytest.approx(0.2666649529589094)
+
+
+def test_published_concentrations_are_the_consensus_inputs():
+    """The per-lab values must be the ones Suppl_TableS01 was computed from.
+
+    Reading the workbook instead understates LabId 26a/26b threefold, which pulled
+    every across-lab mean down by roughly 3 percent without any single value looking
+    obviously wrong. This is the guard against that returning.
+    """
+    published = sources.read_published_concentrations(OUTPUT)
+    consensus = sources.read_consensus(OUTPUT)
+    for (material, ceramide, variant), row in consensus.items():
+        if variant != "All":
+            continue
+        values = [v["concentration"] for k, v in published.items()
+                  if k[1] == material and k[2] == ceramide and k[3] == "multi-point"]
+        assert len(values) == row["n"]
+        assert sum(values) / len(values) == pytest.approx(row["mean"], rel=1e-12)
+
+
+def test_correction_factor_is_one_for_all_labs_but_26():
+    """LabId 26a/26b spiked 3x the internal standard; nobody else is rescaled."""
+    stats = sources.read_lab_stats(XLSX)
+    published = sources.read_published_concentrations(OUTPUT)
+    rescaled = {}
+    for (lab_id, material, ceramide, method), row in published.items():
+        factor = entries.correction_factor(
+            lab_id, ceramide, method,
+            stats[(lab_id, material, ceramide)][method]["mean"],
+            row["concentration"])
+        if factor != 1.0:
+            rescaled.setdefault(lab_id, []).append(factor)
+    assert sorted(rescaled) == ["26a", "26b"]
+    for values in rescaled.values():
+        assert len(values) == 32           # 4 materials x 4 ceramides x 2 methods
+        assert all(value == pytest.approx(3.0, rel=1e-12) for value in values)
 
 
 def test_consensus_matches_the_published_table():
@@ -148,7 +187,7 @@ def _fixture():
     return (sources.read_lab_metadata(DEFINITIONS),
             sources.read_lab_stats(XLSX),
             sources.read_replicates(XLSX),
-            sources.read_outliers(OUTPUT))
+            sources.read_published_concentrations(OUTPUT))
 
 
 def test_instrument_term_uses_the_exact_model_accession():
@@ -179,13 +218,13 @@ def test_instrument_term_override_is_per_lab_not_per_model():
 
 
 def test_build_lab_entry_shape():
-    metadata, stats, replicates, outliers = _fixture()
+    metadata, stats, replicates, published = _fixture()
     entry = entries.build_lab_entry(
         "02b", "SRM", "Cer 18:1;O2/16:0", "multi-point",
         metadata["02b"],
         stats[("02b", "SRM", "Cer 18:1;O2/16:0")],
         replicates[("02b", "SRM", "Cer 18:1;O2/16:0")],
-        outliers[("02b", "SRM", "Cer 18:1;O2/16:0", "multi-point")],
+        published[("02b", "SRM", "Cer 18:1;O2/16:0", "multi-point")],
     )
     assert entry["lipids"] == ["Cer 18:1;O2/16:0"]
     assert entry["quantityUnit"]["accession"] == "UO:0010003"
@@ -203,7 +242,9 @@ def test_build_lab_entry_shape():
     assert grouping["outlier"]["value"] == "false"
 
     assert entry["stats"]["n"] == 6
-    assert entry["stats"]["mean"] == pytest.approx(0.266664952958908)
+    assert entry["stats"]["mean"] == 0.2666649529589094   # verbatim from the CSV
+    assert entry["stats"]["median"] is None               # not reported, not zero
+    assert set(entry["stats"]) == set(entries.STATS_FIELDS)
     assert len(entry["individualMeasurements"]) == 6
     first = entry["individualMeasurements"][0]
     assert first["quantity"] == pytest.approx(0.270695512055809)
@@ -211,12 +252,12 @@ def test_build_lab_entry_shape():
 
 
 def test_build_lab_entry_omits_absent_method_parameters():
-    metadata, stats, replicates, outliers = _fixture()
+    metadata, stats, replicates, published = _fixture()
     key = ("09", "SRM", "Cer 18:1;O2/16:0")
     entry = entries.build_lab_entry(
         "09", "SRM", "Cer 18:1;O2/16:0", "multi-point",
         metadata["09"], stats[key], replicates[key],
-        outliers[key + ("multi-point",)],
+        published[key + ("multi-point",)],
     )
     # LabId 09 records GradientTime NA and runs FIA rather than RP.
     names = {parameter["name"] for parameter in entry["cvParameters"]}
@@ -236,6 +277,8 @@ def test_build_consensus_entry_shape():
     assert "individualMeasurements" not in entry
     assert entry["stats"]["n"] == 39
     assert entry["stats"]["rcv"] == pytest.approx(11.914665756598856)
+    assert entry["stats"]["min"] is None                  # TableS01 reports no min
+    assert set(entry["stats"]) == set(entries.STATS_FIELDS)
 
 
 def test_build_consensus_entry_labels_the_filtered_variant():
