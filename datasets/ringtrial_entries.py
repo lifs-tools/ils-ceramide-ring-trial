@@ -11,6 +11,53 @@ from ringtrial_terms import cv
 
 DATASET_FILTER_VALUES = {"All": "All", "Filt": "Without Outliers"}
 
+# Every field the schema allows on a stats object, in reporting order.
+STATS_FIELDS = ("n", "mean", "sd", "median", "cv", "rcv",
+                "min", "max", "sum", "variance")
+
+# Below this relative difference the workbook and the published CSVs are taken to
+# agree. Excel serialises about fifteen significant digits where the CSVs carry
+# seventeen, so every matching pair still differs by a few units in the last place.
+# Only a real, communicated correction exceeds this -- see correction_factor().
+CORRECTION_EPSILON = 1e-6
+
+
+def stats_block(**values):
+    """A stats object carrying every field, null where the source reports nothing.
+
+    Absence and null say different things downstream: an omitted key reads as "this
+    study does not use that statistic", an explicit null as "not reported here". Only
+    the latter is true, and a uniform shape stops a consumer inferring zero from a
+    missing key.
+    """
+    unknown = sorted(set(values) - set(STATS_FIELDS))
+    if unknown:
+        raise ValueError(f"unknown stats fields: {unknown}")
+    return {field: values.get(field) for field in STATS_FIELDS}
+
+
+def correction_factor(lab_id, ceramide, method, workbook_mean, published):
+    """Scale taking the workbook's concentration to the published one.
+
+    Exactly 1.0 when the two agree within CORRECTION_EPSILON, so the workbook's
+    float serialisation never perturbs replicate values by an ulp.
+
+    LabId 26a/26b (LabNum 22) is the one real exception: that laboratory spiked
+    three times the intended internal standard amount, so the manuscript multiplies
+    its concentrations by three
+    (manuscript/manuscript-figures-tables.Rmd:104). The factor is derived rather
+    than hard-coded so the generated data cannot drift from the published values.
+    """
+    if published is None:
+        raise ValueError(
+            f"LabId {lab_id}: no published concentration for {ceramide} {method}")
+    if workbook_mean is None or workbook_mean == 0:
+        raise ValueError(
+            f"LabId {lab_id}: no workbook mean for {ceramide} {method}; "
+            f"cannot scale replicates onto the published concentration")
+    factor = published / workbook_mean
+    return 1.0 if abs(factor - 1.0) <= CORRECTION_EPSILON else factor
+
 
 def instrument_term(lab_id, metadata):
     """Model-level PSI-MS term, or the vendor-level term for overridden labs.
@@ -41,8 +88,13 @@ def _lookup(table, key, what, lab_id):
 
 
 def build_lab_entry(lab_id, material_code, ceramide, method,
-                    metadata, stats, replicates, outlier):
-    """One lab x ceramide x calibration-method entry."""
+                    metadata, stats, replicates, published):
+    """One lab x ceramide x calibration-method entry.
+
+    `published` is the manuscript's own concentration and outlier flag for this
+    combination. Its concentration is authoritative: the workbook supplies only the
+    SD and the per-replicate values, both rescaled onto it by correction_factor().
+    """
     material = terms.MATERIALS[material_code]
 
     analyzer = _lookup(terms.ANALYZER_TYPES, metadata["analyzer"],
@@ -63,7 +115,7 @@ def build_lab_entry(lab_id, material_code, ceramide, method,
         "protocol": cv(*protocol, metadata["protocol"]),
         "chromatography": cv(*chromatography, metadata["lc"]),
         "calibrationMethod": cv(*terms.CALIBRATION_METHOD, method),
-        "outlier": cv(*terms.OUTLIER, "true" if outlier else "false"),
+        "outlier": cv(*terms.OUTLIER, "true" if published["outlier"] else "false"),
     }
 
     cv_parameters = []
@@ -72,19 +124,24 @@ def build_lab_entry(lab_id, material_code, ceramide, method,
     if metadata["sourceTemp"] is not None:
         cv_parameters.append(cv(*terms.SOURCE_TEMPERATURE, metadata["sourceTemp"]))
 
+    summary = stats[method]
+    scale = correction_factor(lab_id, ceramide, method,
+                              summary["mean"], published["concentration"])
+
+    # Replicates reported as NA are dropped, never coerced to zero: they would
+    # otherwise enter both the sum and the denominator of every downstream mean.
     measurements = [
-        {"quantity": replicate[method],
+        {"quantity": replicate[method] * scale,
          "attributes": {"sampleReplicate": cv(*terms.SAMPLE_REPLICATE,
                                               replicate["sample"])}}
         for replicate in replicates if replicate[method] is not None
     ]
 
-    summary = stats[method]
-    entry_stats = {"n": len(measurements)}
-    if summary["mean"] is not None:
-        entry_stats["mean"] = summary["mean"]
-    if summary["sd"] is not None:
-        entry_stats["sd"] = summary["sd"]
+    entry_stats = stats_block(
+        n=len(measurements),
+        mean=published["concentration"],
+        sd=None if summary["sd"] is None else summary["sd"] * scale,
+    )
 
     entry = {
         "lipids": [ceramide],
@@ -112,5 +169,5 @@ def build_consensus_entry(material_code, ceramide, variant, consensus_row):
             "datasetFilter": cv(*terms.DATASET_FILTER,
                                 DATASET_FILTER_VALUES[variant]),
         },
-        "stats": dict(consensus_row),
+        "stats": stats_block(**consensus_row),
     }

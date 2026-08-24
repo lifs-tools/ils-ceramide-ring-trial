@@ -13,6 +13,7 @@ import jsonschema
 import pytest
 
 import generate_datasets as generator
+import ringtrial_entries as entries
 import ringtrial_sources as sources
 import ringtrial_terms as terms
 
@@ -114,6 +115,72 @@ def test_stats_mean_matches_the_measurements(documents):
                 continue
             observed = statistics.mean(m["quantity"] for m in measurements)
             assert observed == pytest.approx(quantity["stats"]["mean"], rel=1e-9), code
+
+
+def test_lab_means_reproduce_the_published_consensus(documents):
+    """The across-lab mean of the generated per-lab values must equal Suppl_TableS01.
+
+    This is the invariant that failed silently when the per-lab concentrations came
+    from the workbook: LabId 26a/26b were threefold low, which depressed every
+    consensus by about 3 percent while each individual value still looked plausible.
+    """
+    for code, document in documents.items():
+        by_species = {}
+        consensus = {}
+        for quantity in document["lipidSummarizedQuantities"]:
+            grouping = quantity["groupingAttributes"]
+            ceramide = quantity["lipids"][0]
+            if grouping["aggregationLevel"]["value"] == "consensus":
+                if grouping["datasetFilter"]["value"] == "All":
+                    consensus[ceramide] = quantity["stats"]
+            elif grouping["calibrationMethod"]["value"] == "multi-point":
+                by_species.setdefault(ceramide, []).append(quantity["stats"]["mean"])
+
+        assert set(by_species) == set(consensus), code
+        for ceramide, values in by_species.items():
+            published = consensus[ceramide]
+            assert len(values) == published["n"], (code, ceramide)
+            assert statistics.mean(values) == pytest.approx(published["mean"], rel=1e-12), \
+                (code, ceramide)
+
+
+def test_unreported_statistics_are_null_never_zero(documents):
+    """Absent statistics must be explicit nulls, so nobody reads them as measurements."""
+    for code, document in documents.items():
+        for quantity in document["lipidSummarizedQuantities"]:
+            stats = quantity["stats"]
+            assert set(stats) == set(entries.STATS_FIELDS), code
+            level = quantity["groupingAttributes"]["aggregationLevel"]["value"]
+            if level == "lab":
+                # Results table 3 reports only n, mean and SD.
+                assert stats["mean"] is not None and stats["sd"] is not None, code
+                for field in ("median", "cv", "rcv", "min", "max", "sum", "variance"):
+                    assert stats[field] is None, (code, field)
+            else:
+                # Suppl_TableS01 adds median, CV and RCV but no spread bounds.
+                assert stats["median"] is not None, code
+                for field in ("min", "max", "sum", "variance"):
+                    assert stats[field] is None, (code, field)
+
+
+def test_lab_26_carries_the_internal_standard_correction(documents):
+    """LabId 26a/26b must be threefold above the workbook, everyone else unchanged."""
+    stats = sources.read_lab_stats(REPO_ROOT / "Suppl table concentration values.xlsx")
+    rescaled = set()
+    for code, document in documents.items():
+        for quantity in document["lipidSummarizedQuantities"]:
+            grouping = quantity["groupingAttributes"]
+            if grouping["aggregationLevel"]["value"] != "lab":
+                continue
+            lab_id = grouping["labId"]["value"]
+            method = grouping["calibrationMethod"]["value"]
+            workbook = stats[(lab_id, code, quantity["lipids"][0])][method]["mean"]
+            ratio = quantity["stats"]["mean"] / workbook
+            if ratio == pytest.approx(1.0, rel=1e-6):
+                continue
+            assert ratio == pytest.approx(3.0, rel=1e-6), (code, lab_id)
+            rescaled.add(lab_id)
+    assert rescaled == {"26a", "26b"}
 
 
 def test_all_39_labs_appear_in_every_document(documents):

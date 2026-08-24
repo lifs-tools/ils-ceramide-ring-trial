@@ -137,24 +137,48 @@ def read_replicates(xlsx_path):
     return replicates
 
 
-def read_outliers(output_dir):
-    """Outlier flags per calibration method (Suppl_Dataset_* CSVs)."""
-    files = {
-        "multi-point": ("Suppl_Dataset_Concentrations_OutlierStatus_"
-                        "Sheet-MultiPointConc.csv"),
-        "single-point": ("Suppl_Dataset_Concentrations_OutlierStatus_"
-                         "Sheet-SinglePointConc.csv"),
-    }
-    flags = {}
-    for method, filename in files.items():
+# Suppl_Dataset_* CSVs: the *published* per-lab concentrations and outlier flags.
+# These are the manuscript's numbers and the direct input to Suppl_TableS01, so
+# they -- not the workbook -- are authoritative for what a laboratory reported.
+PUBLISHED_CONCENTRATION_FILES = {
+    "multi-point": ("Suppl_Dataset_Concentrations_OutlierStatus_"
+                    "Sheet-MultiPointConc.csv", "ConcMultiPoint"),
+    "single-point": ("Suppl_Dataset_Concentrations_OutlierStatus_"
+                     "Sheet-SinglePointConc.csv", "ConcSinglePoint"),
+}
+
+
+def read_published_concentrations(output_dir):
+    """Published per-lab concentration and outlier flag, per calibration method.
+
+    Keyed (labId, materialCode, ceramide, method). The CSVs already write the
+    material as its short code ('SRM', 'hTAG', 'DB', 'YAA'), unlike the xlsx.
+
+    These values differ from the workbook's Results table 3 for LabId 26a/26b,
+    which the manuscript multiplies by three because that laboratory spiked 3x
+    the intended internal standard amount -- see the correction at
+    manuscript/manuscript-figures-tables.Rmd:104. Reading the published CSVs
+    rather than the workbook is what keeps the per-lab values, and therefore the
+    across-lab consensus, consistent with the paper.
+    """
+    published = {}
+    for method, (filename, column) in PUBLISHED_CONCENTRATION_FILES.items():
         with open(output_dir / filename, encoding="utf-8-sig") as handle:
             for row in csv.DictReader(handle):
+                material = row["SampleType"].strip()
+                if material not in terms.MATERIALS:
+                    raise ValueError(f"unknown SampleType in {filename}: {material!r}")
                 key = (normalize_lab_id(row["LabId"]),
-                       row["SampleType"].strip(),
+                       material,
                        row["CeramideName"].strip(),
                        method)
-                flags[key] = row["Outlier"].strip().upper() == "TRUE"
-    return flags
+                if key in published:
+                    raise ValueError(f"duplicate row in {filename} for {key}")
+                published[key] = {
+                    "concentration": _number(row[column]),
+                    "outlier": row["Outlier"].strip().upper() == "TRUE",
+                }
+    return published
 
 
 def read_consensus(output_dir):

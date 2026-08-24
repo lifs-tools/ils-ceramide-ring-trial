@@ -215,8 +215,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.347091343603276,
-        "sd": 0.00454689407948948
+        "mean": 0.3470913436032764,
+        "sd": 0.00454689407948948,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -380,8 +387,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.249475891504389,
-        "sd": 0.00328491535626569
+        "mean": 0.24947589150439028,
+        "sd": 0.00328491535626569,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -545,8 +559,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0666785087099323,
-        "sd": 0.000919430180535556
+        "mean": 0.06667850870993243,
+        "sd": 0.000919430180535556,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -710,8 +731,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.102560093576606,
-        "sd": 0.00142329336913501
+        "mean": 0.10256009357660724,
+        "sd": 0.00142329336913501,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -875,8 +903,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.61822143836452,
-        "sd": 0.0479913114657264
+        "mean": 2.6182214383645337,
+        "sd": 0.0479913114657264,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -1040,8 +1075,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.71192513510245,
-        "sd": 0.0500798915579079
+        "mean": 2.7119251351024545,
+        "sd": 0.0500798915579079,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -1205,8 +1247,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.896792447794508,
-        "sd": 0.0156250035133926
+        "mean": 0.8967924477945084,
+        "sd": 0.0156250035133926,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -1370,8 +1419,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.97866080716254,
-        "sd": 0.0172106880046238
+        "mean": 0.9786608071625409,
+        "sd": 0.0172106880046238,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -1535,8 +1591,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.329775413118009,
-        "sd": 0.0212597491201154
+        "mean": 0.3297754131180103,
+        "sd": 0.0212597491201154,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -1700,8 +1763,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.200793394869867,
-        "sd": 0.0131423578320488
+        "mean": 0.20079339486986744,
+        "sd": 0.0131423578320488,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -1865,8 +1935,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0629941503927316,
-        "sd": 0.0042190883470242
+        "mean": 0.0629941503927317,
+        "sd": 0.0042190883470242,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -2030,8 +2107,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0951049447650273,
-        "sd": 0.00640049103268196
+        "mean": 0.09510494476502748,
+        "sd": 0.00640049103268196,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -2195,8 +2279,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.85012051119195,
-        "sd": 0.157081612673951
+        "mean": 2.85012051119196,
+        "sd": 0.157081612673951,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -2360,8 +2451,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.50772486696707,
-        "sd": 0.138662393330022
+        "mean": 2.507724866967081,
+        "sd": 0.138662393330022,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -2525,8 +2623,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.869539313476949,
-        "sd": 0.0463677540255085
+        "mean": 0.8695393134769501,
+        "sd": 0.0463677540255085,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -2690,8 +2795,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.87570894658329,
-        "sd": 0.0462991652302879
+        "mean": 0.8757089465832913,
+        "sd": 0.0462991652302879,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -2855,8 +2967,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.295656649085393,
-        "sd": 0.0194412140251224
+        "mean": 0.2956566490853941,
+        "sd": 0.0194412140251224,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -3020,8 +3139,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.239757910586103,
-        "sd": 0.0157904891218844
+        "mean": 0.23975791058610355,
+        "sd": 0.0157904891218844,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -3185,8 +3311,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0597791700577336,
-        "sd": 0.00371453848163394
+        "mean": 0.05977917005773372,
+        "sd": 0.00371453848163394,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -3350,8 +3483,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.105242009311539,
-        "sd": 0.00654560864265497
+        "mean": 0.10524200931154025,
+        "sd": 0.00654560864265497,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -3515,8 +3655,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.82641873580071,
-        "sd": 0.183829000237318
+        "mean": 2.826418735800721,
+        "sd": 0.183829000237318,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -3680,8 +3827,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.52755930035683,
-        "sd": 0.164225534427836
+        "mean": 2.5275593003568346,
+        "sd": 0.164225534427836,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -3845,8 +3999,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.924933319959425,
-        "sd": 0.0626309872138873
+        "mean": 0.9249333199594257,
+        "sd": 0.0626309872138873,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -4010,8 +4171,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.893398169767848,
-        "sd": 0.060006094161677
+        "mean": 0.8933981697678488,
+        "sd": 0.060006094161677,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -4175,8 +4343,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.330564503607227,
-        "sd": 0.00894646248421208
+        "mean": 0.3305645036072281,
+        "sd": 0.00894646248421208,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -4340,8 +4515,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.227928894611236,
-        "sd": 0.00650675790097379
+        "mean": 0.22792889461123733,
+        "sd": 0.00650675790097379,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -4505,8 +4687,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0614479045400722,
-        "sd": 0.00143255181371248
+        "mean": 0.0614479045400723,
+        "sd": 0.00143255181371248,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -4670,8 +4859,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.114695058684714,
-        "sd": 0.00271948729079259
+        "mean": 0.1146950586847145,
+        "sd": 0.00271948729079259,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -4835,8 +5031,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.595804559515743,
-        "sd": 0.0137328626705756
+        "mean": 0.595804559515744,
+        "sd": 0.0137328626705756,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -5000,8 +5203,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.62843265369499,
-        "sd": 0.0609124441546791
+        "mean": 2.628432653694995,
+        "sd": 0.0609124441546791,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -5165,8 +5375,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.248894092262824,
-        "sd": 0.00735634510872745
+        "mean": 0.24889409226282527,
+        "sd": 0.00735634510872745,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -5330,8 +5547,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.911734526182975,
-        "sd": 0.0271922989916057
+        "mean": 0.9117345261829763,
+        "sd": 0.0271922989916057,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -5495,8 +5719,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.474303077668216,
-        "sd": 0.0379932098809852
+        "mean": 0.47430307766821744,
+        "sd": 0.0379932098809852,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -5660,8 +5891,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.342143436545691,
-        "sd": 0.0281832386237012
+        "mean": 0.3421434365456918,
+        "sd": 0.0281832386237012,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -5825,8 +6063,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0688416145723779,
-        "sd": 0.00462010867160671
+        "mean": 0.06884161457237795,
+        "sd": 0.00462010867160671,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -5990,8 +6235,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.10468873801686,
-        "sd": 0.00727624084483792
+        "mean": 0.10468873801686089,
+        "sd": 0.00727624084483792,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -6155,8 +6407,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.71784061628823,
-        "sd": 0.153217750291538
+        "mean": 2.717840616288244,
+        "sd": 0.153217750291538,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -6320,8 +6579,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.5776114128302,
-        "sd": 0.147600574068912
+        "mean": 2.5776114128302035,
+        "sd": 0.147600574068912,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -6485,8 +6751,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 1.02172080679518,
-        "sd": 0.0375986679548007
+        "mean": 1.0217208067951922,
+        "sd": 0.0375986679548007,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -6650,8 +6923,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.985030713762153,
-        "sd": 0.0375579174315162
+        "mean": 0.9850307137621557,
+        "sd": 0.0375579174315162,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -6815,8 +7095,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.273199015960657,
-        "sd": 0.0270182842886696
+        "mean": 0.273199015960658,
+        "sd": 0.0270182842886696,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -6974,8 +7261,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.211231852541462,
-        "sd": 0.0214623321919394
+        "mean": 0.21123185254146276,
+        "sd": 0.0214623321919394,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -7133,8 +7427,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.052590682379664,
-        "sd": 0.00791297691557303
+        "mean": 0.05259068237966406,
+        "sd": 0.00791297691557303,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -7292,8 +7593,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.104388215489236,
-        "sd": 0.0165737456118458
+        "mean": 0.10438821548923634,
+        "sd": 0.0165737456118458,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -7451,8 +7759,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.20833971898423,
-        "sd": 0.0642219781981129
+        "mean": 2.2083397189842446,
+        "sd": 0.0642219781981129,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -7610,8 +7925,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.51854387188376,
-        "sd": 0.0738641636604741
+        "mean": 2.5185438718837667,
+        "sd": 0.0738641636604741,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -7769,8 +8091,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.7645669358055,
-        "sd": 0.0330945976634309
+        "mean": 0.7645669358055007,
+        "sd": 0.0330945976634309,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -7928,8 +8257,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.939001086987882,
-        "sd": 0.0414497328569999
+        "mean": 0.9390010869878835,
+        "sd": 0.0414497328569999,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -8087,8 +8423,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.323393789951402,
-        "sd": 0.0196640581254633
+        "mean": 0.3233937899514032,
+        "sd": 0.0196640581254633,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -8252,8 +8595,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.155373626431226,
-        "sd": 0.011379656587994
+        "mean": 0.15537362643122699,
+        "sd": 0.011379656587994,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -8417,8 +8767,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0656960426621418,
-        "sd": 0.0057964476055789
+        "mean": 0.06569604266214184,
+        "sd": 0.0057964476055789,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -8582,8 +8939,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.075180635767177,
-        "sd": 0.00761824758343247
+        "mean": 0.07518063576717711,
+        "sd": 0.00761824758343247,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -8747,8 +9111,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.2485329479629,
-        "sd": 0.439366513253626
+        "mean": 2.248532947962904,
+        "sd": 0.439366513253626,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -8912,8 +9283,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 1.78639256230812,
-        "sd": 0.369646641021677
+        "mean": 1.78639256230813,
+        "sd": 0.369646641021677,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -9077,8 +9455,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.555137252818454,
-        "sd": 0.108383469917529
+        "mean": 0.5551372528184545,
+        "sd": 0.108383469917529,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -9242,8 +9627,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.686842604234544,
-        "sd": 0.14783717642635
+        "mean": 0.6868426042345452,
+        "sd": 0.14783717642635,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -9407,8 +9799,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.291338071233825,
-        "sd": 0.023000705441607
+        "mean": 0.2913380712338256,
+        "sd": 0.023000705441607,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -9566,8 +9965,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.161376005460833,
-        "sd": 0.014858301261075
+        "mean": 0.1613760054608338,
+        "sd": 0.014858301261075,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -9725,8 +10131,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0550236659780357,
-        "sd": 0.0113497242239538
+        "mean": 0.05502366597803581,
+        "sd": 0.0113497242239538,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -9884,8 +10297,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0642907841457533,
-        "sd": 0.0148628056272819
+        "mean": 0.06429078414575343,
+        "sd": 0.0148628056272819,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -10043,8 +10463,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.27265252207042,
-        "sd": 0.0676784139820609
+        "mean": 2.2726525220704277,
+        "sd": 0.0676784139820609,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -10202,8 +10629,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 1.76227902894476,
-        "sd": 0.0546547198129594
+        "mean": 1.7622790289447687,
+        "sd": 0.0546547198129594,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -10361,8 +10795,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.680361288879767,
-        "sd": 0.0375065688599245
+        "mean": 0.6803612888797683,
+        "sd": 0.0375065688599245,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -10520,8 +10961,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.502645178414189,
-        "sd": 0.0312999073557629
+        "mean": 0.5026451784141901,
+        "sd": 0.0312999073557629,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -10679,8 +11127,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.226666603844999,
-        "sd": 0.0221440296330311
+        "mean": 0.22666660384499962,
+        "sd": 0.0221440296330311,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -10844,8 +11299,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.234142633548064,
-        "sd": 0.0228648224790498
+        "mean": 0.23414263354806525,
+        "sd": 0.0228648224790498,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -11009,8 +11471,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0721776635357574,
-        "sd": 0.00723639111875628
+        "mean": 0.07217766353575752,
+        "sd": 0.00723639111875628,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -11174,8 +11643,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.11884027061715,
-        "sd": 0.0119280371178929
+        "mean": 0.11884027061715095,
+        "sd": 0.0119280371178929,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -11339,8 +11815,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.05982957778553,
-        "sd": 0.191287779075052
+        "mean": 2.0598295777855378,
+        "sd": 0.191287779075052,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -11504,8 +11987,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.64510904674348,
-        "sd": 0.245468581998542
+        "mean": 2.6451090467434923,
+        "sd": 0.245468581998542,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -11669,8 +12159,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.693088703418561,
-        "sd": 0.0646143162705593
+        "mean": 0.6930887034185624,
+        "sd": 0.0646143162705593,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -11834,8 +12331,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.947563281692296,
-        "sd": 0.0880992057027335
+        "mean": 0.9475632816922974,
+        "sd": 0.0880992057027335,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -11999,8 +12503,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.203542629519593,
-        "sd": 0.00726279483550194
+        "mean": 0.20354262951959412,
+        "sd": 0.00726279483550194,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -12164,8 +12675,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.173078994948028,
-        "sd": 0.00805062596744441
+        "mean": 0.17307899494802867,
+        "sd": 0.00805062596744441,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -12329,8 +12847,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.104477165170058,
-        "sd": 0.00519754851779599
+        "mean": 0.10447716517005919,
+        "sd": 0.00519754851779599,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -12494,8 +13019,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.139283825439625,
-        "sd": 0.0073058974544873
+        "mean": 0.1392838254396257,
+        "sd": 0.0073058974544873,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -12659,8 +13191,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 1.81277884074773,
-        "sd": 0.0328225112687529
+        "mean": 1.8127788407477379,
+        "sd": 0.0328225112687529,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -12824,8 +13363,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 3.73797792338943,
-        "sd": 0.0693691141679869
+        "mean": 3.7379779233894443,
+        "sd": 0.0693691141679869,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -12989,8 +13535,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.458502924590479,
-        "sd": 0.0159231688092988
+        "mean": 0.45850292459048003,
+        "sd": 0.0159231688092988,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -13154,8 +13707,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 1.32381072423903,
-        "sd": 0.0490517377269098
+        "mean": 1.3238107242390367,
+        "sd": 0.0490517377269098,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -13319,8 +13879,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.341391647507586,
-        "sd": 0.0106952968576921
+        "mean": 0.3413916475075873,
+        "sd": 0.0106952968576921,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -13484,8 +14051,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.211856772601647,
-        "sd": 0.00671403832638304
+        "mean": 0.2118567726016483,
+        "sd": 0.00671403832638304,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -13649,8 +14223,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.06431160787366,
-        "sd": 0.00165602539608825
+        "mean": 0.06431160787366005,
+        "sd": 0.00165602539608825,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -13814,8 +14395,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0985166961543836,
-        "sd": 0.00257501399324663
+        "mean": 0.09851669615438378,
+        "sd": 0.00257501399324663,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -13979,8 +14567,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.88447713823563,
-        "sd": 0.110853690477606
+        "mean": 2.884477138235641,
+        "sd": 0.110853690477606,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -14144,8 +14739,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.79065148372802,
-        "sd": 0.108158890291065
+        "mean": 2.7906514837280323,
+        "sd": 0.108158890291065,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -14309,8 +14911,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.942787316327334,
-        "sd": 0.0497847648797803
+        "mean": 0.9427873163273354,
+        "sd": 0.0497847648797803,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -14474,8 +15083,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.943717541268986,
-        "sd": 0.0507467321022895
+        "mean": 0.9437175412689883,
+        "sd": 0.0507467321022895,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -14639,8 +15255,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.30335182060508,
-        "sd": 0.00689983904591422
+        "mean": 0.3033518206050813,
+        "sd": 0.00689983904591422,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -14804,8 +15427,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.222606021597699,
-        "sd": 0.00509296652900884
+        "mean": 0.2226060215977003,
+        "sd": 0.00509296652900884,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -14969,8 +15599,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0653823714441584,
-        "sd": 0.00442935912213529
+        "mean": 0.06538237144415848,
+        "sd": 0.00442935912213529,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -15134,8 +15771,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0995062176412545,
-        "sd": 0.00674208948239131
+        "mean": 0.09950621764125483,
+        "sd": 0.00674208948239131,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -15299,8 +15943,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.27889955050056,
-        "sd": 0.121909523944324
+        "mean": 2.278899550500565,
+        "sd": 0.121909523944324,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -15464,8 +16115,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 3.02396700619982,
-        "sd": 0.162782338778864
+        "mean": 3.023967006199831,
+        "sd": 0.162782338778864,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -15629,8 +16287,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.774754486523544,
-        "sd": 0.0477826958495326
+        "mean": 0.7747544865235445,
+        "sd": 0.0477826958495326,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -15794,8 +16459,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 1.09741589995337,
-        "sd": 0.0684984396679194
+        "mean": 1.0974158999533805,
+        "sd": 0.0684984396679194,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -15959,8 +16631,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.322446586181678,
-        "sd": 0.0510028655335092
+        "mean": 0.32244658618167904,
+        "sd": 0.0510028655335092,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -16124,8 +16803,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.20636462258554,
-        "sd": 0.032246482156074
+        "mean": 0.20636462258554125,
+        "sd": 0.032246482156074,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -16289,8 +16975,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0613020495835041,
-        "sd": 0.0120011563931367
+        "mean": 0.06130204958350414,
+        "sd": 0.0120011563931367,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -16454,8 +17147,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0875871608967225,
-        "sd": 0.0164379188397172
+        "mean": 0.0875871608967227,
+        "sd": 0.0164379188397172,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -16619,8 +17319,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.50947190040832,
-        "sd": 0.382024814285856
+        "mean": 2.509471900408328,
+        "sd": 0.382024814285856,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -16784,8 +17491,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.26112492683875,
-        "sd": 0.341978102110348
+        "mean": 2.261124926838763,
+        "sd": 0.341978102110348,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -16949,8 +17663,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.493487771535019,
-        "sd": 0.0770669572390921
+        "mean": 0.49348777153501966,
+        "sd": 0.0770669572390921,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -17114,8 +17835,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.854273973245314,
-        "sd": 0.127878287709754
+        "mean": 0.8542739732453177,
+        "sd": 0.127878287709754,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -17279,8 +18007,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.271949878701485,
-        "sd": 0.00913551858757179
+        "mean": 0.27194987870148657,
+        "sd": 0.00913551858757179,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -17444,8 +18179,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.245414858514324,
-        "sd": 0.00832713374714577
+        "mean": 0.24541485851432557,
+        "sd": 0.00832713374714577,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -17609,8 +18351,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0807887858094467,
-        "sd": 0.00817820367391967
+        "mean": 0.08078878580944684,
+        "sd": 0.00817820367391967,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -17774,8 +18523,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.129692675074206,
-        "sd": 0.0132584468553912
+        "mean": 0.12969267507420693,
+        "sd": 0.0132584468553912,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -17939,8 +18695,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.82534261259246,
-        "sd": 0.0687152304311802
+        "mean": 2.8253426125924648,
+        "sd": 0.0687152304311802,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -18104,8 +18867,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.23491250240991,
-        "sd": 0.0536763402265936
+        "mean": 2.234912502409924,
+        "sd": 0.0536763402265936,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -18269,8 +19039,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 1.25198463439011,
-        "sd": 0.0317979951558771
+        "mean": 1.2519846343901189,
+        "sd": 0.0317979951558771,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -18434,8 +19211,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.952008237425399,
-        "sd": 0.0234339087498546
+        "mean": 0.9520082374253995,
+        "sd": 0.0234339087498546,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -18599,8 +19383,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.298822618298668,
-        "sd": 0.0113865408170845
+        "mean": 0.2988226182986688,
+        "sd": 0.0113865408170845,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -18764,8 +19555,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.213434731331528,
-        "sd": 0.00823362760898358
+        "mean": 0.21343473133152893,
+        "sd": 0.00823362760898358,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -18929,8 +19727,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0680000143770812,
-        "sd": 0.0023947094280577
+        "mean": 0.06800001437708127,
+        "sd": 0.0023947094280577,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -19094,8 +19899,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0949768455165015,
-        "sd": 0.00340204915601583
+        "mean": 0.0949768455165016,
+        "sd": 0.00340204915601583,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -19259,8 +20071,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.48610535277857,
-        "sd": 0.0807597951490184
+        "mean": 2.486105352778579,
+        "sd": 0.0807597951490184,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -19424,8 +20243,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.23714406294559,
-        "sd": 0.0727267032508
+        "mean": 2.2371440629455948,
+        "sd": 0.0727267032508,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -19589,8 +20415,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.953715844096778,
-        "sd": 0.0261532096547884
+        "mean": 0.9537158440967793,
+        "sd": 0.0261532096547884,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -19754,8 +20587,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.82891401297162,
-        "sd": 0.0227456806195518
+        "mean": 0.8289140129716204,
+        "sd": 0.0227456806195518,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -19919,8 +20759,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.298478899626277,
-        "sd": 0.0139237606669659
+        "mean": 0.29847889962627827,
+        "sd": 0.0139237606669659,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -20078,8 +20925,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.221897635652229,
-        "sd": 0.0105777881779793
+        "mean": 0.2218976356522303,
+        "sd": 0.0105777881779793,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -20237,8 +21091,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0528538769275829,
-        "sd": 0.000944437701247432
+        "mean": 0.05285387692758304,
+        "sd": 0.000944437701247432,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -20396,8 +21257,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0947727626601569,
-        "sd": 0.00174041783633473
+        "mean": 0.09477276266015704,
+        "sd": 0.00174041783633473,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -20555,8 +21423,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.57551294313084,
-        "sd": 0.0884142601340005
+        "mean": 2.575512943130849,
+        "sd": 0.0884142601340005,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -20714,8 +21589,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.67259576615895,
-        "sd": 0.0933390292179601
+        "mean": 2.6725957661589588,
+        "sd": 0.0933390292179601,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -20873,8 +21755,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.934635871734531,
-        "sd": 0.0267529149756172
+        "mean": 0.9346358717345319,
+        "sd": 0.0267529149756172,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -21032,8 +21921,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.906400060596399,
-        "sd": 0.0269268258268988
+        "mean": 0.9064000605963995,
+        "sd": 0.0269268258268988,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -21191,8 +22087,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.226145670965327,
-        "sd": 0.0321049767458613
+        "mean": 0.22614567096532795,
+        "sd": 0.0321049767458613,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -21356,8 +22259,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.249677235208575,
-        "sd": 0.0372039117649896
+        "mean": 0.24967723520857635,
+        "sd": 0.0372039117649896,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -21521,8 +22431,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.054630273553851,
-        "sd": 0.0089467776703663
+        "mean": 0.054630273553851125,
+        "sd": 0.0089467776703663,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -21686,8 +22603,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0978782848389954,
-        "sd": 0.0172865681871306
+        "mean": 0.09787828483899565,
+        "sd": 0.0172865681871306,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -21851,8 +22775,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.58270861527126,
-        "sd": 0.364902576296037
+        "mean": 2.5827086152712684,
+        "sd": 0.364902576296037,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -22016,8 +22947,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.32216081476014,
-        "sd": 0.329501966321137
+        "mean": 2.322160814760145,
+        "sd": 0.329501966321137,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -22181,8 +23119,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.689037074193037,
-        "sd": 0.0663234692866722
+        "mean": 0.6890370741930375,
+        "sd": 0.0663234692866722,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -22346,8 +23291,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.760208992288052,
-        "sd": 0.0726107900866649
+        "mean": 0.7602089922880528,
+        "sd": 0.0726107900866649,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -22511,8 +23463,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.29839259426594,
-        "sd": 0.0179899364209001
+        "mean": 0.29839259426594134,
+        "sd": 0.0179899364209001,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -22676,8 +23635,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.224122702360535,
-        "sd": 0.0137055378446918
+        "mean": 0.22412270236053553,
+        "sd": 0.0137055378446918,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -22841,8 +23807,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0596141990137653,
-        "sd": 0.00254096542875558
+        "mean": 0.0596141990137654,
+        "sd": 0.00254096542875558,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -23006,8 +23979,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0842586251289797,
-        "sd": 0.00360986870912064
+        "mean": 0.08425862512897982,
+        "sd": 0.00360986870912064,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -23171,8 +24151,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.50713199686357,
-        "sd": 0.0928014818714618
+        "mean": 2.5071319968635803,
+        "sd": 0.0928014818714618,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -23336,8 +24323,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.15367387160113,
-        "sd": 0.0797346126677082
+        "mean": 2.1536738716011374,
+        "sd": 0.0797346126677082,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -23501,8 +24495,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.823314718893522,
-        "sd": 0.050137147075786
+        "mean": 0.8233147188935233,
+        "sd": 0.050137147075786,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -23666,8 +24667,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.754882968830189,
-        "sd": 0.0447814453751453
+        "mean": 0.7548829688301899,
+        "sd": 0.0447814453751453,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -23831,8 +24839,15 @@
       },
       "stats": {
         "n": 3,
-        "mean": 0.307311672730078,
-        "sd": 0.0188511242044826
+        "mean": 0.30731167273007864,
+        "sd": 0.0188511242044826,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -23963,8 +24978,15 @@
       },
       "stats": {
         "n": 3,
-        "mean": 0.227489624042159,
-        "sd": 0.0145212194454212
+        "mean": 0.22748962404216017,
+        "sd": 0.0145212194454212,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -24095,8 +25117,15 @@
       },
       "stats": {
         "n": 3,
-        "mean": 0.0575181410837129,
-        "sd": 0.00124640469027525
+        "mean": 0.05751814108371298,
+        "sd": 0.00124640469027525,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -24227,8 +25256,15 @@
       },
       "stats": {
         "n": 3,
-        "mean": 0.0892752189020716,
-        "sd": 0.00201996091996993
+        "mean": 0.08927521890207164,
+        "sd": 0.00201996091996993,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -24359,8 +25395,15 @@
       },
       "stats": {
         "n": 3,
-        "mean": 2.45854595690826,
-        "sd": 0.0719058095006747
+        "mean": 2.4585459569082677,
+        "sd": 0.0719058095006747,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -24491,8 +25534,15 @@
       },
       "stats": {
         "n": 3,
-        "mean": 2.31403757592083,
-        "sd": 0.0682930609206855
+        "mean": 2.314037575920841,
+        "sd": 0.0682930609206855,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -24623,8 +25673,15 @@
       },
       "stats": {
         "n": 3,
-        "mean": 0.855756449775098,
-        "sd": 0.0159552505133885
+        "mean": 0.8557564497750986,
+        "sd": 0.0159552505133885,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -24755,8 +25812,15 @@
       },
       "stats": {
         "n": 3,
-        "mean": 0.845542849680269,
-        "sd": 0.0157730687937455
+        "mean": 0.8455428496802697,
+        "sd": 0.0157730687937455,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -24887,8 +25951,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.335666933673862,
-        "sd": 0.0135857769360311
+        "mean": 0.335666933673863,
+        "sd": 0.0135857769360311,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -25052,8 +26123,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.426395664081935,
-        "sd": 0.017435742830515
+        "mean": 0.42639566408193624,
+        "sd": 0.017435742830515,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -25217,8 +26295,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0691589427636916,
-        "sd": 0.00144111722978942
+        "mean": 0.06915894276369171,
+        "sd": 0.00144111722978942,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -25382,8 +26467,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.210313017954196,
-        "sd": 0.00442415713892446
+        "mean": 0.21031301795419644,
+        "sd": 0.00442415713892446,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -25547,8 +26639,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.88225688039073,
-        "sd": 0.0598787183531545
+        "mean": 2.8822568803907425,
+        "sd": 0.0598787183531545,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -25712,8 +26811,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 4.89804224817529,
-        "sd": 0.101754921848996
+        "mean": 4.898042248175299,
+        "sd": 0.101754921848996,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -25877,8 +26983,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.930063284784955,
-        "sd": 0.0191528398016007
+        "mean": 0.9300632847849559,
+        "sd": 0.0191528398016007,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -26042,8 +27155,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 1.76283743687349,
-        "sd": 0.0360676041680575
+        "mean": 1.762837436873494,
+        "sd": 0.0360676041680575,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -26207,8 +27327,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.288116005782102,
-        "sd": 0.00625991634942899
+        "mean": 0.2881160057821026,
+        "sd": 0.00625991634942899,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -26372,8 +27499,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.213244896294399,
-        "sd": 0.00464975854658562
+        "mean": 0.21324489629440008,
+        "sd": 0.00464975854658562,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -26537,8 +27671,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0620865063986865,
-        "sd": 0.00236500735363448
+        "mean": 0.06208650639868659,
+        "sd": 0.00236500735363448,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -26702,8 +27843,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0980911560886932,
-        "sd": 0.00375284411000353
+        "mean": 0.0980911560886934,
+        "sd": 0.00375284411000353,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -26867,8 +28015,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.58623797231148,
-        "sd": 0.0483788154245348
+        "mean": 2.5862379723114874,
+        "sd": 0.0483788154245348,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -27032,8 +28187,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.41504680701996,
-        "sd": 0.045119653871402
+        "mean": 2.415046807019973,
+        "sd": 0.045119653871402,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -27197,8 +28359,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.833118231519249,
-        "sd": 0.0172844538135949
+        "mean": 0.8331182315192496,
+        "sd": 0.0172844538135949,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -27362,8 +28531,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.836636317833812,
-        "sd": 0.0172996351963074
+        "mean": 0.8366363178338128,
+        "sd": 0.0172996351963074,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -27527,8 +28703,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.313146159681743,
-        "sd": 0.0120690735558691
+        "mean": 0.31314615968174375,
+        "sd": 0.0120690735558691,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -27692,8 +28875,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.229868063453803,
-        "sd": 0.00872003958548598
+        "mean": 0.2298680634538034,
+        "sd": 0.00872003958548598,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -27857,8 +29047,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.071031854000167,
-        "sd": 0.00392358754680171
+        "mean": 0.07103185400016704,
+        "sd": 0.00392358754680171,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -28022,8 +29219,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.104144240464436,
-        "sd": 0.00553322146320543
+        "mean": 0.10414424046443735,
+        "sd": 0.00553322146320543,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -28187,8 +29391,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.84764676917509,
-        "sd": 0.0714750702843226
+        "mean": 2.8476467691750953,
+        "sd": 0.0714750702843226,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -28352,8 +29563,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.45406993172254,
-        "sd": 0.0605289681037803
+        "mean": 2.454069931722546,
+        "sd": 0.0605289681037803,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -28517,8 +29735,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 1.07816050183499,
-        "sd": 0.0394151083586158
+        "mean": 1.0781605018349953,
+        "sd": 0.0394151083586158,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -28682,8 +29907,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 1.00307627679463,
-        "sd": 0.0350070467963142
+        "mean": 1.0030762767946426,
+        "sd": 0.0350070467963142,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -28847,8 +30079,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.344467460817397,
-        "sd": 0.0100561200536635
+        "mean": 0.34446746081739804,
+        "sd": 0.0100561200536635,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -29012,8 +30251,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.215506741540234,
-        "sd": 0.00636812840249822
+        "mean": 0.2155067415402352,
+        "sd": 0.00636812840249822,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -29177,8 +30423,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0782326770866402,
-        "sd": 0.00262441955427404
+        "mean": 0.07823267708664033,
+        "sd": 0.00262441955427404,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -29342,8 +30595,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.10043942506826,
-        "sd": 0.003429354544031
+        "mean": 0.10043942506826085,
+        "sd": 0.003429354544031,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -29507,8 +30767,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.771598892335745,
-        "sd": 0.0381406405632305
+        "mean": 0.7715988923357455,
+        "sd": 0.0381406405632305,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -29672,8 +30939,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.36994356404895,
-        "sd": 0.117693378985182
+        "mean": 2.3699435640489623,
+        "sd": 0.117693378985182,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -29837,8 +31111,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.247381522643015,
-        "sd": 0.00977356260746659
+        "mean": 0.24738152264301572,
+        "sd": 0.00977356260746659,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -30002,8 +31283,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.850749420208547,
-        "sd": 0.0339284527820596
+        "mean": 0.8507494202085482,
+        "sd": 0.0339284527820596,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -30167,8 +31455,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.313960879953595,
-        "sd": 0.0445262696651483
+        "mean": 0.3139608799535959,
+        "sd": 0.0445262696651483,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -30326,8 +31621,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.2402741231448,
-        "sd": 0.0341199836830751
+        "mean": 0.240274123144801,
+        "sd": 0.0341199836830751,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -30485,8 +31787,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0595874972463034,
-        "sd": 0.0113591536173769
+        "mean": 0.05958749724630343,
+        "sd": 0.0113591536173769,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -30644,8 +31953,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.097085290547905,
-        "sd": 0.0184714953421853
+        "mean": 0.09708529054790513,
+        "sd": 0.0184714953421853,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -30803,8 +32119,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.5494406093351,
-        "sd": 0.179765133120919
+        "mean": 2.5494406093351127,
+        "sd": 0.179765133120919,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -30962,8 +32285,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.55551013839205,
-        "sd": 0.181219431666198
+        "mean": 2.555510138392063,
+        "sd": 0.181219431666198,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -31121,8 +32451,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.825505795889302,
-        "sd": 0.0659643512149408
+        "mean": 0.8255057958893031,
+        "sd": 0.0659643512149408,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -31280,8 +32617,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.904165472497132,
-        "sd": 0.0774580377574766
+        "mean": 0.9041654724971331,
+        "sd": 0.0774580377574766,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -31439,8 +32783,15 @@
       },
       "stats": {
         "n": 5,
-        "mean": 0.198219387013726,
-        "sd": 0.0480511360036738
+        "mean": 0.594658161041182,
+        "sd": 0.14415340801102236,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -31452,7 +32803,7 @@
       ],
       "individualMeasurements": [
         {
-          "quantity": 0.150829496828354,
+          "quantity": 0.452488490485065,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -31463,7 +32814,7 @@
           }
         },
         {
-          "quantity": 0.179869528953499,
+          "quantity": 0.5396085868605006,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -31474,7 +32825,7 @@
           }
         },
         {
-          "quantity": 0.221591759692359,
+          "quantity": 0.6647752790770814,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -31485,7 +32836,7 @@
           }
         },
         {
-          "quantity": 0.270439153415757,
+          "quantity": 0.8113174602472765,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -31496,7 +32847,7 @@
           }
         },
         {
-          "quantity": 0.168366996178664,
+          "quantity": 0.5051009885359954,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -31587,8 +32938,15 @@
       },
       "stats": {
         "n": 5,
-        "mean": 0.0859377793533208,
-        "sd": 0.0223379719825385
+        "mean": 0.2578133380599632,
+        "sd": 0.06701391594761572,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -31600,7 +32958,7 @@
       ],
       "individualMeasurements": [
         {
-          "quantity": 0.0639072067746518,
+          "quantity": 0.19172162032395598,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -31611,7 +32969,7 @@
           }
         },
         {
-          "quantity": 0.0774073126604714,
+          "quantity": 0.23222193798141494,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -31622,7 +32980,7 @@
           }
         },
         {
-          "quantity": 0.0968031084481593,
+          "quantity": 0.29040932534447883,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -31633,7 +32991,7 @@
           }
         },
         {
-          "quantity": 0.119511244054565,
+          "quantity": 0.3585337321636961,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -31644,7 +33002,7 @@
           }
         },
         {
-          "quantity": 0.0720600248287569,
+          "quantity": 0.21618007448627136,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -31735,8 +33093,15 @@
       },
       "stats": {
         "n": 5,
-        "mean": 0.0331529903694965,
-        "sd": 0.00630908874717829
+        "mean": 0.09945897110848978,
+        "sd": 0.01892726624153492,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -31748,7 +33113,7 @@
       ],
       "individualMeasurements": [
         {
-          "quantity": 0.0270899848173007,
+          "quantity": 0.08126995445190231,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -31759,7 +33124,7 @@
           }
         },
         {
-          "quantity": 0.0281652879592031,
+          "quantity": 0.08449586387760952,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -31770,7 +33135,7 @@
           }
         },
         {
-          "quantity": 0.0400714965364662,
+          "quantity": 0.12021448960939893,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -31781,7 +33146,7 @@
           }
         },
         {
-          "quantity": 0.0397565970908139,
+          "quantity": 0.11926979127244203,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -31792,7 +33157,7 @@
           }
         },
         {
-          "quantity": 0.0306815854436988,
+          "quantity": 0.09204475633109664,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -31883,8 +33248,15 @@
       },
       "stats": {
         "n": 5,
-        "mean": 0.0401032395284958,
-        "sd": 0.00827101357156384
+        "mean": 0.1203097185854876,
+        "sd": 0.02481304071469156,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -31896,7 +33268,7 @@
       ],
       "individualMeasurements": [
         {
-          "quantity": 0.0321548331553715,
+          "quantity": 0.09646449946611466,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -31907,7 +33279,7 @@
           }
         },
         {
-          "quantity": 0.0335645211842802,
+          "quantity": 0.10069356355284077,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -31918,7 +33290,7 @@
           }
         },
         {
-          "quantity": 0.0491731798471428,
+          "quantity": 0.14751953954142863,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -31929,7 +33301,7 @@
           }
         },
         {
-          "quantity": 0.0487603567449423,
+          "quantity": 0.14628107023482714,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -31940,7 +33312,7 @@
           }
         },
         {
-          "quantity": 0.0368633067107423,
+          "quantity": 0.11058992013222707,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32031,8 +33403,15 @@
       },
       "stats": {
         "n": 5,
-        "mean": 0.976056741454988,
-        "sd": 0.0562262724594087
+        "mean": 2.9281702243649717,
+        "sd": 0.16867881737822654,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -32044,7 +33423,7 @@
       ],
       "individualMeasurements": [
         {
-          "quantity": 0.898785871628909,
+          "quantity": 2.6963576148867343,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32055,7 +33434,7 @@
           }
         },
         {
-          "quantity": 1.03042854252655,
+          "quantity": 3.0912856275796585,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32066,7 +33445,7 @@
           }
         },
         {
-          "quantity": 1.01746742330042,
+          "quantity": 3.052402269901268,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32077,7 +33456,7 @@
           }
         },
         {
-          "quantity": 0.936532879944297,
+          "quantity": 2.8095986398328985,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32088,7 +33467,7 @@
           }
         },
         {
-          "quantity": 0.997068989874765,
+          "quantity": 2.991206969624303,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32179,8 +33558,15 @@
       },
       "stats": {
         "n": 5,
-        "mean": 0.778287565018355,
-        "sd": 0.0461789534748698
+        "mean": 2.334862695055068,
+        "sd": 0.13853686042460955,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -32192,7 +33578,7 @@
       ],
       "individualMeasurements": [
         {
-          "quantity": 0.714824565488425,
+          "quantity": 2.1444736964652775,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32203,7 +33589,7 @@
           }
         },
         {
-          "quantity": 0.822943430723149,
+          "quantity": 2.46883029216945,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32214,7 +33600,7 @@
           }
         },
         {
-          "quantity": 0.812298390681457,
+          "quantity": 2.436895172044374,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32225,7 +33611,7 @@
           }
         },
         {
-          "quantity": 0.745826395497166,
+          "quantity": 2.2374791864915005,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32236,7 +33622,7 @@
           }
         },
         {
-          "quantity": 0.79554504270158,
+          "quantity": 2.386635128104743,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32327,8 +33713,15 @@
       },
       "stats": {
         "n": 5,
-        "mean": 0.366662499301305,
-        "sd": 0.0179779701981375
+        "mean": 1.0999874979039177,
+        "sd": 0.053933910594412625,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -32340,7 +33733,7 @@
       ],
       "individualMeasurements": [
         {
-          "quantity": 0.335005855239015,
+          "quantity": 1.0050175657170473,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32351,7 +33744,7 @@
           }
         },
         {
-          "quantity": 0.369420045432222,
+          "quantity": 1.1082601362966686,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32362,7 +33755,7 @@
           }
         },
         {
-          "quantity": 0.377194872052162,
+          "quantity": 1.1315846161564886,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32373,7 +33766,7 @@
           }
         },
         {
-          "quantity": 0.374526145418511,
+          "quantity": 1.1235784362555357,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32384,7 +33777,7 @@
           }
         },
         {
-          "quantity": 0.377165578364617,
+          "quantity": 1.1314967350938536,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32475,8 +33868,15 @@
       },
       "stats": {
         "n": 5,
-        "mean": 0.29752961277218,
-        "sd": 0.0156599604523676
+        "mean": 0.892588838316542,
+        "sd": 0.04697988135710291,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -32488,7 +33888,7 @@
       ],
       "individualMeasurements": [
         {
-          "quantity": 0.269954653607908,
+          "quantity": 0.8098639608237259,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32499,7 +33899,7 @@
           }
         },
         {
-          "quantity": 0.299931611600735,
+          "quantity": 0.8997948348022071,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32510,7 +33910,7 @@
           }
         },
         {
-          "quantity": 0.306703982232705,
+          "quantity": 0.9201119466981172,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32521,7 +33921,7 @@
           }
         },
         {
-          "quantity": 0.304379350859944,
+          "quantity": 0.9131380525798342,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32532,7 +33932,7 @@
           }
         },
         {
-          "quantity": 0.306678465559609,
+          "quantity": 0.9200353966788292,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32623,8 +34023,15 @@
       },
       "stats": {
         "n": 5,
-        "mean": 0.0976046471867626,
-        "sd": 0.00605314407524296
+        "mean": 0.2928139415602887,
+        "sd": 0.01815943222572894,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -32636,7 +34043,7 @@
       ],
       "individualMeasurements": [
         {
-          "quantity": 0.0890038374534149,
+          "quantity": 0.26701151236024556,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32647,7 +34054,7 @@
           }
         },
         {
-          "quantity": 0.105114355660735,
+          "quantity": 0.31534306698220604,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32658,7 +34065,7 @@
           }
         },
         {
-          "quantity": 0.0954105359864566,
+          "quantity": 0.28623160795937075,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32669,7 +34076,7 @@
           }
         },
         {
-          "quantity": 0.0975177839983475,
+          "quantity": 0.29255335199504345,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32680,7 +34087,7 @@
           }
         },
         {
-          "quantity": 0.100976722834859,
+          "quantity": 0.302930168504578,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32771,8 +34178,15 @@
       },
       "stats": {
         "n": 5,
-        "mean": 0.0582653414295763,
-        "sd": 0.00368046285268404
+        "mean": 0.17479602428872906,
+        "sd": 0.01104138855805213,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -32784,7 +34198,7 @@
       ],
       "individualMeasurements": [
         {
-          "quantity": 0.0530358341961278,
+          "quantity": 0.15910750258838355,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32795,7 +34209,7 @@
           }
         },
         {
-          "quantity": 0.0628314318330716,
+          "quantity": 0.18849429549921498,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32806,7 +34220,7 @@
           }
         },
         {
-          "quantity": 0.056931266993712,
+          "quantity": 0.17079380098113617,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32817,7 +34231,7 @@
           }
         },
         {
-          "quantity": 0.0582125264404972,
+          "quantity": 0.17463757932149176,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32828,7 +34242,7 @@
           }
         },
         {
-          "quantity": 0.060315647684473,
+          "quantity": 0.18094694305341916,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32919,8 +34333,15 @@
       },
       "stats": {
         "n": 5,
-        "mean": 0.0139884722711745,
-        "sd": 0.00233558561382973
+        "mean": 0.0419654168135238,
+        "sd": 0.0070067568414892405,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -32932,7 +34353,7 @@
       ],
       "individualMeasurements": [
         {
-          "quantity": 0.0135005732913487,
+          "quantity": 0.040501719874046396,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32943,7 +34364,7 @@
           }
         },
         {
-          "quantity": 0.0175667322503052,
+          "quantity": 0.05270019675091598,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32954,7 +34375,7 @@
           }
         },
         {
-          "quantity": 0.0146067773084624,
+          "quantity": 0.043820331925387514,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32965,7 +34386,7 @@
           }
         },
         {
-          "quantity": 0.013005473787006,
+          "quantity": 0.03901642136101829,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -32976,7 +34397,7 @@
           }
         },
         {
-          "quantity": 0.0112628047187505,
+          "quantity": 0.03378841415625174,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33067,8 +34488,15 @@
       },
       "stats": {
         "n": 5,
-        "mean": 0.0194087031300087,
-        "sd": 0.00330664225528629
+        "mean": 0.0582261093900265,
+        "sd": 0.009919926765858938,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -33080,7 +34508,7 @@
       ],
       "individualMeasurements": [
         {
-          "quantity": 0.0187179524362853,
+          "quantity": 0.05615385730885628,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33091,7 +34519,7 @@
           }
         },
         {
-          "quantity": 0.0244746812630013,
+          "quantity": 0.0734240437890044,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33102,7 +34530,7 @@
           }
         },
         {
-          "quantity": 0.0202840782611305,
+          "quantity": 0.06085223478339191,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33113,7 +34541,7 @@
           }
         },
         {
-          "quantity": 0.0180170074861466,
+          "quantity": 0.05405102245844017,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33124,7 +34552,7 @@
           }
         },
         {
-          "quantity": 0.0155497962034802,
+          "quantity": 0.04664938861044092,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33215,8 +34643,15 @@
       },
       "stats": {
         "n": 5,
-        "mean": 0.916663960854971,
-        "sd": 0.028463872658561
+        "mean": 2.7499918825649172,
+        "sd": 0.08539161797568312,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -33228,7 +34663,7 @@
       ],
       "individualMeasurements": [
         {
-          "quantity": 0.872475681819191,
+          "quantity": 2.617427045457577,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33239,7 +34674,7 @@
           }
         },
         {
-          "quantity": 0.94371927030031,
+          "quantity": 2.831157810900934,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33250,7 +34685,7 @@
           }
         },
         {
-          "quantity": 0.92779084084099,
+          "quantity": 2.783372522522974,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33261,7 +34696,7 @@
           }
         },
         {
-          "quantity": 0.905273771149739,
+          "quantity": 2.715821313449221,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33272,7 +34707,7 @@
           }
         },
         {
-          "quantity": 0.93406024016463,
+          "quantity": 2.802180720493894,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33363,8 +34798,15 @@
       },
       "stats": {
         "n": 5,
-        "mean": 0.699163898960964,
-        "sd": 0.0225812523051923
+        "mean": 2.0974916968828947,
+        "sd": 0.06774375691557699,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -33376,7 +34818,7 @@
       ],
       "individualMeasurements": [
         {
-          "quantity": 0.664107998809616,
+          "quantity": 1.9923239964288506,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33387,7 +34829,7 @@
           }
         },
         {
-          "quantity": 0.720627695405981,
+          "quantity": 2.161883086217946,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33398,7 +34840,7 @@
           }
         },
         {
-          "quantity": 0.707991189869262,
+          "quantity": 2.123973569607789,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33409,7 +34851,7 @@
           }
         },
         {
-          "quantity": 0.690127716477183,
+          "quantity": 2.0703831494315517,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33420,7 +34862,7 @@
           }
         },
         {
-          "quantity": 0.71296489424278,
+          "quantity": 2.138894682728343,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33511,8 +34953,15 @@
       },
       "stats": {
         "n": 5,
-        "mean": 0.312650364386953,
-        "sd": 0.0131812034078182
+        "mean": 0.9379510931608621,
+        "sd": 0.039543610223454734,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -33524,7 +34973,7 @@
       ],
       "individualMeasurements": [
         {
-          "quantity": 0.292696896889731,
+          "quantity": 0.878090690669196,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33535,7 +34984,7 @@
           }
         },
         {
-          "quantity": 0.317778671184505,
+          "quantity": 0.9533360135535182,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33546,7 +34995,7 @@
           }
         },
         {
-          "quantity": 0.325702496983471,
+          "quantity": 0.9771074909504163,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33557,7 +35006,7 @@
           }
         },
         {
-          "quantity": 0.30651526474593,
+          "quantity": 0.9195457942377931,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33568,7 +35017,7 @@
           }
         },
         {
-          "quantity": 0.320558492131131,
+          "quantity": 0.9616754763933963,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33659,8 +35108,15 @@
       },
       "stats": {
         "n": 5,
-        "mean": 0.249226119619069,
-        "sd": 0.011419635540025
+        "mean": 0.747678358857209,
+        "sd": 0.034258906620075094,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -33672,7 +35128,7 @@
       ],
       "individualMeasurements": [
         {
-          "quantity": 0.231939281723611,
+          "quantity": 0.695817845170835,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33683,7 +35139,7 @@
           }
         },
         {
-          "quantity": 0.253669067106757,
+          "quantity": 0.7610072013202732,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33694,7 +35150,7 @@
           }
         },
         {
-          "quantity": 0.260533933682837,
+          "quantity": 0.7816018010485132,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33705,7 +35161,7 @@
           }
         },
         {
-          "quantity": 0.243910929515814,
+          "quantity": 0.7317327885474441,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33716,7 +35172,7 @@
           }
         },
         {
-          "quantity": 0.256077386066327,
+          "quantity": 0.7682321581989832,
           "attributes": {
             "sampleReplicate": {
               "accession": "OBI:0000747",
@@ -33807,8 +35263,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.266820507897511,
-        "sd": 0.0069666359066536
+        "mean": 0.2668205078975115,
+        "sd": 0.0069666359066536,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -33972,8 +35435,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.160224766183505,
-        "sd": 0.00483878659616656
+        "mean": 0.16022476618350565,
+        "sd": 0.00483878659616656,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -34137,8 +35607,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0577740117778182,
-        "sd": 0.00137453806339797
+        "mean": 0.05777401177781834,
+        "sd": 0.00137453806339797,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -34302,8 +35779,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0684494630311041,
-        "sd": 0.00189106013937455
+        "mean": 0.06844946303110422,
+        "sd": 0.00189106013937455,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -34467,8 +35951,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.31914253280064,
-        "sd": 0.0713806662343113
+        "mean": 2.319142532800648,
+        "sd": 0.0713806662343113,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -34632,8 +36123,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.0529762496469,
-        "sd": 0.0652831773391276
+        "mean": 2.052976249646905,
+        "sd": 0.0652831773391276,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -34797,8 +36295,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.734027080268988,
-        "sd": 0.0206824522095314
+        "mean": 0.734027080268989,
+        "sd": 0.0206824522095314,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -34962,8 +36467,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.650343938805023,
-        "sd": 0.0199790501725587
+        "mean": 0.6503439388050237,
+        "sd": 0.0199790501725587,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -35127,8 +36639,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.334703933424385,
-        "sd": 0.0174854735827901
+        "mean": 0.33470393342438587,
+        "sd": 0.0174854735827901,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -35292,8 +36811,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.163515512027447,
-        "sd": 0.0133438749574148
+        "mean": 0.16351551202744843,
+        "sd": 0.0133438749574148,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -35457,8 +36983,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.064970018551918,
-        "sd": 0.0010512573823371
+        "mean": 0.06497001855191813,
+        "sd": 0.0010512573823371,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -35622,8 +37155,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0913562055342863,
-        "sd": 0.0016464403540564
+        "mean": 0.09135620553428643,
+        "sd": 0.0016464403540564,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -35787,8 +37327,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.62771130791292,
-        "sd": 0.0349220487329913
+        "mean": 2.627711307912926,
+        "sd": 0.0349220487329913,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -35952,8 +37499,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 3.05177361860381,
-        "sd": 0.0415181755963232
+        "mean": 3.0517736186038165,
+        "sd": 0.0415181755963232,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -36117,8 +37671,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.852635079056334,
-        "sd": 0.0134615481736183
+        "mean": 0.852635079056335,
+        "sd": 0.0134615481736183,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -36282,8 +37843,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 1.01245370832788,
-        "sd": 0.0166999282138893
+        "mean": 1.0124537083278933,
+        "sd": 0.0166999282138893,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -36447,8 +38015,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.269627307210497,
-        "sd": 0.00706521177768388
+        "mean": 0.2696273072104982,
+        "sd": 0.00706521177768388,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -36612,8 +38187,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.208811403373933,
-        "sd": 0.00552923417257124
+        "mean": 0.20881140337393395,
+        "sd": 0.00552923417257124,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -36777,8 +38359,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0575786080005864,
-        "sd": 0.00156619852971163
+        "mean": 0.05757860800058645,
+        "sd": 0.00156619852971163,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -36942,8 +38531,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0908020939301962,
-        "sd": 0.00248959186710303
+        "mean": 0.09080209393019632,
+        "sd": 0.00248959186710303,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -37107,8 +38703,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.53151813064849,
-        "sd": 0.0491575796256162
+        "mean": 2.5315181306484984,
+        "sd": 0.0491575796256162,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -37272,8 +38875,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.36202385208344,
-        "sd": 0.0460985390686359
+        "mean": 2.3620238520834524,
+        "sd": 0.0460985390686359,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -37437,8 +39047,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.858107525376052,
-        "sd": 0.0385983926273005
+        "mean": 0.8581075253760528,
+        "sd": 0.0385983926273005,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -37602,8 +39219,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.835377743705749,
-        "sd": 0.0377475380378658
+        "mean": 0.8353777437057496,
+        "sd": 0.0377475380378658,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -37767,8 +39391,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.346120294709976,
-        "sd": 0.00670626771116044
+        "mean": 0.34612029470997674,
+        "sd": 0.00670626771116044,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -37932,8 +39563,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.213931282777105,
-        "sd": 0.00416163244340002
+        "mean": 0.2139312827771054,
+        "sd": 0.00416163244340002,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -38097,8 +39735,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0803569522609297,
-        "sd": 0.00402444181060631
+        "mean": 0.0803569522609298,
+        "sd": 0.00402444181060631,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -38262,8 +39907,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.1069910318496,
-        "sd": 0.00552490690127607
+        "mean": 0.10699103184960139,
+        "sd": 0.00552490690127607,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -38427,8 +40079,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.66638347768057,
-        "sd": 0.0806468511861406
+        "mean": 2.6663834776805775,
+        "sd": 0.0806468511861406,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -38592,8 +40251,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.40791311199793,
-        "sd": 0.0724993333167081
+        "mean": 2.4079131119979436,
+        "sd": 0.0724993333167081,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -38757,8 +40423,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 1.24795205513157,
-        "sd": 0.0278321574145175
+        "mean": 1.2479520551315784,
+        "sd": 0.0278321574145175,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -38922,8 +40595,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 1.17107934280952,
-        "sd": 0.0258374812025306
+        "mean": 1.1710793428095259,
+        "sd": 0.0258374812025306,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -39087,8 +40767,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.365861676246068,
-        "sd": 0.019980135649624
+        "mean": 0.36586167624606875,
+        "sd": 0.019980135649624,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -39252,8 +40939,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.285422696172125,
-        "sd": 0.0156186208180995
+        "mean": 0.28542269617212634,
+        "sd": 0.0156186208180995,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -39417,8 +41111,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0597581652375681,
-        "sd": 0.0028087877903253
+        "mean": 0.0597581652375682,
+        "sd": 0.0028087877903253,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -39582,8 +41283,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0896062996373657,
-        "sd": 0.00415346538447049
+        "mean": 0.08960629963736583,
+        "sd": 0.00415346538447049,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -39747,8 +41455,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.05596878282559,
-        "sd": 0.0968259960986582
+        "mean": 2.0559687828256,
+        "sd": 0.0968259960986582,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -39912,8 +41627,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.07112013345477,
-        "sd": 0.0972004458749089
+        "mean": 2.0711201334547797,
+        "sd": 0.0972004458749089,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -40077,8 +41799,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.851564973112004,
-        "sd": 0.047152795069147
+        "mean": 0.8515649731120049,
+        "sd": 0.047152795069147,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -40242,8 +41971,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.823917370475412,
-        "sd": 0.0451114760070293
+        "mean": 0.8239173704754134,
+        "sd": 0.0451114760070293,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -40407,8 +42143,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.364117579767043,
-        "sd": 0.0130364645434692
+        "mean": 0.36411757976704395,
+        "sd": 0.0130364645434692,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -40572,8 +42315,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.227797871773863,
-        "sd": 0.00830133755228663
+        "mean": 0.22779787177386343,
+        "sd": 0.00830133755228663,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -40737,8 +42487,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0719254366764208,
-        "sd": 0.00334928968164402
+        "mean": 0.07192543667642094,
+        "sd": 0.00334928968164402,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -40902,8 +42659,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0925163574719836,
-        "sd": 0.00445111626067235
+        "mean": 0.09251635747198377,
+        "sd": 0.00445111626067235,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -41067,8 +42831,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 4.01156138773851,
-        "sd": 0.13094832824397
+        "mean": 4.011561387738523,
+        "sd": 0.13094832824397,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -41232,8 +43003,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.549427837882,
-        "sd": 0.0848602888601999
+        "mean": 2.5494278378820137,
+        "sd": 0.0848602888601999,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -41397,8 +43175,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 1.04925872877533,
-        "sd": 0.04211043874182
+        "mean": 1.0492587287753357,
+        "sd": 0.04211043874182,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -41562,8 +43347,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.883910778827238,
-        "sd": 0.0364820745508535
+        "mean": 0.8839107788272393,
+        "sd": 0.0364820745508535,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -41727,8 +43519,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.437984897970617,
-        "sd": 0.0383982104243996
+        "mean": 0.43798489797061807,
+        "sd": 0.0383982104243996,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -41892,8 +43691,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.354192028525998,
-        "sd": 0.0318250053674801
+        "mean": 0.3541920285259994,
+        "sd": 0.0318250053674801,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -42057,8 +43863,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.128490151585981,
-        "sd": 0.00944010535665127
+        "mean": 0.12849015158598204,
+        "sd": 0.00944010535665127,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -42222,8 +44035,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.156816231563492,
-        "sd": 0.0109820095200754
+        "mean": 0.15681623156349284,
+        "sd": 0.0109820095200754,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -42387,8 +44207,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.91662558258186,
-        "sd": 0.0971723139727412
+        "mean": 2.9166255825818745,
+        "sd": 0.0971723139727412,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -42552,8 +44379,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.45376628249692,
-        "sd": 0.08166548263246
+        "mean": 2.4537662824969244,
+        "sd": 0.08166548263246,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -42717,8 +44551,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 1.36815764270685,
-        "sd": 0.086911831421505
+        "mean": 1.3681576427068554,
+        "sd": 0.086911831421505,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -42882,8 +44723,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 1.23602928953873,
-        "sd": 0.0781853705859836
+        "mean": 1.23602928953874,
+        "sd": 0.0781853705859836,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -43047,8 +44895,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.361845370537549,
-        "sd": 0.0227222438403079
+        "mean": 0.36184537053755034,
+        "sd": 0.0227222438403079,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -43212,8 +45067,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.250700225689266,
-        "sd": 0.0158134222894796
+        "mean": 0.2507002256892671,
+        "sd": 0.0158134222894796,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -43377,8 +45239,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0740475491511411,
-        "sd": 0.00571518036297834
+        "mean": 0.0740475491511412,
+        "sd": 0.00571518036297834,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -43542,8 +45411,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.10301595923239,
-        "sd": 0.00795573220152225
+        "mean": 0.10301595923239111,
+        "sd": 0.00795573220152225,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -43707,8 +45583,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.70895704305069,
-        "sd": 0.198292669023763
+        "mean": 2.7089570430507006,
+        "sd": 0.198292669023763,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -43872,8 +45755,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.49472120194744,
-        "sd": 0.18246603654363
+        "mean": 2.494721201947449,
+        "sd": 0.18246603654363,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -44037,8 +45927,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.885390412365835,
-        "sd": 0.0711080035432593
+        "mean": 0.8853904123658355,
+        "sd": 0.0711080035432593,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -44202,8 +46099,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.866264218992981,
-        "sd": 0.0686121220569203
+        "mean": 0.8662642189929819,
+        "sd": 0.0686121220569203,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -44367,8 +46271,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.31626341660295,
-        "sd": 0.0136847080857084
+        "mean": 0.3162634166029507,
+        "sd": 0.0136847080857084,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -44532,8 +46443,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.19207602858906,
-        "sd": 0.00840335863622564
+        "mean": 0.19207602858906056,
+        "sd": 0.00840335863622564,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -44697,8 +46615,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0601787768537632,
-        "sd": 0.00224674189009699
+        "mean": 0.06017877685376332,
+        "sd": 0.00224674189009699,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -44862,8 +46787,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0848400346750621,
-        "sd": 0.00318709217894625
+        "mean": 0.08484003467506214,
+        "sd": 0.00318709217894625,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -45027,8 +46959,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.65341654889116,
-        "sd": 0.0924437762088545
+        "mean": 2.6534165488911636,
+        "sd": 0.0924437762088545,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -45192,8 +47131,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.14123310275616,
-        "sd": 0.0760309993085011
+        "mean": 2.1412331027561677,
+        "sd": 0.0760309993085011,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -45357,8 +47303,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.847737128435296,
-        "sd": 0.0276589306950409
+        "mean": 0.8477371284352967,
+        "sd": 0.0276589306950409,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -45522,8 +47475,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.771940388937521,
-        "sd": 0.0255204564055725
+        "mean": 0.7719403889375215,
+        "sd": 0.0255204564055725,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -45687,8 +47647,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.292965862756677,
-        "sd": 0.0203017451513835
+        "mean": 0.29296586275667746,
+        "sd": 0.0203017451513835,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -45852,8 +47819,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.185695275462728,
-        "sd": 0.0148187089461133
+        "mean": 0.1856952754627287,
+        "sd": 0.0148187089461133,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -46017,8 +47991,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0558114854251948,
-        "sd": 0.00664549275440826
+        "mean": 0.05581148542519485,
+        "sd": 0.00664549275440826,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -46182,8 +48163,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0787834657591533,
-        "sd": 0.0107243818454425
+        "mean": 0.07878346575915339,
+        "sd": 0.0107243818454425,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -46347,8 +48335,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.13037137223219,
-        "sd": 0.0766422749367703
+        "mean": 2.1303713722322035,
+        "sd": 0.0766422749367703,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -46512,8 +48507,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.05128168243024,
-        "sd": 0.0771094421003547
+        "mean": 2.0512816824302544,
+        "sd": 0.0771094421003547,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -46677,8 +48679,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.714684151459666,
-        "sd": 0.0174810932445381
+        "mean": 0.714684151459667,
+        "sd": 0.0174810932445381,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -46842,8 +48851,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.690535707250576,
-        "sd": 0.0191651561882401
+        "mean": 0.6905357072505772,
+        "sd": 0.0191651561882401,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -47007,8 +49023,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.299337406202749,
-        "sd": 0.00438496087243243
+        "mean": 0.29933740620274957,
+        "sd": 0.00438496087243243,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -47172,8 +49195,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.213501782203517,
-        "sd": 0.00314050552811191
+        "mean": 0.2135017822035175,
+        "sd": 0.00314050552811191,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -47337,8 +49367,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0601327792585142,
-        "sd": 0.00170645702363245
+        "mean": 0.06013277925851429,
+        "sd": 0.00170645702363245,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -47502,8 +49539,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0948823195227838,
-        "sd": 0.00272915416561084
+        "mean": 0.09488231952278392,
+        "sd": 0.00272915416561084,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -47667,8 +49711,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.57077126015319,
-        "sd": 0.0403329396153572
+        "mean": 2.570771260153198,
+        "sd": 0.0403329396153572,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -47832,8 +49883,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.44278866603342,
-        "sd": 0.0384491017829593
+        "mean": 2.4427886660334295,
+        "sd": 0.0384491017829593,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -47997,8 +50055,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.848470144466133,
-        "sd": 0.0158198314099321
+        "mean": 0.8484701444661341,
+        "sd": 0.0158198314099321,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -48162,8 +50227,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.823281421623027,
-        "sd": 0.0196668829807379
+        "mean": 0.8232814216230275,
+        "sd": 0.0196668829807379,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -48327,8 +50399,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0687431047927466,
-        "sd": 0.00512600450449402
+        "mean": 0.06874310479274663,
+        "sd": 0.00512600450449402,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -48492,8 +50571,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.252939933472091,
-        "sd": 0.0191701164701305
+        "mean": 0.2529399334720916,
+        "sd": 0.0191701164701305,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -48657,8 +50743,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0551989164060014,
-        "sd": 0.00356096540552357
+        "mean": 0.05519891640600147,
+        "sd": 0.00356096540552357,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -48822,8 +50915,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.100854029594145,
-        "sd": 0.00662747084806924
+        "mean": 0.10085402959414608,
+        "sd": 0.00662747084806924,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -48987,8 +51087,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 1.93501632028764,
-        "sd": 0.103408892228264
+        "mean": 1.9350163202876454,
+        "sd": 0.103408892228264,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -49152,8 +51259,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 2.46372821124671,
-        "sd": 0.131477262511483
+        "mean": 2.463728211246724,
+        "sd": 0.131477262511483,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -49317,8 +51431,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.565313719597672,
-        "sd": 0.0340855802691385
+        "mean": 0.5653137195976727,
+        "sd": 0.0340855802691385,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -49482,8 +51603,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.833746790284962,
-        "sd": 0.0501084720061192
+        "mean": 0.8337467902849633,
+        "sd": 0.0501084720061192,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -49647,8 +51775,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0555811667233613,
-        "sd": 0.0119211481179694
+        "mean": 0.05558116672336145,
+        "sd": 0.0119211481179694,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -49812,8 +51947,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0581584065196471,
-        "sd": 0.0121719900918549
+        "mean": 0.05815840651964716,
+        "sd": 0.0121719900918549,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -49977,8 +52119,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0112875453212768,
-        "sd": 0.00236527347068421
+        "mean": 0.01128754532127685,
+        "sd": 0.00236527347068421,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -50142,8 +52291,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.0238431781706146,
-        "sd": 0.00512162084578298
+        "mean": 0.0238431781706147,
+        "sd": 0.00512162084578298,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -50307,8 +52463,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.482904964091725,
-        "sd": 0.107444497210651
+        "mean": 0.482904964091726,
+        "sd": 0.107444497210651,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -50472,8 +52635,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.566450806923142,
-        "sd": 0.129707224205918
+        "mean": 0.5664508069231424,
+        "sd": 0.129707224205918,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -50637,8 +52807,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.162486248175769,
-        "sd": 0.0349371534286733
+        "mean": 0.16248624817576957,
+        "sd": 0.0349371534286733,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -50802,8 +52979,15 @@
       },
       "stats": {
         "n": 6,
-        "mean": 0.199024101922469,
-        "sd": 0.0466417128640908
+        "mean": 0.19902410192246955,
+        "sd": 0.0466417128640908,
+        "median": null,
+        "cv": null,
+        "rcv": null,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       },
       "cvParameters": [
         {
@@ -50929,7 +53113,11 @@
         "sd": 0.05939729324886494,
         "median": 0.2218976356522303,
         "cv": 26.495318740407285,
-        "rcv": 14.100712381167138
+        "rcv": 14.100712381167138,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       }
     },
     {
@@ -50973,7 +53161,11 @@
         "sd": 0.030910505078260257,
         "median": 0.2155067415402352,
         "cv": 14.306362950163587,
-        "rcv": 12.820746716942214
+        "rcv": 12.820746716942214,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       }
     },
     {
@@ -51017,7 +53209,11 @@
         "sd": 0.02856672644417655,
         "median": 0.09787828483899565,
         "cv": 28.772526063132037,
-        "rcv": 11.154116483501157
+        "rcv": 11.154116483501157,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       }
     },
     {
@@ -51061,7 +53257,11 @@
         "sd": 0.011369954464656488,
         "median": 0.0974817876934504,
         "cv": 11.776086406870283,
-        "rcv": 10.146031848467421
+        "rcv": 10.146031848467421,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       }
     },
     {
@@ -51105,7 +53305,11 @@
         "sd": 0.6096152866272772,
         "median": 2.4427886660334295,
         "cv": 24.85676361172136,
-        "rcv": 11.267277433129804
+        "rcv": 11.267277433129804,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       }
     },
     {
@@ -51149,7 +53353,11 @@
         "sd": 0.28471318410007285,
         "median": 2.428917736526701,
         "cv": 11.856801918159379,
-        "rcv": 9.659093370570213
+        "rcv": 9.659093370570213,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       }
     },
     {
@@ -51193,7 +53401,11 @@
         "sd": 0.23576108953111027,
         "median": 0.8757089465832913,
         "cv": 26.43411268895552,
-        "rcv": 12.165142042714063
+        "rcv": 12.165142042714063,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       }
     },
     {
@@ -51237,7 +53449,11 @@
         "sd": 0.09960869815406961,
         "median": 0.8662642189929819,
         "cv": 11.49814721124995,
-        "rcv": 7.782184229917031
+        "rcv": 7.782184229917031,
+        "min": null,
+        "max": null,
+        "sum": null,
+        "variance": null
       }
     }
   ],

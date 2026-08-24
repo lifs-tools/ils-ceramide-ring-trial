@@ -269,48 +269,48 @@
           },
           "stats": {
             "type": "object",
-            "description": "Optional: Pre-computed statistical summary for the quantity data. May be null if only raw measurements are provided (stats can be computed from individualMeasurements). All fields are optional to support studies that report partial statistics.",
+            "description": "Optional: Pre-computed statistical summary for the quantity data. May be null if only raw measurements are provided (stats can be computed from individualMeasurements). Every field is optional and independently nullable: an explicit null means the source reported no value and must be filtered out before any arithmetic rather than read as zero. Absent and null are equivalent; neither implies a measured zero.",
             "additionalProperties": false,
             "properties": {
               "n": {
-                "type": "integer",
+                "type": ["integer", "null"],
                 "description": "Number of measurements.",
                 "minimum": 0
               },
               "mean": {
-                "type": "number",
+                "type": ["number", "null"],
                 "description": "Arithmetic mean of the measurements."
               },
               "sd": {
-                "type": "number",
+                "type": ["number", "null"],
                 "description": "Standard deviation of the measurements."
               },
               "median": {
-                "type": "number",
+                "type": ["number", "null"],
                 "description": "Median of the measurements."
               },
               "cv": {
-                "type": "number",
+                "type": ["number", "null"],
                 "description": "Coefficient of variation (CV = sd/mean * 100)."
               },
               "rcv": {
-                "type": "number",
+                "type": ["number", "null"],
                 "description": "Relative coefficient of variation."
               },
               "min": {
-                "type": "number",
+                "type": ["number", "null"],
                 "description": "Minimum value in the measurements."
               },
               "max": {
-                "type": "number",
+                "type": ["number", "null"],
                 "description": "Maximum value in the measurements."
               },
               "sum": {
-                "type": "number",
+                "type": ["number", "null"],
                 "description": "Sum of all measurements."
               },
               "variance": {
-                "type": "number",
+                "type": ["number", "null"],
                 "description": "Variance of the measurements."
               }
             }

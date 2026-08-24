@@ -48,7 +48,7 @@ DESCRIPTION = (
 )
 
 
-def build_document(material_code, metadata, stats, replicates, outliers, consensus):
+def build_document(material_code, metadata, stats, replicates, published, consensus):
     """Assemble one SummarizedStudyResult document for a reference material."""
     material = terms.MATERIALS[material_code]
     quantities = []
@@ -62,7 +62,7 @@ def build_document(material_code, metadata, stats, replicates, outliers, consens
                 quantities.append(entries.build_lab_entry(
                     lab_id, material_code, ceramide, method,
                     metadata[lab_id], stats[key], replicates[key],
-                    outliers[key + (method,)],
+                    published[key + (method,)],
                 ))
 
     for ceramide in CERAMIDES:
@@ -95,12 +95,35 @@ def build_all(repo_root=DEFAULT_REPO_ROOT):
     metadata = sources.read_lab_metadata(definitions)
     stats = sources.read_lab_stats(xlsx)
     replicates = sources.read_replicates(xlsx)
-    outliers = sources.read_outliers(output)
+    published = sources.read_published_concentrations(output)
     consensus = sources.read_consensus(output)
 
+    _report_corrections(stats, published)
+
     return {code: build_document(code, metadata, stats, replicates,
-                                 outliers, consensus)
+                                 published, consensus)
             for code in terms.MATERIALS}
+
+
+def _report_corrections(stats, published):
+    """Print any laboratory whose published concentrations rescale the workbook's.
+
+    Silence here would be the dangerous outcome: a correction that appears in the
+    manuscript but not in the workbook is exactly the discrepancy this reader exists
+    to absorb, so every run says out loud which laboratories it applied one to.
+    """
+    factors = {}
+    for (lab_id, material, ceramide, method), row in published.items():
+        summary = stats[(lab_id, material, ceramide)][method]
+        factor = entries.correction_factor(lab_id, ceramide, method,
+                                           summary["mean"], row["concentration"])
+        if factor != 1.0:
+            factors.setdefault(lab_id, []).append(factor)
+    for lab_id in sorted(factors):
+        values = factors[lab_id]
+        print(f"LabId {lab_id}: published concentrations are "
+              f"{sum(values) / len(values):.4f}x the workbook values "
+              f"({len(values)} of 32 combinations); SD and replicates rescaled to match.")
 
 
 def main(argv=None):
